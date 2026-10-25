@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512">
+  <!-- Generator: Adobe Illustrator 29.1.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 142)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #f37021;
+      }
+
+      .st1 {
+        fill: #5bc98a;
+      }
+
+      .st2 {
+        fill: #fbf9f4;
+      }
+
+      .st3 {
+        stroke: #1e9bd7;
+        stroke-width: 7px;
+      }
+
+      .st3, .st4, .st5, .st6 {
+        fill: none;
+      }
+
+      .st4 {
+        stroke: #f4f1e8;
+        stroke-linejoin: round;
+        stroke-width: 25px;
+      }
+
+      .st4, .st5, .st6 {
+        stroke-linecap: round;
+      }
+
+      .st5 {
+        stroke: #2c6c9b;
+        stroke-width: 11px;
+      }
+
+      .st7 {
+        fill: #0a2839;
+      }
+
+      .st8 {
+        fill: url(#linear-gradient);
+      }
+
+      .st6 {
+        stroke: #5bc98a;
+        stroke-width: 23px;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="-48.6" y1="652.8" x2="-48.3" y2="651.8" gradientTransform="translate(24457 326367) scale(500 -500)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0f3145"/>
+      <stop offset=".6" stop-color="#0a2839"/>
+      <stop offset="1" stop-color="#082231"/>
+    </linearGradient>
+  </defs>
+  <rect class="st8" x="9.6" y="6" width="500" height="500" rx="112" ry="112"/>
+  <rect class="st3" x="6" y="6" width="500" height="500" rx="112" ry="112"/>
+  <g>
+    <path class="st4" d="M152,106l-68,126,68,126"/>
+    <path class="st4" d="M360,106l68,126-68,126"/>
+  </g>
+  <g>
+    <path class="st6" d="M183.6,145.4v132.1c0,27.7,15.2,38.3,45.5,35.7,22.8-2,28.5-21.1,24.7-35.7"/>
+    <path class="st1" d="M183.6,264.9l-36.1,10.6,36.1,4v-14.5Z"/>
+    <path class="st1" d="M251.9,262.9l-15.2,15.9h30.4l-15.2-15.9Z"/>
+  </g>
+  <g>
+    <path class="st0" d="M369.6,284l71.8-21.9-30.1,84.3-41.7-62.4Z"/>
+    <path class="st0" d="M249.6,241.2c10.2-18.3,40.4-31.3,76.1-18.6,37.3,13.3,56.9,40.4,50.4,63.7-9.7,22.1-42,30.7-79.3,17.4-35.7-12.7-50.8-41.9-47.1-62.5Z"/>
+    <circle class="st2" cx="278.1" cy="233.1" r="16.4"/>
+    <circle class="st7" cx="274.1" cy="231.6" r="7.4"/>
+  </g>
+  <path class="st5" d="M134.8,415.8c20-24,44-24,64-4s44,20,64,0c20-20,44-20,64,0s44,16,62-4"/>
+</svg>

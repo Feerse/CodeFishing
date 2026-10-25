@@ -1,0 +1,173 @@
+{
+ "ikan": [
+  {
+   "key": "teri",
+   "nama": "Teri",
+   "drawable": "ikan_teri",
+   "terkunci": "ikan_terkunci_teri",
+   "rarity": "common"
+  },
+  {
+   "key": "bandeng",
+   "nama": "Bandeng",
+   "drawable": "ikan_bandeng",
+   "terkunci": "ikan_terkunci_bandeng",
+   "rarity": "common"
+  },
+  {
+   "key": "bawal",
+   "nama": "Bawal",
+   "drawable": "ikan_bawal",
+   "terkunci": "ikan_terkunci_bawal",
+   "rarity": "common"
+  },
+  {
+   "key": "mujair",
+   "nama": "Mujair",
+   "drawable": "ikan_mujair",
+   "terkunci": "ikan_terkunci_mujair",
+   "rarity": "common"
+  },
+  {
+   "key": "nila",
+   "nama": "Nila",
+   "drawable": "ikan_nila",
+   "terkunci": "ikan_terkunci_nila",
+   "rarity": "common"
+  },
+  {
+   "key": "lele",
+   "nama": "Lele",
+   "drawable": "ikan_lele",
+   "terkunci": "ikan_terkunci_lele",
+   "rarity": "common"
+  },
+  {
+   "key": "patin",
+   "nama": "Patin",
+   "drawable": "ikan_patin",
+   "terkunci": "ikan_terkunci_patin",
+   "rarity": "common"
+  },
+  {
+   "key": "gurame",
+   "nama": "Gurame",
+   "drawable": "ikan_gurame",
+   "terkunci": "ikan_terkunci_gurame",
+   "rarity": "common"
+  },
+  {
+   "key": "sepat",
+   "nama": "Sepat",
+   "drawable": "ikan_sepat",
+   "terkunci": "ikan_terkunci_sepat",
+   "rarity": "common"
+  },
+  {
+   "key": "gabus",
+   "nama": "Gabus",
+   "drawable": "ikan_gabus",
+   "terkunci": "ikan_terkunci_gabus",
+   "rarity": "common"
+  },
+  {
+   "key": "kerapu",
+   "nama": "Kerapu",
+   "drawable": "ikan_kerapu",
+   "terkunci": "ikan_terkunci_kerapu",
+   "rarity": "rare"
+  },
+  {
+   "key": "barakuda",
+   "nama": "Barakuda",
+   "drawable": "ikan_barakuda",
+   "terkunci": "ikan_terkunci_barakuda",
+   "rarity": "rare"
+  },
+  {
+   "key": "tenggiri",
+   "nama": "Tenggiri",
+   "drawable": "ikan_tenggiri",
+   "terkunci": "ikan_terkunci_tenggiri",
+   "rarity": "rare"
+  },
+  {
+   "key": "arwana",
+   "nama": "Arwana",
+   "drawable": "ikan_arwana",
+   "terkunci": "ikan_terkunci_arwana",
+   "rarity": "legend"
+  },
+  {
+   "key": "hiu merah",
+   "nama": "Hiu Merah",
+   "drawable": "ikan_hiu_merah",
+   "terkunci": "ikan_terkunci_hiu_merah",
+   "rarity": "mythic"
+  }
+ ],
+ "config": {
+  "umpanMax": 5,
+  "regenMs": 900000,
+  "ambangLulusPersen": 70,
+  "rarity": {
+   "common": {
+    "nama": "Common",
+    "warna": "#B7C2C6"
+   },
+   "rare": {
+    "nama": "Rare",
+    "warna": "#6EA8FF"
+   },
+   "epic": {
+    "nama": "Epic",
+    "warna": "#B18CFF"
+   },
+   "legend": {
+    "nama": "Legend",
+    "warna": "#FFD166"
+   },
+   "mythic": {
+    "nama": "Mythic",
+    "warna": "#FF6B81"
+   }
+  },
+  "streakRare": [
+   {
+    "k": 5,
+    "fish": "Kerapu"
+   },
+   {
+    "k": 10,
+    "fish": "Barakuda"
+   },
+   {
+    "k": 15,
+    "fish": "Tenggiri"
+   }
+  ],
+  "perairan": [
+   {
+    "n": "Samudra Pasifik",
+    "cond": "Tenang dan hangat, air jernih",
+    "x0": 0,
+    "open": true,
+    "stage": "Dimainkan · 10 stage"
+   },
+   {
+    "n": "Perairan Antartika",
+    "cond": "Dingin, es mengapung",
+    "x0": 1800,
+    "open": false,
+    "stage": "Segera"
+   },
+   {
+    "n": "Samudra Atlantik",
+    "cond": "Berkabut, ombak tinggi",
+    "x0": 2350,
+    "open": false,
+    "stage": "Segera"
+   }
+  ]
+ }
+}

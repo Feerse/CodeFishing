@@ -5,43 +5,45 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.codefishing.core.AppContainer
+import com.example.codefishing.core.LocalContainer
+import com.example.codefishing.frontend.App
 import com.example.codefishing.ui.theme.CodeFishingTheme
 
 class MainActivity : ComponentActivity() {
+    private lateinit var container: AppContainer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        container = AppContainer(applicationContext)
         setContent {
-            CodeFishingTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+            CompositionLocalProvider(LocalContainer provides container) {
+                CodeFishingTheme {
+                    Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                        App()
+                    }
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    override fun onPause() {
+        super.onPause()
+        container.audio.onAppPause()
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CodeFishingTheme {
-        Greeting("Android")
+    override fun onResume() {
+        super.onResume()
+        container.audio.onAppResume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isFinishing) container.audio.release()
     }
 }

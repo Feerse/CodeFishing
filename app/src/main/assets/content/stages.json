@@ -1,0 +1,702 @@
+{
+ "stages": [
+  {
+   "topic": "Hello World",
+   "fish": "Teri",
+   "text": "print() menampilkan teks ke layar. Teks ditulis di dalam tanda kutip.",
+   "code": "print(\"Hello, World!\")",
+   "out": "Hello, World!",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Kapten menampilkan salam di layar kapal.\nLengkapi perintah untuk menampilkan teks!",
+     "code": "___(\"Hello\")",
+     "o": [
+      {
+       "t": "print",
+       "out": "Hello"
+      },
+      {
+       "t": "echo",
+       "out": "NameError"
+      },
+      {
+       "t": "show",
+       "out": "NameError"
+      },
+      {
+       "t": "Print",
+       "out": "NameError"
+      }
+     ],
+     "ok": 0,
+     "sc": "board",
+     "v": "",
+     "vn": "kapal"
+    },
+    {
+     "q": "Penjaga dermaga menulis sapaan di papan pengumuman.\nIsi bagian kosong agar teks Halo tampil!",
+     "code": "print(___)",
+     "o": [
+      {
+       "t": "\"Halo\"",
+       "out": "Halo"
+      },
+      {
+       "t": "Halo",
+       "out": "NameError"
+      },
+      {
+       "t": "Halo()",
+       "out": "NameError"
+      },
+      {
+       "t": "'Halo",
+       "out": "SyntaxError"
+      }
+     ],
+     "ok": 0,
+     "sc": "board",
+     "v": "",
+     "vn": "dermaga"
+    }
+   ]
+  },
+  {
+   "topic": "Variabel",
+   "fish": "Bandeng",
+   "text": "Variabel menyimpan nilai. Tanda = memasukkan nilai di kanan ke nama di kiri.",
+   "code": "nama = \"Gabus\"\nprint(nama)",
+   "out": "Gabus",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Pemancing di dermaga mencatat 5 ikan di ember.\nTanda untuk menyimpan 5 ke variabel ikan!",
+     "code": "ikan ___ 5",
+     "o": [
+      {
+       "t": "==",
+       "out": "False"
+      },
+      {
+       "t": "=",
+       "out": "5"
+      },
+      {
+       "t": "->",
+       "out": "SyntaxError"
+      },
+      {
+       "t": ":=",
+       "out": "SyntaxError"
+      }
+     ],
+     "ok": 1,
+     "sc": "box",
+     "v": "ikan",
+     "vn": "dermaga"
+    },
+    {
+     "q": "Jala pertama dapat 3 ikan, jala kedua dapat 7 ikan.\nIsi bagian kosong agar yang tampil 7!",
+     "code": "ikan = 3\nikan = 7\nprint(___)",
+     "o": [
+      {
+       "t": "\"ikan\"",
+       "out": "ikan"
+      },
+      {
+       "t": "jala",
+       "out": "NameError"
+      },
+      {
+       "t": "ikan",
+       "out": "7"
+      },
+      {
+       "t": "7ikan",
+       "out": "SyntaxError"
+      }
+     ],
+     "ok": 2,
+     "sc": "box",
+     "v": "ikan",
+     "vn": "jala"
+    }
+   ]
+  },
+  {
+   "topic": "Nama Variabel",
+   "fish": "Bawal",
+   "text": "Nama variabel ditulis huruf kecil, kata dipisah garis bawah, dan tidak boleh diawali angka.",
+   "code": "jumlah_tangkapan = 4\nprint(jumlah_tangkapan)",
+   "out": "4",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Nelayan mencatat jumlah ikan hasil jala.\nPilih nama variabel yang valid!",
+     "code": "___ = 4",
+     "o": [
+      {
+       "t": "1ikan",
+       "out": "SyntaxError"
+      },
+      {
+       "t": "jumlah ikan",
+       "out": "SyntaxError"
+      },
+      {
+       "t": "jumlah-ikan",
+       "out": "SyntaxError"
+      },
+      {
+       "t": "jumlah_ikan",
+       "out": "Valid"
+      }
+     ],
+     "ok": 3,
+     "sc": "board",
+     "v": "",
+     "vn": "jala"
+    },
+    {
+     "q": "Nelayan mencatat kedalaman pemasangan bubu.\nGaya penulisan nama variabel Python!",
+     "code": "___ = 10",
+     "o": [
+      {
+       "t": "KedalamanBubu",
+       "out": "Bukan gaya"
+      },
+      {
+       "t": "kedalaman_bubu",
+       "out": "Gaya Python"
+      },
+      {
+       "t": "Kedalaman Bubu",
+       "out": "SyntaxError"
+      },
+      {
+       "t": "KEDALAMAN-BUBU",
+       "out": "SyntaxError"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "bubu"
+    }
+   ]
+  },
+  {
+   "topic": "Tipe Data: str dan int",
+   "fish": "Mujair",
+   "text": "str adalah teks, int adalah bilangan bulat. type() menunjukkan tipe sebuah nilai.",
+   "code": "umur = 20\nprint(type(umur))",
+   "out": "<class 'int'>",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Penyelam menulis kode ikan \"20\" di papan catatan.\nNilai mana yang bertipe str (teks)?",
+     "code": "print(type(___))",
+     "o": [
+      {
+       "t": "20",
+       "out": "<class 'int'>"
+      },
+      {
+       "t": "2.0",
+       "out": "<class 'float'>"
+      },
+      {
+       "t": "\"20\"",
+       "out": "<class 'str'>"
+      },
+      {
+       "t": "True",
+       "out": "<class 'bool'>"
+      }
+     ],
+     "ok": 2,
+     "sc": "board",
+     "v": "",
+     "vn": "selam"
+    },
+    {
+     "q": "Kapal menghitung ikan satu per satu.\nNilai mana yang bertipe int?",
+     "code": "print(type(___))",
+     "o": [
+      {
+       "t": "\"20\"",
+       "out": "<class 'str'>"
+      },
+      {
+       "t": "20",
+       "out": "<class 'int'>"
+      },
+      {
+       "t": "20.0",
+       "out": "<class 'float'>"
+      },
+      {
+       "t": "False",
+       "out": "<class 'bool'>"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "kapal"
+    }
+   ]
+  },
+  {
+   "topic": "Tipe Data: float dan bool",
+   "fish": "Nila",
+   "text": "float adalah bilangan desimal. bool hanya bernilai True atau False.",
+   "code": "berat = 2.5\nprint(type(berat))",
+   "out": "<class 'float'>",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Ikan dari lubang es ditimbang: 2,5 kg.\nNilai mana yang bertipe float?",
+     "code": "print(type(___))",
+     "o": [
+      {
+       "t": "2",
+       "out": "<class 'int'>"
+      },
+      {
+       "t": "\"2.5\"",
+       "out": "<class 'str'>"
+      },
+      {
+       "t": "True",
+       "out": "<class 'bool'>"
+      },
+      {
+       "t": "2.5",
+       "out": "<class 'float'>"
+      }
+     ],
+     "ok": 3,
+     "sc": "board",
+     "v": "",
+     "vn": "es"
+    },
+    {
+     "q": "Penyelam memeriksa apakah ikan sudah cukup besar.\nNilai yang valid untuk bool!",
+     "code": "ikan_besar = ___",
+     "o": [
+      {
+       "t": "\"True\"",
+       "out": "str"
+      },
+      {
+       "t": "True",
+       "out": "bool"
+      },
+      {
+       "t": "1.5",
+       "out": "float"
+      },
+      {
+       "t": "Benar",
+       "out": "NameError"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "selam"
+    }
+   ]
+  },
+  {
+   "topic": "Operator",
+   "fish": "Lele",
+   "text": "Operator menghitung dan membandingkan. + - * / untuk hitung, == untuk membandingkan apakah sama.",
+   "code": "ikan = 3 + 2\nprint(ikan == 5)",
+   "out": "True",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Bubu A berisi 5 ikan dan bubu B juga 5. Samakah isinya?\nOperator untuk membandingkan apakah sama!",
+     "code": "print(5 ___ 5)",
+     "o": [
+      {
+       "t": "=",
+       "out": "SyntaxError"
+      },
+      {
+       "t": "!=",
+       "out": "False"
+      },
+      {
+       "t": "==",
+       "out": "True"
+      },
+      {
+       "t": "=>",
+       "out": "SyntaxError"
+      }
+     ],
+     "ok": 2,
+     "sc": "board",
+     "v": "",
+     "vn": "bubu"
+    },
+    {
+     "q": "Tiga pemancing di dermaga masing-masing dapat 2 ikan.\nOperator untuk mengalikan!",
+     "code": "print(3 ___ 2)",
+     "o": [
+      {
+       "t": "+",
+       "out": "5"
+      },
+      {
+       "t": "*",
+       "out": "6"
+      },
+      {
+       "t": "x",
+       "out": "SyntaxError"
+      },
+      {
+       "t": "/",
+       "out": "1.5"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "dermaga"
+    }
+   ]
+  },
+  {
+   "topic": "Kondisi if dan else",
+   "fish": "Patin",
+   "text": "if menjalankan kode hanya jika kondisinya benar. else untuk kasus lainnya. Blok kode dijorokkan.",
+   "code": "ikan = 12\nif ikan >= 10:\n    print(\"Cukup\")\nelse:\n    print(\"Kurang\")",
+   "out": "Cukup",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Tangkapan lebih dari 5 ikan masuk keranjang A, selain itu keranjang B.\nKata kunci untuk memeriksa kondisi!",
+     "code": "n = 4\n___ n > 5:\n    print(\"A\")\nelse:\n    print(\"B\")",
+     "o": [
+      {
+       "t": "for",
+       "out": "Error"
+      },
+      {
+       "t": "when",
+       "out": "Error"
+      },
+      {
+       "t": "if",
+       "out": "B"
+      },
+      {
+       "t": "elif",
+       "out": "Error"
+      }
+     ],
+     "ok": 2,
+     "sc": "fork",
+     "v": "",
+     "vn": "es"
+    },
+    {
+     "q": "Hasil jala disortir dengan aturan yang sama.\nBagian yang berjalan saat kondisi if salah!",
+     "code": "if n > 5:\n    print(\"A\")\n___:\n    print(\"B\")",
+     "o": [
+      {
+       "t": "if",
+       "out": "Error"
+      },
+      {
+       "t": "else",
+       "out": "B"
+      },
+      {
+       "t": "then",
+       "out": "Error"
+      },
+      {
+       "t": "elif",
+       "out": "Error"
+      }
+     ],
+     "ok": 1,
+     "sc": "fork",
+     "v": "",
+     "vn": "jala"
+    }
+   ]
+  },
+  {
+   "topic": "Perulangan while",
+   "fish": "Gurame",
+   "text": "while mengulang blok kode selama kondisinya masih benar. Ubah penghitung agar loop berhenti.",
+   "code": "n = 0\nwhile n < 3:\n    n = n + 1\nprint(n)",
+   "out": "3",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Bubu diangkat berulang sampai tiga kali.\nKata kunci untuk mengulang selama kondisi benar!",
+     "code": "n = 0\n___ n < 3:\n    n = n + 1",
+     "o": [
+      {
+       "t": "if",
+       "out": "1x"
+      },
+      {
+       "t": "for",
+       "out": "Error"
+      },
+      {
+       "t": "repeat",
+       "out": "Error"
+      },
+      {
+       "t": "while",
+       "out": "3x"
+      }
+     ],
+     "ok": 3,
+     "sc": "count",
+     "v": "",
+     "vn": "bubu"
+    },
+    {
+     "q": "Joran ditarik setiap hitungan sampai tiga tarikan.\nApa yang membuat loop berhenti?",
+     "code": "n = 0\nwhile n < 3:\n    n = ___",
+     "o": [
+      {
+       "t": "n",
+       "out": "∞"
+      },
+      {
+       "t": "n + 1",
+       "out": "3x"
+      },
+      {
+       "t": "0",
+       "out": "∞"
+      },
+      {
+       "t": "n - 1",
+       "out": "∞"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "kapal"
+    }
+   ]
+  },
+  {
+   "topic": "Kondisi di dalam Loop",
+   "fish": "Sepat",
+   "text": "if bisa berada di dalam while, dan kondisinya dicek tiap putaran. Operator % memberi sisa bagi, jadi n % 2 == 0 berarti n genap.",
+   "code": "n = 0\ntotal = 0\nwhile n < 5:\n    n = n + 1\n    if n % 2 == 0:\n        total = total + n\nprint(total)",
+   "out": "6",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Penyelam hanya menghitung ikan bernomor genap.\nOperator sisa bagi untuk mengecek genap!",
+     "code": "n = 4\nprint(n ___ 2 == 0)",
+     "o": [
+      {
+       "t": "+",
+       "out": "False"
+      },
+      {
+       "t": "*",
+       "out": "False"
+      },
+      {
+       "t": "/",
+       "out": "False"
+      },
+      {
+       "t": "%",
+       "out": "True"
+      }
+     ],
+     "ok": 3,
+     "sc": "board",
+     "v": "",
+     "vn": "selam"
+    },
+    {
+     "q": "Hanya ikan bernomor genap yang masuk ember.\nIsi baris kosong agar total berisi 6!",
+     "code": "n = 0\ntotal = 0\nwhile n < 5:\n    n = n + 1\n    if n % 2 == 0:\n        total = ___",
+     "o": [
+      {
+       "t": "n",
+       "out": "4"
+      },
+      {
+       "t": "total + n",
+       "out": "6"
+      },
+      {
+       "t": "total + 1",
+       "out": "2"
+      },
+      {
+       "t": "total",
+       "out": "0"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "es"
+    }
+   ]
+  },
+  {
+   "topic": "Boss: Ujian Pasifik",
+   "fish": "Gabus",
+   "text": null,
+   "code": null,
+   "out": null,
+   "boss": true,
+   "qs": [
+    {
+     "q": "Kapal pukat melapor ke pelabuhan di tengah badai.\nPerintah menampilkan teks Halo!",
+     "code": "___(\"Halo\")",
+     "o": [
+      {
+       "t": "print",
+       "out": "Halo"
+      },
+      {
+       "t": "echo",
+       "out": "NameError"
+      },
+      {
+       "t": "Print",
+       "out": "NameError"
+      },
+      {
+       "t": "say",
+       "out": "NameError"
+      }
+     ],
+     "ok": 0,
+     "sc": "board",
+     "v": "",
+     "vn": "trawler"
+    },
+    {
+     "q": "Penyelam menyimpan hasil tembakan.\nIsi baris kedua agar x menjadi 7!",
+     "code": "x = 5\nx = ___\nprint(x)",
+     "o": [
+      {
+       "t": "2",
+       "out": "2"
+      },
+      {
+       "t": "x + x",
+       "out": "10"
+      },
+      {
+       "t": "x + 2",
+       "out": "7"
+      },
+      {
+       "t": "x = 2",
+       "out": "SyntaxError"
+      }
+     ],
+     "ok": 2,
+     "sc": "box",
+     "v": "x",
+     "vn": "selam"
+    },
+    {
+     "q": "Ketebalan es diperiksa sebelum memancing.\nNilai bertipe bool!",
+     "code": "print(type(___))",
+     "o": [
+      {
+       "t": "\"True\"",
+       "out": "<class 'str'>"
+      },
+      {
+       "t": "1",
+       "out": "<class 'int'>"
+      },
+      {
+       "t": "True",
+       "out": "<class 'bool'>"
+      },
+      {
+       "t": "1.0",
+       "out": "<class 'float'>"
+      }
+     ],
+     "ok": 2,
+     "sc": "board",
+     "v": "",
+     "vn": "es"
+    },
+    {
+     "q": "Bubu dinaikkan tiga kali.\nIsi kondisi agar loop berjalan 3 kali!",
+     "code": "n = 0\nwhile ___:\n    n = n + 1",
+     "o": [
+      {
+       "t": "n > 3",
+       "out": "0x"
+      },
+      {
+       "t": "n == 5",
+       "out": "0x"
+      },
+      {
+       "t": "n = 3",
+       "out": "Error"
+      },
+      {
+       "t": "n < 3",
+       "out": "3x"
+      }
+     ],
+     "ok": 3,
+     "sc": "count",
+     "v": "",
+     "vn": "bubu"
+    },
+    {
+     "q": "Hanya ikan bernomor lebih dari 2 yang dihitung.\nIsi kondisi agar total berisi 7!",
+     "code": "n = 0\ntotal = 0\nwhile n < 4:\n    n = n + 1\n    if ___:\n        total = total + n",
+     "o": [
+      {
+       "t": "n < 2",
+       "out": "1"
+      },
+      {
+       "t": "n == 2",
+       "out": "2"
+      },
+      {
+       "t": "n % 2 == 0",
+       "out": "6"
+      },
+      {
+       "t": "n > 2",
+       "out": "7"
+      }
+     ],
+     "ok": 3,
+     "sc": "count",
+     "v": "",
+     "vn": "trawler"
+    }
+   ]
+  }
+ ]
+}
