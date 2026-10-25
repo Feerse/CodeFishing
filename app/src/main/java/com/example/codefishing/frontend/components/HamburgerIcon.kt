@@ -13,10 +13,10 @@ import androidx.compose.ui.unit.dp
 /** Ikon tiga garis (menu hamburger) digambar sendiri, tanpa library ikon tambahan. */
 @Composable
 fun HamburgerIcon(
-    modifier: Modifier = Modifier.size(24.dp),
+    modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.onBackground,
 ) {
-    Canvas(modifier) {
+    Canvas(modifier.size(24.dp)) {
         val stroke = 2.dp.toPx()
         listOf(0.28f, 0.5f, 0.72f).forEach { f ->
             drawLine(

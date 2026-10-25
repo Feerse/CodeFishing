@@ -1,0 +1,1847 @@
+[
+ {
+  "id": 1,
+  "stage_asal_id": 1,
+  "tipe": "token",
+  "teks": "Kapten menampilkan salam di layar kapal.\nLengkapi perintah untuk menampilkan teks!",
+  "kode_template": "___(\"Hello\")",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: print. Hasilnya: Hello.",
+  "poin": 25,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 20,
+    "soal_id": 1,
+    "teks": "print",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 21,
+    "soal_id": 1,
+    "teks": "echo",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 22,
+    "soal_id": 1,
+    "teks": "show",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 23,
+    "soal_id": 1,
+    "teks": "Print",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 2,
+  "stage_asal_id": 1,
+  "tipe": "token",
+  "teks": "Penjaga dermaga menulis sapaan di papan pengumuman.\nIsi bagian kosong agar teks Halo tampil!",
+  "kode_template": "print(___)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: \"Halo\". Hasilnya: Halo.",
+  "poin": 25,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 30,
+    "soal_id": 2,
+    "teks": "\"Halo\"",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 31,
+    "soal_id": 2,
+    "teks": "Halo",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 32,
+    "soal_id": 2,
+    "teks": "Halo()",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 33,
+    "soal_id": 2,
+    "teks": "'Halo",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 3,
+  "stage_asal_id": 1,
+  "tipe": "token",
+  "teks": "Kapal pukat melapor ke pelabuhan di tengah badai.\nPerintah menampilkan teks Halo!",
+  "kode_template": "___(\"Halo\")",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: print. Hasilnya: Halo.",
+  "poin": 25,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 40,
+    "soal_id": 3,
+    "teks": "print",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 41,
+    "soal_id": 3,
+    "teks": "echo",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 42,
+    "soal_id": 3,
+    "teks": "Print",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 43,
+    "soal_id": 3,
+    "teks": "say",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 4,
+  "stage_asal_id": 1,
+  "tipe": "token",
+  "teks": "Papan skor pelabuhan harus menampilkan kata Python.",
+  "kode_template": "print(___)",
+  "jawaban_benar": null,
+  "pembahasan": "Teks harus diapit tanda kutip dan dicetak dengan print().",
+  "poin": 25,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 50,
+    "soal_id": 4,
+    "teks": "\"Python\"",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 51,
+    "soal_id": 4,
+    "teks": "Python",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 52,
+    "soal_id": 4,
+    "teks": "\"Python",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 53,
+    "soal_id": 4,
+    "teks": "echo(\"Python\")",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 5,
+  "stage_asal_id": 1,
+  "tipe": "token",
+  "teks": "Dua baris teks dicetak berurutan: Laut lalu Tenang.",
+  "kode_template": "print(\"Laut\")\n___(\"Tenang\")",
+  "jawaban_benar": null,
+  "pembahasan": "print() dapat dipanggil berulang untuk mencetak baris baru.",
+  "poin": 25,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 60,
+    "soal_id": 5,
+    "teks": "print",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 61,
+    "soal_id": 5,
+    "teks": "echo",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 62,
+    "soal_id": 5,
+    "teks": "out",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 63,
+    "soal_id": 5,
+    "teks": "write",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 6,
+  "stage_asal_id": 2,
+  "tipe": "token",
+  "teks": "Pemancing di dermaga mencatat 5 ikan di ember.\nTanda untuk menyimpan 5 ke variabel ikan!",
+  "kode_template": "ikan ___ 5",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: =. Hasilnya: 5.",
+  "poin": 25,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 70,
+    "soal_id": 6,
+    "teks": "==",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 71,
+    "soal_id": 6,
+    "teks": "=",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 72,
+    "soal_id": 6,
+    "teks": "->",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 73,
+    "soal_id": 6,
+    "teks": ":=",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 7,
+  "stage_asal_id": 2,
+  "tipe": "token",
+  "teks": "Jala pertama dapat 3 ikan, jala kedua dapat 7 ikan.\nIsi bagian kosong agar yang tampil 7!",
+  "kode_template": "ikan = 3\nikan = 7\nprint(___)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: ikan. Hasilnya: 7.",
+  "poin": 25,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 80,
+    "soal_id": 7,
+    "teks": "\"ikan\"",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 81,
+    "soal_id": 7,
+    "teks": "jala",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 82,
+    "soal_id": 7,
+    "teks": "ikan",
+    "benar": 1,
+    "urutan": 3
+   },
+   {
+    "id": 83,
+    "soal_id": 7,
+    "teks": "7ikan",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 8,
+  "stage_asal_id": 2,
+  "tipe": "token",
+  "teks": "Penyelam menyimpan hasil tembakan.\nIsi baris kedua agar x menjadi 7!",
+  "kode_template": "x = 5\nx = ___\nprint(x)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: x + 2. Hasilnya: 7.",
+  "poin": 25,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 90,
+    "soal_id": 8,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 91,
+    "soal_id": 8,
+    "teks": "x + x",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 92,
+    "soal_id": 8,
+    "teks": "x + 2",
+    "benar": 1,
+    "urutan": 3
+   },
+   {
+    "id": 93,
+    "soal_id": 8,
+    "teks": "x = 2",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 9,
+  "stage_asal_id": 2,
+  "tipe": "token",
+  "teks": "Nelayan menyimpan 10 umpan ke variabel umpan.",
+  "kode_template": "umpan ___ 10",
+  "jawaban_benar": null,
+  "pembahasan": "Tanda = memasukkan nilai ke variabel; == membandingkan.",
+  "poin": 25,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 100,
+    "soal_id": 9,
+    "teks": "=",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 101,
+    "soal_id": 9,
+    "teks": "==",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 102,
+    "soal_id": 9,
+    "teks": "=>",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 103,
+    "soal_id": 9,
+    "teks": ":",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 10,
+  "stage_asal_id": 2,
+  "tipe": "token",
+  "teks": "Nama ikan diganti dari teri menjadi gurame. Tampilkan isi variabel nama.",
+  "kode_template": "nama = \"teri\"\nnama = \"gurame\"\nprint(___)",
+  "jawaban_benar": null,
+  "pembahasan": "print(nama) membaca nilai terbaru yang disimpan di variabel.",
+  "poin": 25,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 110,
+    "soal_id": 10,
+    "teks": "nama",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 111,
+    "soal_id": 10,
+    "teks": "\"nama\"",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 112,
+    "soal_id": 10,
+    "teks": "nama()",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 113,
+    "soal_id": 10,
+    "teks": "\"teri\"",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 11,
+  "stage_asal_id": 3,
+  "tipe": "token",
+  "teks": "Nelayan mencatat jumlah ikan hasil jala.\nPilih nama variabel yang valid!",
+  "kode_template": "___ = 4",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: jumlah_ikan. Hasilnya: Valid.",
+  "poin": 25,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 120,
+    "soal_id": 11,
+    "teks": "1ikan",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 121,
+    "soal_id": 11,
+    "teks": "jumlah ikan",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 122,
+    "soal_id": 11,
+    "teks": "jumlah-ikan",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 123,
+    "soal_id": 11,
+    "teks": "jumlah_ikan",
+    "benar": 1,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 12,
+  "stage_asal_id": 3,
+  "tipe": "token",
+  "teks": "Nelayan mencatat kedalaman pemasangan bubu.\nGaya penulisan nama variabel Python!",
+  "kode_template": "___ = 10",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: kedalaman_bubu. Hasilnya: Gaya Python.",
+  "poin": 25,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 130,
+    "soal_id": 12,
+    "teks": "KedalamanBubu",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 131,
+    "soal_id": 12,
+    "teks": "kedalaman_bubu",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 132,
+    "soal_id": 12,
+    "teks": "Kedalaman Bubu",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 133,
+    "soal_id": 12,
+    "teks": "KEDALAMAN-BUBU",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 13,
+  "stage_asal_id": 3,
+  "tipe": "token",
+  "teks": "Nelayan mencatat berat ikan. Pilih nama variabel yang valid.",
+  "kode_template": "___ = 2.5",
+  "jawaban_benar": null,
+  "pembahasan": "Nama variabel memakai huruf kecil dan garis bawah, tidak diawali angka.",
+  "poin": 25,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 140,
+    "soal_id": 13,
+    "teks": "berat_ikan",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 141,
+    "soal_id": 13,
+    "teks": "berat ikan",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 142,
+    "soal_id": 13,
+    "teks": "berat-ikan",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 143,
+    "soal_id": 13,
+    "teks": "2berat",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 14,
+  "stage_asal_id": 3,
+  "tipe": "token",
+  "teks": "Pilih nama variabel yang boleh diawali garis bawah.",
+  "kode_template": "___ = 12",
+  "jawaban_benar": null,
+  "pembahasan": "Garis bawah boleh di awal nama variabel.",
+  "poin": 25,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 150,
+    "soal_id": 14,
+    "teks": "_jumlah",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 151,
+    "soal_id": 14,
+    "teks": "2jumlah",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 152,
+    "soal_id": 14,
+    "teks": "jumlah ikan",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 153,
+    "soal_id": 14,
+    "teks": "jumlah-kan",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 15,
+  "stage_asal_id": 3,
+  "tipe": "token",
+  "teks": "Jumlahkan dua keranjang: lama 5 dan baru 7.",
+  "kode_template": "lama = 5\nbaru = 7\nhasil = ___\nprint(hasil)",
+  "jawaban_benar": null,
+  "pembahasan": "Operator + menjumlahkan nilai kedua variabel.",
+  "poin": 25,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 160,
+    "soal_id": 15,
+    "teks": "lama + baru",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 161,
+    "soal_id": 15,
+    "teks": "lama - baru",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 162,
+    "soal_id": 15,
+    "teks": "\"lama + baru\"",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 163,
+    "soal_id": 15,
+    "teks": "lama == baru",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 16,
+  "stage_asal_id": 4,
+  "tipe": "token",
+  "teks": "Penyelam menulis kode ikan \"20\" di papan catatan.\nNilai mana yang bertipe str (teks)?",
+  "kode_template": "print(type(___))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: \"20\". Hasilnya: <class 'str'>.",
+  "poin": 25,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 170,
+    "soal_id": 16,
+    "teks": "20",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 171,
+    "soal_id": 16,
+    "teks": "2.0",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 172,
+    "soal_id": 16,
+    "teks": "\"20\"",
+    "benar": 1,
+    "urutan": 3
+   },
+   {
+    "id": 173,
+    "soal_id": 16,
+    "teks": "True",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 17,
+  "stage_asal_id": 4,
+  "tipe": "token",
+  "teks": "Kapal menghitung ikan satu per satu.\nNilai mana yang bertipe int?",
+  "kode_template": "print(type(___))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 20. Hasilnya: <class 'int'>.",
+  "poin": 25,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 180,
+    "soal_id": 17,
+    "teks": "\"20\"",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 181,
+    "soal_id": 17,
+    "teks": "20",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 182,
+    "soal_id": 17,
+    "teks": "20.0",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 183,
+    "soal_id": 17,
+    "teks": "False",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 18,
+  "stage_asal_id": 4,
+  "tipe": "token",
+  "teks": "Papan menampilkan \"100\" sebagai teks. Tipe apa nilainya?",
+  "kode_template": "print(type(___))",
+  "jawaban_benar": null,
+  "pembahasan": "Nilai dalam tanda kutip bertipe str.",
+  "poin": 25,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 190,
+    "soal_id": 18,
+    "teks": "\"100\"",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 191,
+    "soal_id": 18,
+    "teks": "100",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 192,
+    "soal_id": 18,
+    "teks": "100.0",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 193,
+    "soal_id": 18,
+    "teks": "True",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 19,
+  "stage_asal_id": 4,
+  "tipe": "token",
+  "teks": "Hitung total ikan dari dua ember berisi 3 dan 4.",
+  "kode_template": "print(___)",
+  "jawaban_benar": null,
+  "pembahasan": "int + int menghasilkan int 7.",
+  "poin": 25,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 200,
+    "soal_id": 19,
+    "teks": "3 + 4",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 201,
+    "soal_id": 19,
+    "teks": "\"3\" + \"4\"",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 202,
+    "soal_id": 19,
+    "teks": "3 + \"4\"",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 203,
+    "soal_id": 19,
+    "teks": "\"3 + 4\"",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 20,
+  "stage_asal_id": 4,
+  "tipe": "token",
+  "teks": "Pilih nilai yang bertipe int.",
+  "kode_template": "print(type(___))",
+  "jawaban_benar": null,
+  "pembahasan": "25 adalah bilangan bulat, jadi bertipe int.",
+  "poin": 25,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 210,
+    "soal_id": 20,
+    "teks": "25",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 211,
+    "soal_id": 20,
+    "teks": "\"25\"",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 212,
+    "soal_id": 20,
+    "teks": "25.0",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 213,
+    "soal_id": 20,
+    "teks": "True",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 21,
+  "stage_asal_id": 5,
+  "tipe": "token",
+  "teks": "Ikan dari lubang es ditimbang: 2,5 kg.\nNilai mana yang bertipe float?",
+  "kode_template": "print(type(___))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 2.5. Hasilnya: <class 'float'>.",
+  "poin": 25,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 220,
+    "soal_id": 21,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 221,
+    "soal_id": 21,
+    "teks": "\"2.5\"",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 222,
+    "soal_id": 21,
+    "teks": "True",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 223,
+    "soal_id": 21,
+    "teks": "2.5",
+    "benar": 1,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 22,
+  "stage_asal_id": 5,
+  "tipe": "token",
+  "teks": "Penyelam memeriksa apakah ikan sudah cukup besar.\nNilai yang valid untuk bool!",
+  "kode_template": "ikan_besar = ___",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: True. Hasilnya: bool.",
+  "poin": 25,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 230,
+    "soal_id": 22,
+    "teks": "\"True\"",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 231,
+    "soal_id": 22,
+    "teks": "True",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 232,
+    "soal_id": 22,
+    "teks": "1.5",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 233,
+    "soal_id": 22,
+    "teks": "Benar",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 23,
+  "stage_asal_id": 5,
+  "tipe": "token",
+  "teks": "Ketebalan es diperiksa sebelum memancing.\nNilai bertipe bool!",
+  "kode_template": "print(type(___))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: True. Hasilnya: <class 'bool'>.",
+  "poin": 25,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 240,
+    "soal_id": 23,
+    "teks": "\"True\"",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 241,
+    "soal_id": 23,
+    "teks": "1",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 242,
+    "soal_id": 23,
+    "teks": "True",
+    "benar": 1,
+    "urutan": 3
+   },
+   {
+    "id": 243,
+    "soal_id": 23,
+    "teks": "1.0",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 24,
+  "stage_asal_id": 5,
+  "tipe": "token",
+  "teks": "Suhu air tercatat 27.5 derajat. Pilih nilai float.",
+  "kode_template": "print(type(___))",
+  "jawaban_benar": null,
+  "pembahasan": "float memakai titik desimal.",
+  "poin": 25,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 250,
+    "soal_id": 24,
+    "teks": "27.5",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 251,
+    "soal_id": 24,
+    "teks": "27",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 252,
+    "soal_id": 24,
+    "teks": "\"27.5\"",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 253,
+    "soal_id": 24,
+    "teks": "True",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 25,
+  "stage_asal_id": 5,
+  "tipe": "token",
+  "teks": "Periksa apakah 5 lebih besar dari 3. Hasilnya bertipe bool.",
+  "kode_template": "print(type(___))",
+  "jawaban_benar": null,
+  "pembahasan": "Perbandingan menghasilkan True atau False bertipe bool.",
+  "poin": 25,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 260,
+    "soal_id": 25,
+    "teks": "5 > 3",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 261,
+    "soal_id": 25,
+    "teks": "\"5 > 3\"",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 262,
+    "soal_id": 25,
+    "teks": "5 + 3",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 263,
+    "soal_id": 25,
+    "teks": "\"True\"",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 26,
+  "stage_asal_id": 6,
+  "tipe": "token",
+  "teks": "Bubu A berisi 5 ikan dan bubu B juga 5. Samakah isinya?\nOperator untuk membandingkan apakah sama!",
+  "kode_template": "print(5 ___ 5)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: ==. Hasilnya: True.",
+  "poin": 25,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 270,
+    "soal_id": 26,
+    "teks": "=",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 271,
+    "soal_id": 26,
+    "teks": "!=",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 272,
+    "soal_id": 26,
+    "teks": "==",
+    "benar": 1,
+    "urutan": 3
+   },
+   {
+    "id": 273,
+    "soal_id": 26,
+    "teks": "=>",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 27,
+  "stage_asal_id": 6,
+  "tipe": "token",
+  "teks": "Tiga pemancing di dermaga masing-masing dapat 2 ikan.\nOperator untuk mengalikan!",
+  "kode_template": "print(3 ___ 2)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: *. Hasilnya: 6.",
+  "poin": 25,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 280,
+    "soal_id": 27,
+    "teks": "+",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 281,
+    "soal_id": 27,
+    "teks": "*",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 282,
+    "soal_id": 27,
+    "teks": "x",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 283,
+    "soal_id": 27,
+    "teks": "/",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 28,
+  "stage_asal_id": 6,
+  "tipe": "token",
+  "teks": "Dua bubu masing-masing berisi 4 ikan. Hitung totalnya.",
+  "kode_template": "print(2 ___ 4)",
+  "jawaban_benar": null,
+  "pembahasan": "2 * 4 = 8.",
+  "poin": 25,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 290,
+    "soal_id": 28,
+    "teks": "*",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 291,
+    "soal_id": 28,
+    "teks": "+",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 292,
+    "soal_id": 28,
+    "teks": "-",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 293,
+    "soal_id": 28,
+    "teks": "==",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 29,
+  "stage_asal_id": 6,
+  "tipe": "token",
+  "teks": "Periksa apakah 10 sama dengan 12.",
+  "kode_template": "print(10 ___ 12)",
+  "jawaban_benar": null,
+  "pembahasan": "== memeriksa kesamaan dan menghasilkan False.",
+  "poin": 25,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 300,
+    "soal_id": 29,
+    "teks": "==",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 301,
+    "soal_id": 29,
+    "teks": "!=",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 302,
+    "soal_id": 29,
+    "teks": "<",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 303,
+    "soal_id": 29,
+    "teks": ">",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 30,
+  "stage_asal_id": 6,
+  "tipe": "token",
+  "teks": "Bagi 20 ikan ke 4 keranjang.",
+  "kode_template": "print(20 ___ 4)",
+  "jawaban_benar": null,
+  "pembahasan": "Operator / menghasilkan pembagian, yaitu 5.0.",
+  "poin": 25,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 310,
+    "soal_id": 30,
+    "teks": "/",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 311,
+    "soal_id": 30,
+    "teks": "//",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 312,
+    "soal_id": 30,
+    "teks": "%",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 313,
+    "soal_id": 30,
+    "teks": "*",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 31,
+  "stage_asal_id": 7,
+  "tipe": "token",
+  "teks": "Tangkapan lebih dari 5 ikan masuk keranjang A, selain itu keranjang B.\nKata kunci untuk memeriksa kondisi!",
+  "kode_template": "n = 4\n___ n > 5:\n    print(\"A\")\nelse:\n    print(\"B\")",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: if. Hasilnya: B.",
+  "poin": 25,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 320,
+    "soal_id": 31,
+    "teks": "for",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 321,
+    "soal_id": 31,
+    "teks": "when",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 322,
+    "soal_id": 31,
+    "teks": "if",
+    "benar": 1,
+    "urutan": 3
+   },
+   {
+    "id": 323,
+    "soal_id": 31,
+    "teks": "elif",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 32,
+  "stage_asal_id": 7,
+  "tipe": "token",
+  "teks": "Hasil jala disortir dengan aturan yang sama.\nBagian yang berjalan saat kondisi if salah!",
+  "kode_template": "if n > 5:\n    print(\"A\")\n___:\n    print(\"B\")",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: else. Hasilnya: B.",
+  "poin": 25,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 330,
+    "soal_id": 32,
+    "teks": "if",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 331,
+    "soal_id": 32,
+    "teks": "else",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 332,
+    "soal_id": 32,
+    "teks": "then",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 333,
+    "soal_id": 32,
+    "teks": "elif",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 33,
+  "stage_asal_id": 7,
+  "tipe": "token",
+  "teks": "Ikan lulus jika beratnya minimal 2 kg.",
+  "kode_template": "berat = 2.5\nif berat ___ 2:\n    print(\"Lulus\")",
+  "jawaban_benar": null,
+  "pembahasan": "Minimal berarti lebih besar atau sama dengan (>=).",
+  "poin": 25,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 340,
+    "soal_id": 33,
+    "teks": ">=",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 341,
+    "soal_id": 33,
+    "teks": "<=",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 342,
+    "soal_id": 33,
+    "teks": "==",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 343,
+    "soal_id": 33,
+    "teks": "!=",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 34,
+  "stage_asal_id": 7,
+  "tipe": "token",
+  "teks": "Ketika kondisi if salah, jalankan blok alternatif.",
+  "kode_template": "if n > 5:\n    print(\"A\")\n___:\n    print(\"B\")",
+  "jawaban_benar": null,
+  "pembahasan": "else menangani kondisi yang tidak masuk if.",
+  "poin": 25,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 350,
+    "soal_id": 34,
+    "teks": "else",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 351,
+    "soal_id": 34,
+    "teks": "if",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 352,
+    "soal_id": 34,
+    "teks": "elif",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 353,
+    "soal_id": 34,
+    "teks": "for",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 35,
+  "stage_asal_id": 7,
+  "tipe": "token",
+  "teks": "Nilai 75 masuk kategori B. Lengkapi elif.",
+  "kode_template": "nilai = 75\nif nilai >= 80:\n    print(\"A\")\nelif nilai >= 70:\n    print(___)",
+  "jawaban_benar": null,
+  "pembahasan": "75 tidak memenuhi if, tetapi memenuhi elif >= 70.",
+  "poin": 25,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 360,
+    "soal_id": 35,
+    "teks": "\"B\"",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 361,
+    "soal_id": 35,
+    "teks": "\"A\"",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 362,
+    "soal_id": 35,
+    "teks": "\"C\"",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 363,
+    "soal_id": 35,
+    "teks": "nilai",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 36,
+  "stage_asal_id": 8,
+  "tipe": "token",
+  "teks": "Bubu diangkat berulang sampai tiga kali.\nKata kunci untuk mengulang selama kondisi benar!",
+  "kode_template": "n = 0\n___ n < 3:\n    n = n + 1",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: while. Hasilnya: 3x.",
+  "poin": 25,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 370,
+    "soal_id": 36,
+    "teks": "if",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 371,
+    "soal_id": 36,
+    "teks": "for",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 372,
+    "soal_id": 36,
+    "teks": "repeat",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 373,
+    "soal_id": 36,
+    "teks": "while",
+    "benar": 1,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 37,
+  "stage_asal_id": 8,
+  "tipe": "token",
+  "teks": "Joran ditarik setiap hitungan sampai tiga tarikan.\nApa yang membuat loop berhenti?",
+  "kode_template": "n = 0\nwhile n < 3:\n    n = ___",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: n + 1. Hasilnya: 3x.",
+  "poin": 25,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 380,
+    "soal_id": 37,
+    "teks": "n",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 381,
+    "soal_id": 37,
+    "teks": "n + 1",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 382,
+    "soal_id": 37,
+    "teks": "0",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 383,
+    "soal_id": 37,
+    "teks": "n - 1",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 38,
+  "stage_asal_id": 8,
+  "tipe": "token",
+  "teks": "Bubu dinaikkan tiga kali.\nIsi kondisi agar loop berjalan 3 kali!",
+  "kode_template": "n = 0\nwhile ___:\n    n = n + 1",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: n < 3. Hasilnya: 3x.",
+  "poin": 25,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 390,
+    "soal_id": 38,
+    "teks": "n > 3",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 391,
+    "soal_id": 38,
+    "teks": "n == 5",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 392,
+    "soal_id": 38,
+    "teks": "n = 3",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 393,
+    "soal_id": 38,
+    "teks": "n < 3",
+    "benar": 1,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 39,
+  "stage_asal_id": 8,
+  "tipe": "token",
+  "teks": "Putar loop tepat 4 kali.",
+  "kode_template": "n = 0\nwhile n < ___:\n    n = n + 1",
+  "jawaban_benar": null,
+  "pembahasan": "Kondisi n < 4 bernilai benar untuk n = 0,1,2,3.",
+  "poin": 25,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 400,
+    "soal_id": 39,
+    "teks": "4",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 401,
+    "soal_id": 39,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 402,
+    "soal_id": 39,
+    "teks": "5",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 403,
+    "soal_id": 39,
+    "teks": "n",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 40,
+  "stage_asal_id": 8,
+  "tipe": "token",
+  "teks": "Setelah loop selesai, berapa nilai n?",
+  "kode_template": "n = 0\nwhile n < 5:\n    n = n + 1\nprint(___)",
+  "jawaban_benar": null,
+  "pembahasan": "Setiap putaran menambah n; setelah 5 putaran n bernilai 5.",
+  "poin": 25,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 410,
+    "soal_id": 40,
+    "teks": "n",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 411,
+    "soal_id": 40,
+    "teks": "5",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 412,
+    "soal_id": 40,
+    "teks": "0",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 413,
+    "soal_id": 40,
+    "teks": "\"n\"",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 41,
+  "stage_asal_id": 9,
+  "tipe": "token",
+  "teks": "Penyelam hanya menghitung ikan bernomor genap.\nOperator sisa bagi untuk mengecek genap!",
+  "kode_template": "n = 4\nprint(n ___ 2 == 0)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: %. Hasilnya: True.",
+  "poin": 25,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 420,
+    "soal_id": 41,
+    "teks": "+",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 421,
+    "soal_id": 41,
+    "teks": "*",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 422,
+    "soal_id": 41,
+    "teks": "/",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 423,
+    "soal_id": 41,
+    "teks": "%",
+    "benar": 1,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 42,
+  "stage_asal_id": 9,
+  "tipe": "token",
+  "teks": "Hanya ikan bernomor genap yang masuk ember.\nIsi baris kosong agar total berisi 6!",
+  "kode_template": "n = 0\ntotal = 0\nwhile n < 5:\n    n = n + 1\n    if n % 2 == 0:\n        total = ___",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: total + n. Hasilnya: 6.",
+  "poin": 25,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 430,
+    "soal_id": 42,
+    "teks": "n",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 431,
+    "soal_id": 42,
+    "teks": "total + n",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 432,
+    "soal_id": 42,
+    "teks": "total + 1",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 433,
+    "soal_id": 42,
+    "teks": "total",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 43,
+  "stage_asal_id": 9,
+  "tipe": "token",
+  "teks": "Hanya ikan bernomor lebih dari 2 yang dihitung.\nIsi kondisi agar total berisi 7!",
+  "kode_template": "n = 0\ntotal = 0\nwhile n < 4:\n    n = n + 1\n    if ___:\n        total = total + n",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: n > 2. Hasilnya: 7.",
+  "poin": 25,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 440,
+    "soal_id": 43,
+    "teks": "n < 2",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 441,
+    "soal_id": 43,
+    "teks": "n == 2",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 442,
+    "soal_id": 43,
+    "teks": "n % 2 == 0",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 443,
+    "soal_id": 43,
+    "teks": "n > 2",
+    "benar": 1,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 44,
+  "stage_asal_id": 9,
+  "tipe": "token",
+  "teks": "Jumlahkan bilangan 1 sampai 3 dengan for.",
+  "kode_template": "total = 0\nfor i in range(1, 4):\n    total = total + i\nprint(total)",
+  "jawaban_benar": null,
+  "pembahasan": "1 + 2 + 3 = 6.",
+  "poin": 25,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 450,
+    "soal_id": 44,
+    "teks": "6",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 451,
+    "soal_id": 44,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 452,
+    "soal_id": 44,
+    "teks": "10",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 453,
+    "soal_id": 44,
+    "teks": "0",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 45,
+  "stage_asal_id": 9,
+  "tipe": "token",
+  "teks": "Penghitung berhenti saat mencapai 3. Berapa hasil akhirnya?",
+  "kode_template": "n = 0\nwhile n < 3:\n    n = n + 1\nprint(n)",
+  "jawaban_benar": null,
+  "pembahasan": "Loop berhenti ketika n < 3 bernilai salah, yaitu n = 3.",
+  "poin": 25,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 460,
+    "soal_id": 45,
+    "teks": "3",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 461,
+    "soal_id": 45,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 462,
+    "soal_id": 45,
+    "teks": "4",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 463,
+    "soal_id": 45,
+    "teks": "0",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ }
+]

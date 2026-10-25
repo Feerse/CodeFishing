@@ -1,0 +1,1574 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "7b72efc9de3ee3a16442d79ade865c6d",
+    "entities": [
+      {
+        "tableName": "pemain",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `nama` TEXT NOT NULL, `xp` INTEGER NOT NULL, `level` INTEGER NOT NULL, `umpan_emas` INTEGER NOT NULL, `stage_terakhir_id` INTEGER, `mode_terakhir` TEXT, `dibuat_pada` INTEGER NOT NULL, `terakhir_main` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`stage_terakhir_id`) REFERENCES `stage`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL DEFERRABLE INITIALLY DEFERRED)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nama",
+            "columnName": "nama",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "xp",
+            "columnName": "xp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "level",
+            "columnName": "level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "umpan_emas",
+            "columnName": "umpan_emas",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stage_terakhir_id",
+            "columnName": "stage_terakhir_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "mode_terakhir",
+            "columnName": "mode_terakhir",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "dibuat_pada",
+            "columnName": "dibuat_pada",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "terakhir_main",
+            "columnName": "terakhir_main",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_pemain_stage_terakhir_id",
+            "unique": false,
+            "columnNames": [
+              "stage_terakhir_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_pemain_stage_terakhir_id` ON `${TABLE_NAME}` (`stage_terakhir_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "stage",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "stage_terakhir_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "stage",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `nomor` INTEGER NOT NULL, `nama` TEXT NOT NULL, `zona` TEXT NOT NULL, `konsep` TEXT NOT NULL, `tipe` TEXT NOT NULL, `jumlah_soal` INTEGER NOT NULL, `skor_lulus` INTEGER NOT NULL, `xp_reward` INTEGER NOT NULL, `ikan_target_id` INTEGER, `urutan` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`ikan_target_id`) REFERENCES `ikan`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL DEFERRABLE INITIALLY DEFERRED)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nomor",
+            "columnName": "nomor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nama",
+            "columnName": "nama",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "zona",
+            "columnName": "zona",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "konsep",
+            "columnName": "konsep",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tipe",
+            "columnName": "tipe",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "jumlah_soal",
+            "columnName": "jumlah_soal",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "skor_lulus",
+            "columnName": "skor_lulus",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "xp_reward",
+            "columnName": "xp_reward",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ikan_target_id",
+            "columnName": "ikan_target_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "urutan",
+            "columnName": "urutan",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_stage_nomor",
+            "unique": true,
+            "columnNames": [
+              "nomor"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_stage_nomor` ON `${TABLE_NAME}` (`nomor`)"
+          },
+          {
+            "name": "index_stage_ikan_target_id",
+            "unique": false,
+            "columnNames": [
+              "ikan_target_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stage_ikan_target_id` ON `${TABLE_NAME}` (`ikan_target_id`)"
+          },
+          {
+            "name": "index_stage_zona_nomor",
+            "unique": false,
+            "columnNames": [
+              "zona",
+              "nomor"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stage_zona_nomor` ON `${TABLE_NAME}` (`zona`, `nomor`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "ikan",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ikan_target_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "ikan",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `nama` TEXT NOT NULL, `nama_ilmiah` TEXT, `tier` TEXT NOT NULL, `konsep_python` TEXT NOT NULL, `deskripsi` TEXT NOT NULL, `asal_stage_id` INTEGER, `syarat_unlock` TEXT, `nilai_xp` INTEGER NOT NULL, `bobot_kg` REAL NOT NULL, `gambar` TEXT, `urutan` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`asal_stage_id`) REFERENCES `stage`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL DEFERRABLE INITIALLY DEFERRED)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nama",
+            "columnName": "nama",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nama_ilmiah",
+            "columnName": "nama_ilmiah",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "tier",
+            "columnName": "tier",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "konsep_python",
+            "columnName": "konsep_python",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deskripsi",
+            "columnName": "deskripsi",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "asal_stage_id",
+            "columnName": "asal_stage_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "syarat_unlock",
+            "columnName": "syarat_unlock",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "nilai_xp",
+            "columnName": "nilai_xp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bobot_kg",
+            "columnName": "bobot_kg",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gambar",
+            "columnName": "gambar",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "urutan",
+            "columnName": "urutan",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_ikan_asal_stage_id",
+            "unique": false,
+            "columnNames": [
+              "asal_stage_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_ikan_asal_stage_id` ON `${TABLE_NAME}` (`asal_stage_id`)"
+          },
+          {
+            "name": "index_ikan_tier_urutan",
+            "unique": false,
+            "columnNames": [
+              "tier",
+              "urutan"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_ikan_tier_urutan` ON `${TABLE_NAME}` (`tier`, `urutan`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "stage",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "asal_stage_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "materi",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `stage_id` INTEGER NOT NULL, `judul` TEXT NOT NULL, `isi_markdown` TEXT NOT NULL, `contoh_kode` TEXT NOT NULL, `output_contoh` TEXT, `trik_nelayan` TEXT, `urutan` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`stage_id`) REFERENCES `stage`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stage_id",
+            "columnName": "stage_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "judul",
+            "columnName": "judul",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isi_markdown",
+            "columnName": "isi_markdown",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contoh_kode",
+            "columnName": "contoh_kode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "output_contoh",
+            "columnName": "output_contoh",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "trik_nelayan",
+            "columnName": "trik_nelayan",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "urutan",
+            "columnName": "urutan",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_materi_stage_id",
+            "unique": true,
+            "columnNames": [
+              "stage_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_materi_stage_id` ON `${TABLE_NAME}` (`stage_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "stage",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "stage_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "soal",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `stage_asal_id` INTEGER NOT NULL, `tipe` TEXT NOT NULL, `teks` TEXT NOT NULL, `kode_template` TEXT, `jawaban_benar` TEXT, `pembahasan` TEXT NOT NULL, `poin` INTEGER NOT NULL, `urutan` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`stage_asal_id`) REFERENCES `stage`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stage_asal_id",
+            "columnName": "stage_asal_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tipe",
+            "columnName": "tipe",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "teks",
+            "columnName": "teks",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kode_template",
+            "columnName": "kode_template",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "jawaban_benar",
+            "columnName": "jawaban_benar",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "pembahasan",
+            "columnName": "pembahasan",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "poin",
+            "columnName": "poin",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "urutan",
+            "columnName": "urutan",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_soal_stage_asal_id_urutan",
+            "unique": false,
+            "columnNames": [
+              "stage_asal_id",
+              "urutan"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_soal_stage_asal_id_urutan` ON `${TABLE_NAME}` (`stage_asal_id`, `urutan`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "stage",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "stage_asal_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "pilihan",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `soal_id` INTEGER NOT NULL, `teks` TEXT NOT NULL, `benar` INTEGER NOT NULL, `urutan` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`soal_id`) REFERENCES `soal`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "soal_id",
+            "columnName": "soal_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "teks",
+            "columnName": "teks",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "benar",
+            "columnName": "benar",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "urutan",
+            "columnName": "urutan",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_pilihan_soal_id_urutan",
+            "unique": true,
+            "columnNames": [
+              "soal_id",
+              "urutan"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_pilihan_soal_id_urutan` ON `${TABLE_NAME}` (`soal_id`, `urutan`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "soal",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "soal_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "komposisi_kuis",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `stage_id` INTEGER NOT NULL, `soal_id` INTEGER NOT NULL, `urutan` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`stage_id`) REFERENCES `stage`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`soal_id`) REFERENCES `soal`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stage_id",
+            "columnName": "stage_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "soal_id",
+            "columnName": "soal_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "urutan",
+            "columnName": "urutan",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_komposisi_kuis_stage_id_urutan",
+            "unique": true,
+            "columnNames": [
+              "stage_id",
+              "urutan"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_komposisi_kuis_stage_id_urutan` ON `${TABLE_NAME}` (`stage_id`, `urutan`)"
+          },
+          {
+            "name": "index_komposisi_kuis_stage_id_soal_id",
+            "unique": true,
+            "columnNames": [
+              "stage_id",
+              "soal_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_komposisi_kuis_stage_id_soal_id` ON `${TABLE_NAME}` (`stage_id`, `soal_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "stage",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "stage_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "soal",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "soal_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "progres_stage",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `pemain_id` INTEGER NOT NULL, `stage_id` INTEGER NOT NULL, `status` TEXT NOT NULL, `skor_terbaik` INTEGER NOT NULL, `combo_tertinggi` INTEGER NOT NULL, `percobaan` INTEGER NOT NULL, `lulus_pada` INTEGER, FOREIGN KEY(`pemain_id`) REFERENCES `pemain`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`stage_id`) REFERENCES `stage`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pemain_id",
+            "columnName": "pemain_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stage_id",
+            "columnName": "stage_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "skor_terbaik",
+            "columnName": "skor_terbaik",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "combo_tertinggi",
+            "columnName": "combo_tertinggi",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "percobaan",
+            "columnName": "percobaan",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lulus_pada",
+            "columnName": "lulus_pada",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_progres_stage_pemain_id_stage_id",
+            "unique": true,
+            "columnNames": [
+              "pemain_id",
+              "stage_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_progres_stage_pemain_id_stage_id` ON `${TABLE_NAME}` (`pemain_id`, `stage_id`)"
+          },
+          {
+            "name": "index_progres_stage_pemain_id_status",
+            "unique": false,
+            "columnNames": [
+              "pemain_id",
+              "status"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_progres_stage_pemain_id_status` ON `${TABLE_NAME}` (`pemain_id`, `status`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "pemain",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pemain_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "stage",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "stage_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "umpan",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `pemain_id` INTEGER NOT NULL, `sisa` INTEGER NOT NULL, `maks` INTEGER NOT NULL, `interval_menit` INTEGER NOT NULL, `regen_at` INTEGER, FOREIGN KEY(`pemain_id`) REFERENCES `pemain`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pemain_id",
+            "columnName": "pemain_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sisa",
+            "columnName": "sisa",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maks",
+            "columnName": "maks",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "interval_menit",
+            "columnName": "interval_menit",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "regen_at",
+            "columnName": "regen_at",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_umpan_pemain_id",
+            "unique": true,
+            "columnNames": [
+              "pemain_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_umpan_pemain_id` ON `${TABLE_NAME}` (`pemain_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "pemain",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pemain_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "koleksi_ikan",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `pemain_id` INTEGER NOT NULL, `ikan_id` INTEGER NOT NULL, `jumlah` INTEGER NOT NULL, `bobot_terbesar` REAL NOT NULL, `level` INTEGER NOT NULL, `tier_didapat` TEXT NOT NULL, `xp` INTEGER NOT NULL, `kenyang` INTEGER NOT NULL, `diperbarui_pada` INTEGER NOT NULL, `pertama_didapat` INTEGER NOT NULL, `terakhir_makan` INTEGER, FOREIGN KEY(`pemain_id`) REFERENCES `pemain`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`ikan_id`) REFERENCES `ikan`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pemain_id",
+            "columnName": "pemain_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ikan_id",
+            "columnName": "ikan_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "jumlah",
+            "columnName": "jumlah",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bobot_terbesar",
+            "columnName": "bobot_terbesar",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "level",
+            "columnName": "level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tier_didapat",
+            "columnName": "tier_didapat",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "xp",
+            "columnName": "xp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kenyang",
+            "columnName": "kenyang",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "diperbarui_pada",
+            "columnName": "diperbarui_pada",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pertama_didapat",
+            "columnName": "pertama_didapat",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "terakhir_makan",
+            "columnName": "terakhir_makan",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_koleksi_ikan_pemain_id_ikan_id",
+            "unique": true,
+            "columnNames": [
+              "pemain_id",
+              "ikan_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_koleksi_ikan_pemain_id_ikan_id` ON `${TABLE_NAME}` (`pemain_id`, `ikan_id`)"
+          },
+          {
+            "name": "index_koleksi_ikan_pemain_id",
+            "unique": false,
+            "columnNames": [
+              "pemain_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_koleksi_ikan_pemain_id` ON `${TABLE_NAME}` (`pemain_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "pemain",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pemain_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "ikan",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ikan_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "misi",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `nomor` INTEGER NOT NULL, `judul` TEXT NOT NULL, `deskripsi` TEXT NOT NULL, `tipe` TEXT NOT NULL, `target_ikan` INTEGER NOT NULL, `target_baris` INTEGER, `par_tick` INTEGER NOT NULL, `xp_reward` INTEGER NOT NULL, `urutan` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nomor",
+            "columnName": "nomor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "judul",
+            "columnName": "judul",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deskripsi",
+            "columnName": "deskripsi",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tipe",
+            "columnName": "tipe",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "target_ikan",
+            "columnName": "target_ikan",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "target_baris",
+            "columnName": "target_baris",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "par_tick",
+            "columnName": "par_tick",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "xp_reward",
+            "columnName": "xp_reward",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "urutan",
+            "columnName": "urutan",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_misi_nomor",
+            "unique": true,
+            "columnNames": [
+              "nomor"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_misi_nomor` ON `${TABLE_NAME}` (`nomor`)"
+          }
+        ]
+      },
+      {
+        "tableName": "hasil_program",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `pemain_id` INTEGER NOT NULL, `misi_id` INTEGER, `kode` TEXT NOT NULL, `output` TEXT NOT NULL, `error` TEXT, `ticks` INTEGER NOT NULL, `waktu_jalan_ms` INTEGER NOT NULL, `bintang` INTEGER NOT NULL, `xp` INTEGER NOT NULL, `status` TEXT NOT NULL, `dibuat_pada` INTEGER NOT NULL, FOREIGN KEY(`pemain_id`) REFERENCES `pemain`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`misi_id`) REFERENCES `misi`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pemain_id",
+            "columnName": "pemain_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "misi_id",
+            "columnName": "misi_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "kode",
+            "columnName": "kode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "output",
+            "columnName": "output",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "error",
+            "columnName": "error",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "ticks",
+            "columnName": "ticks",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "waktu_jalan_ms",
+            "columnName": "waktu_jalan_ms",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bintang",
+            "columnName": "bintang",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "xp",
+            "columnName": "xp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dibuat_pada",
+            "columnName": "dibuat_pada",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_hasil_program_pemain_id_dibuat_pada",
+            "unique": false,
+            "columnNames": [
+              "pemain_id",
+              "dibuat_pada"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_hasil_program_pemain_id_dibuat_pada` ON `${TABLE_NAME}` (`pemain_id`, `dibuat_pada`)"
+          },
+          {
+            "name": "index_hasil_program_misi_id_bintang",
+            "unique": false,
+            "columnNames": [
+              "misi_id",
+              "bintang"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_hasil_program_misi_id_bintang` ON `${TABLE_NAME}` (`misi_id`, `bintang`)"
+          },
+          {
+            "name": "index_hasil_program_pemain_id",
+            "unique": false,
+            "columnNames": [
+              "pemain_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_hasil_program_pemain_id` ON `${TABLE_NAME}` (`pemain_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "pemain",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pemain_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "misi",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "misi_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "hasil_tangkapan",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `hasil_id` INTEGER NOT NULL, `ikan_id` INTEGER NOT NULL, `jumlah` INTEGER NOT NULL, `bobot_kg` REAL NOT NULL, FOREIGN KEY(`hasil_id`) REFERENCES `hasil_program`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`ikan_id`) REFERENCES `ikan`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasil_id",
+            "columnName": "hasil_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ikan_id",
+            "columnName": "ikan_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "jumlah",
+            "columnName": "jumlah",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bobot_kg",
+            "columnName": "bobot_kg",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_hasil_tangkapan_hasil_id",
+            "unique": false,
+            "columnNames": [
+              "hasil_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_hasil_tangkapan_hasil_id` ON `${TABLE_NAME}` (`hasil_id`)"
+          },
+          {
+            "name": "index_hasil_tangkapan_ikan_id",
+            "unique": false,
+            "columnNames": [
+              "ikan_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_hasil_tangkapan_ikan_id` ON `${TABLE_NAME}` (`ikan_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "hasil_program",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "hasil_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "ikan",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ikan_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "pengaturan",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `pemain_id` INTEGER NOT NULL, `efek_suara` INTEGER NOT NULL, `musik` INTEGER NOT NULL, `haptik` INTEGER NOT NULL, `pewarnaan_sintaks` INTEGER NOT NULL, `bahasa` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`pemain_id`) REFERENCES `pemain`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pemain_id",
+            "columnName": "pemain_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "efek_suara",
+            "columnName": "efek_suara",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "musik",
+            "columnName": "musik",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "haptik",
+            "columnName": "haptik",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pewarnaan_sintaks",
+            "columnName": "pewarnaan_sintaks",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bahasa",
+            "columnName": "bahasa",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_pengaturan_pemain_id",
+            "unique": true,
+            "columnNames": [
+              "pemain_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_pengaturan_pemain_id` ON `${TABLE_NAME}` (`pemain_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "pemain",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pemain_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "riwayat_jawaban",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `pemain_id` INTEGER NOT NULL, `soal_id` INTEGER NOT NULL, `pilihan_id` INTEGER, `jawaban_teks` TEXT, `benar` INTEGER NOT NULL, `combo_setelah` INTEGER NOT NULL, `waktu` INTEGER NOT NULL, FOREIGN KEY(`pemain_id`) REFERENCES `pemain`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`soal_id`) REFERENCES `soal`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`pilihan_id`) REFERENCES `pilihan`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pemain_id",
+            "columnName": "pemain_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "soal_id",
+            "columnName": "soal_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pilihan_id",
+            "columnName": "pilihan_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "jawaban_teks",
+            "columnName": "jawaban_teks",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "benar",
+            "columnName": "benar",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "combo_setelah",
+            "columnName": "combo_setelah",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "waktu",
+            "columnName": "waktu",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_riwayat_jawaban_pemain_id_waktu",
+            "unique": false,
+            "columnNames": [
+              "pemain_id",
+              "waktu"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_riwayat_jawaban_pemain_id_waktu` ON `${TABLE_NAME}` (`pemain_id`, `waktu`)"
+          },
+          {
+            "name": "index_riwayat_jawaban_soal_id",
+            "unique": false,
+            "columnNames": [
+              "soal_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_riwayat_jawaban_soal_id` ON `${TABLE_NAME}` (`soal_id`)"
+          },
+          {
+            "name": "index_riwayat_jawaban_pilihan_id",
+            "unique": false,
+            "columnNames": [
+              "pilihan_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_riwayat_jawaban_pilihan_id` ON `${TABLE_NAME}` (`pilihan_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "pemain",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pemain_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "soal",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "soal_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "pilihan",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pilihan_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "tantangan_harian",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `pemain_id` INTEGER NOT NULL, `tanggal` TEXT NOT NULL, `target_ikan_id` INTEGER NOT NULL, `reward_umpan_emas` INTEGER NOT NULL, `status` TEXT NOT NULL, `expires_at` INTEGER NOT NULL, FOREIGN KEY(`pemain_id`) REFERENCES `pemain`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`target_ikan_id`) REFERENCES `ikan`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pemain_id",
+            "columnName": "pemain_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tanggal",
+            "columnName": "tanggal",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "target_ikan_id",
+            "columnName": "target_ikan_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reward_umpan_emas",
+            "columnName": "reward_umpan_emas",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expires_at",
+            "columnName": "expires_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_tantangan_harian_pemain_id_tanggal",
+            "unique": true,
+            "columnNames": [
+              "pemain_id",
+              "tanggal"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_tantangan_harian_pemain_id_tanggal` ON `${TABLE_NAME}` (`pemain_id`, `tanggal`)"
+          },
+          {
+            "name": "index_tantangan_harian_target_ikan_id",
+            "unique": false,
+            "columnNames": [
+              "target_ikan_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_tantangan_harian_target_ikan_id` ON `${TABLE_NAME}` (`target_ikan_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "pemain",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pemain_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "ikan",
+            "onDelete": "RESTRICT",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "target_ikan_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [
+      {
+        "viewName": "v_koleksi_lengkap",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT\n          i.id AS ikan_id,\n          i.nama AS nama,\n          i.tier AS tier_katalog,\n          COALESCE(k.tier_didapat, i.tier) AS tier,\n          i.konsep_python AS konsep_python,\n          i.gambar AS gambar,\n          i.syarat_unlock AS syarat_unlock,\n          COALESCE(k.jumlah, 0) AS jumlah,\n          COALESCE(k.bobot_terbesar, 0) AS bobot_terbesar,\n          COALESCE(k.level, 1) AS level,\n          COALESCE(k.kenyang, 100) AS kenyang,\n          CASE WHEN k.id IS NULL THEN 0 ELSE 1 END AS dimiliki,\n          i.deskripsi AS deskripsi,\n          i.nilai_xp AS nilai_xp,\n          i.bobot_kg AS bobot_kg,\n          i.urutan AS urutan\n        FROM ikan i\n        LEFT JOIN koleksi_ikan k ON k.ikan_id = i.id AND k.pemain_id = 1"
+      },
+      {
+        "viewName": "v_statistik_pemain",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT\n          p.id AS id,\n          p.nama AS nama,\n          p.level AS level,\n          p.xp AS xp,\n          p.level * 100 AS xp_target,\n          (SELECT COALESCE(SUM(skor_terbaik), 0) FROM progres_stage WHERE pemain_id = p.id) AS total_skor,\n          (SELECT COUNT(*) FROM progres_stage WHERE pemain_id = p.id AND status = 'selesai') AS stage_selesai,\n          (SELECT COUNT(*) FROM koleksi_ikan WHERE pemain_id = p.id) AS ikan_terkumpul,\n          (SELECT COUNT(*) FROM ikan) AS total_ikan,\n          (SELECT COALESCE(SUM(mx), 0) FROM (\n              SELECT MAX(bintang) AS mx FROM hasil_program WHERE pemain_id = p.id GROUP BY misi_id\n          )) AS total_bintang\n        FROM pemain p"
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7b72efc9de3ee3a16442d79ade865c6d')"
+    ]
+  }
+}

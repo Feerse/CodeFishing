@@ -20,14 +20,22 @@ class AppNavigator(start: Screen) {
         stack = stack + NavEntry(screen, stage, misi)
     }
 
-    /** Ganti layar teratas (mis. dari Kuis ke Hasil Stage, supaya Back tidak kembali ke kuis). */
-    fun replace(screen: Screen, stage: Int = current.stage, misi: Int = current.misi) {
-        stack = stack.dropLast(1) + NavEntry(screen, stage, misi)
+    fun goHasil(screen: Screen, hasil: Long, stage: Int = current.stage, misi: Int = current.misi) {
+        stack = stack + NavEntry(screen, stage, misi, hasil)
     }
 
-    /** Tujuan dari drawer: kosongkan tumpukan, layar tujuan jadi akar. */
-    fun resetTo(screen: Screen) {
-        stack = listOf(NavEntry(screen))
+    /** Ganti layar teratas (mis. dari Kuis ke Hasil Stage, supaya Back tidak kembali ke kuis). */
+    fun replace(screen: Screen, stage: Int = current.stage, misi: Int = current.misi) {
+        stack = stack.dropLast(1) + NavEntry(screen, stage, misi, current.hasil)
+    }
+
+    fun replaceHasil(screen: Screen, hasil: Long, stage: Int = current.stage, misi: Int = current.misi) {
+        stack = stack.dropLast(1) + NavEntry(screen, stage, misi, hasil)
+    }
+
+    /** Tujuan dari drawer/bottom nav: kosongkan tumpukan, layar tujuan jadi akar. */
+    fun resetTo(screen: Screen, stage: Int = 0, misi: Int = 0) {
+        stack = listOf(NavEntry(screen, stage, misi))
     }
 
     /** @return true bila ada layar sebelumnya; false bila sudah di akar (biarkan sistem menutup app). */

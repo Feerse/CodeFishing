@@ -1,0 +1,92 @@
+[
+ {
+  "id": 1,
+  "stage_id": 1,
+  "judul": "Hello World",
+  "isi_markdown": "print() menampilkan teks ke layar. Teks ditulis di dalam tanda kutip.",
+  "contoh_kode": "print(\"Hello, World!\")",
+  "output_contoh": "Hello, World!",
+  "trik_nelayan": "Tulis nama perintah dengan huruf kecil. Python membedakan huruf besar dan kecil.",
+  "urutan": 1
+ },
+ {
+  "id": 2,
+  "stage_id": 2,
+  "judul": "Variabel",
+  "isi_markdown": "Variabel menyimpan nilai. Tanda = memasukkan nilai di kanan ke nama di kiri.",
+  "contoh_kode": "nama = \"Gabus\"\nprint(nama)",
+  "output_contoh": "Gabus",
+  "trik_nelayan": "Nama variabel yang jelas membuat kode mudah dibaca saat kembali ke pelabuhan.",
+  "urutan": 1
+ },
+ {
+  "id": 3,
+  "stage_id": 3,
+  "judul": "Nama Variabel",
+  "isi_markdown": "Nama variabel ditulis huruf kecil, kata dipisah garis bawah, dan tidak boleh diawali angka.",
+  "contoh_kode": "jumlah_tangkapan = 4\nprint(jumlah_tangkapan)",
+  "output_contoh": "4",
+  "trik_nelayan": "Gunakan garis bawah untuk memisahkan kata, bukan spasi atau tanda minus.",
+  "urutan": 1
+ },
+ {
+  "id": 4,
+  "stage_id": 4,
+  "judul": "Tipe Data: str dan int",
+  "isi_markdown": "str adalah teks, int adalah bilangan bulat. type() menunjukkan tipe sebuah nilai.",
+  "contoh_kode": "umur = 20\nprint(type(umur))",
+  "output_contoh": "<class 'int'>",
+  "trik_nelayan": "Teks selalu diapit tanda kutip, bilangan bulat ditulis tanpa titik.",
+  "urutan": 1
+ },
+ {
+  "id": 5,
+  "stage_id": 5,
+  "judul": "Tipe Data: float dan bool",
+  "isi_markdown": "float adalah bilangan desimal. bool hanya bernilai True atau False.",
+  "contoh_kode": "berat = 2.5\nprint(type(berat))",
+  "output_contoh": "<class 'float'>",
+  "trik_nelayan": "Angka desimal memakai titik. Bool hanya True dan False, diawali huruf besar.",
+  "urutan": 1
+ },
+ {
+  "id": 6,
+  "stage_id": 6,
+  "judul": "Operator",
+  "isi_markdown": "Operator menghitung dan membandingkan. + - * / untuk hitung, == untuk membandingkan apakah sama.",
+  "contoh_kode": "ikan = 3 + 2\nprint(ikan == 5)",
+  "output_contoh": "True",
+  "trik_nelayan": "Operator perbandingan menghasilkan True atau False, bukan angka.",
+  "urutan": 1
+ },
+ {
+  "id": 7,
+  "stage_id": 7,
+  "judul": "Kondisi if dan else",
+  "isi_markdown": "if menjalankan kode hanya jika kondisinya benar. else untuk kasus lainnya. Blok kode dijorokkan.",
+  "contoh_kode": "ikan = 12\nif ikan >= 10:\n    print(\"Cukup\")\nelse:\n    print(\"Kurang\")",
+  "output_contoh": "Cukup",
+  "trik_nelayan": "Jorokkan blok di bawah if dan else dengan empat spasi.",
+  "urutan": 1
+ },
+ {
+  "id": 8,
+  "stage_id": 8,
+  "judul": "Perulangan while",
+  "isi_markdown": "while mengulang blok kode selama kondisinya masih benar. Ubah penghitung agar loop berhenti.",
+  "contoh_kode": "n = 0\nwhile n < 3:\n    n = n + 1\nprint(n)",
+  "output_contoh": "3",
+  "trik_nelayan": "Pastikan penghitung berubah, jika tidak while akan berputar selamanya.",
+  "urutan": 1
+ },
+ {
+  "id": 9,
+  "stage_id": 9,
+  "judul": "Kondisi di dalam Loop",
+  "isi_markdown": "if bisa berada di dalam while, dan kondisinya dicek tiap putaran. Operator % memberi sisa bagi, jadi n % 2 == 0 berarti n genap.",
+  "contoh_kode": "n = 0\ntotal = 0\nwhile n < 5:\n    n = n + 1\n    if n % 2 == 0:\n        total = total + n\nprint(total)",
+  "output_contoh": "6",
+  "trik_nelayan": "Cek kondisi di dalam loop pada setiap putaran; jangan lupa mengubah penghitung.",
+  "urutan": 1
+ }
+]

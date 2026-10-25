@@ -7,6 +7,8 @@
 
 Aturan penting:
 - Gambar, audio, dan JSON konten diubah di `2_Aset_dan_Konten/`, lalu jalankan `python3 2_Aset_dan_Konten/tools/sync_assets.py`. Jangan menaruh berkas langsung di `app/src/main/res`.
+- Konten permainan (stage, soal, ikan, misi) diubah di `2_Aset_dan_Konten/konten/seed/` atau generator `tools/generate_seed.js`, lalu jalankan `node 2_Aset_dan_Konten/tools/generate_seed.js` dan naikkan `SeedLoader.SEED_VERSION`.
+- Data permainan disimpan di Room; layar Compose harus lewat `core/data/GameRepository`, bukan memanggil DAO langsung.
 - `core/art/Art.kt` dibuat otomatis oleh skrip, jangan diedit tangan.
 - Logika murni (kuis, umpan, bintang) tanpa Compose/Android supaya bisa dites di `app/src/test`.
 - Tidak ada tombol Kembali di toolbar (keputusan dosen). Jangan tambah library tanpa izin Alief.

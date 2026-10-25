@@ -1,45 +1,67 @@
-# Aturan game (dari prototipe HTML)
+# Aturan game CodeFishing
 
-Angka ini sudah dipakai di `2_Aset_dan_Konten/konten/ikan_config.json` dan di kode `pemula/`. Ubah di satu tempat saja.
+Dokumen ini adalah acuan perilaku yang sudah diterapkan di kode Room + Compose.
+Semua permainan berjalan **offline** di perangkat; aplikasi tidak meminta izin internet.
 
 ## Mode Belajar (tim Logika Mode Pemula)
 
-- 10 stage di Samudra Pasifik (Stage 10 = Boss). Perairan lain (Antartika, Atlantik) berstatus **Segera**.
-- Tiap stage: Materi (satu kalimat, contoh kode, keluaran) lalu Kuis (pilih umpan kode untuk mengisi bagian kosong).
+- 10 stage di Samudra Pasifik (Stage 10 = Boss). Perairan lain berstatus **Segera**.
+- Tiap stage: Materi (satu kalimat, contoh kode, keluaran) lalu Kuis 5 soal pilihan ganda.
 - **Umpan (nyawa)**: maksimum 5, pulih 1 umpan tiap 15 menit, jawaban salah mengurangi 1 umpan. Umpan habis membuka layar 11 (hitung mundur) sampai umpan >= 1.
-- **Lulus stage**: persen jawaban benar >= 70%. Lulus membuka stage berikutnya.
-- Tiap soal memakai studi kasus bergambar (kapal, dermaga, selam, jala, es, bubu, trawler/boss), disimpan di field `vn` pada `stages.json`.
+- **Lulus stage**: skor benar/5 × 100 ≥ 70 untuk stage biasa. **Boss Stage 10 lulus di 4 dari 5 (80%)**.
+- Lulus membuka stage berikutnya. Skor terbaik, combo tertinggi, dan percobaan disimpan di `progres_stage`.
+- Jawaban benar memberi **+25 XP** dan menaikkan combo; jawaban salah mereset combo ke 0.
+- Setiap stage memakai studi kasus (kapal, dermaga, selam, jala, es, bubu, trawler/boss).
 
 ### Ikan dan kelangkaan
 
+Katalog berisi **48 ikan**: 15 ikan berilustrasi yang bisa didapatkan dan 33 ikan placeholder dengan label **“Segera hadir — menunggu aset”**.
+
 | Kelangkaan | Warna | Cara dapat |
 |---|---|---|
-| Common | abu-abu | Ikan tiap Stage 1-9 |
-| Rare | biru | Jawaban benar beruntun 5 (Kerapu), 10 (Barakuda), 15 (Tenggiri) |
-| Epic | ungu | Stage yang sama diselesaikan tanpa kesalahan (naik dari Common) |
-| Legend | emas | Arwana: seluruh stage 1-10 lulus (tafsiran prototipe) |
-| Mythic | merah | Hiu Merah: seluruh stage lulus tanpa salah (tafsiran prototipe) |
+| Biasa | abu-abu | Ikan target Stage 1-7 |
+| Langka | biru | Jawaban benar beruntun 3 (Kerapu), 4 (Barakuda), 5 (Tenggiri) |
+| Epik | ungu | Ikan target Stage 8-9 |
+| Legenda | emas | Gabus Stage 10; Arwana setelah seluruh stage 1-10 lulus |
+| Mitos | merah | Gabus saat boss sempurna (naik satu tier); Hiu Merah setelah seluruh 10 stage sempurna (skor 100) |
 
-Urutan 15 ikan koleksi: Teri, Bandeng, Bawal, Mujair, Nila, Lele, Patin, Gurame, Sepat, Gabus, Kerapu, Barakuda, Tenggiri, Arwana, Hiu Merah.
+Urutan 15 ikan berilustrasi: Teri, Bandeng, Bawal, Mujair, Nila, Lele, Patin, Gurame, Sepat, Gabus, Kerapu, Barakuda, Tenggiri, Arwana, Hiu Merah.
+Karena satu stage hanya 5 soal, ambang combo bonus adalah 3/4/5 dan semua bonus yang tercapai diberikan pada hasil stage.
 
-> Aturan Legend/Mythic adalah tafsiran di prototipe dan perlu dikonfirmasi tim.
+Ikan yang sama boleh ditangkap berulang; jumlah, bobot terbesar, tier terbaik, dan level/kenyang disimpan di `koleksi_ikan`.
+
+### Tantangan harian
+
+- Satu target ikan per tanggal, dipilih dari ikan yang stage-nya sudah selesai (fallback Stage 1).
+- Target dianggap selesai saat ikan tersebut **ditambahkan ke koleksi pada hari itu** (lewat stage atau Sandbox).
+- Hadiah **1 umpan emas** harus diklaim manual dari Beranda.
+- Umpan emas juga bisa ditukar menjadi 1 umpan biasa saat umpan belum penuh.
 
 ## Mode Expert / Sandbox (tim Logika Mode Expert)
 
-Pemain menyelesaikan studi kasus dengan kode Python bebas, boleh memakai fungsi pintas yang disediakan. Kapal bergerak otomatis di petak laut sesuai kode.
+Pemain menulis subset Python lalu menjalankan misi secara offline. Kapal bergerak pada petak laut sesuai kode; setiap eksekusi disimpan di `hasil_program` dan `hasil_tangkapan`.
 
-- Biaya waktu (ticks): `gerak(arah)` = 1, `lempar()` = 2, `lihat()` = 0.
-- **Bintang** (par = waktu acuan): ticks <= par → 3 bintang; ticks <= ceil(par x 1,4) → 2 bintang; selain itu 1 bintang. Misi tanpa par: 3 bintang bila berhasil.
-- Hasil gagal/error menampilkan penjelasan. Hasil berhasil menampilkan waktu, ikan, sampah, dan keluaran print.
+- Biaya waktu (ticks): `gerak(arah)` = **1**, `lempar()` = **1**, `lihat()` = **0**. `gerak` yang menabrak tepi tetap dihitung 1 tick.
+- **Bintang** (par = waktu acuan): ticks ≤ par → 3 bintang; ticks ≤ ceil(par × 1,5) → 2 bintang; selain itu 1 bintang. Misi tanpa par: 3 bintang bila berhasil.
+- Misi gagal/error menampilkan penjelasan. Misi berhasil menampilkan waktu, ikan, sampah (jika ada), keluaran `print`, dan jejak gerak.
+- Ikan yang tertangkap di Sandbox masuk ke Akuarium/Koleksi; hasil gagal tetap dicatat sebagai riwayat.
+- Batas aman eksekusi adalah 1000 tick dan 10.000 langkah.
 
 | Id | Misi | Grid | Tujuan | Par |
 |---|---|---|---|---|
 | m1 | Lempar pertama | 3x3 | Tangkap 1 ikan | 2 |
 | m2 | Sebaris ikan | 5x5 | Tangkap 5 ikan di baris bawah | 14 |
-| m3 | Sapu seluruh petak | 4x4 | Tangkap semua ikan (16) | - |
-| m4 | Pilih-pilih | 5x5 | Tangkap semua nila, jangan angkat sampah | - |
-| m5 | Berburu gurame | 6x6 | Tangkap semua gurame, abaikan yang lain | - |
-| m6 | Fungsi panen | 4x4 | Tangkap semua ikan memakai fungsi buatanmu | - |
-| bebas | Bebas | 6x6 | Bebas: tangkap sesukamu untuk mengisi akuarium | - |
+| m3 | Sapu seluruh petak | 4x4 | Tangkap semua ikan (16) | 48 |
+| m4 | Pilih-pilih | 5x5 | Tangkap semua nila, jangan angkat sampah | 36 |
+| m5 | Berburu gurame | 6x6 | Tangkap semua gurame, jangan yang lain | 40 |
+| m6 | Fungsi panen | 4x4 | Tangkap semua ikan memakai `def` | 36 |
+| bebas | Bebas | 6x6 | Bebas: tangkap sesukamu untuk mengisi akuarium | tanpa par |
 
-Tata letak petak ada di `2_Aset_dan_Konten/konten/misi.json` (field `cells`).
+Tata letak petak ada di `2_Aset_dan_Konten/konten/seed/misi.json` (field `cells`), dan disalin ke `app/src/main/assets/seed/misi.json` oleh generator.
+
+## Progres, reset, dan penyimpanan
+
+- Data permainan (16 tabel + 2 view ERD) disimpan di Room `codefishing.db`.
+- Onboarding dan preferensi audio tetap memakai SharedPreferences agar tema/pengenalan tidak ikut terhapus saat reset.
+- Reset progres menghapus progres stage, koleksi, hasil program, tantangan harian, dan riwayat jawaban; pengaturan tetap disimpan.
+- Seed konten dimuat sekali dari `app/src/main/assets/seed/`. Naikkan `SeedLoader.SEED_VERSION` bila konten berubah.

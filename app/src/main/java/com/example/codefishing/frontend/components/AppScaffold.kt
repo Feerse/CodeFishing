@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 /**
  * TIM: Frontend Compose. Toolbar seragam di semua layar (revisi dosen):
  * ikon hamburger di kiri, judul di tengah, slot kanan opsional (mis. indikator umpan).
- * TIDAK ADA tombol Kembali di toolbar. Drawer berisi 6 tujuan ([DrawerItem]).
+ * TIDAK ADA tombol Kembali di toolbar. Drawer berisi 5 tujuan ([DrawerItem]).
  */
 @Composable
 fun AppScaffold(
@@ -44,6 +44,7 @@ fun AppScaffold(
     onDrawerItem: (DrawerItem) -> Unit,
     modifier: Modifier = Modifier,
     kanan: @Composable RowScope.() -> Unit = {},
+    bottomBar: @Composable () -> Unit = {},
     isi: @Composable (PaddingValues) -> Unit,
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -106,6 +107,7 @@ fun AppScaffold(
                     Spacer(Modifier.width(12.dp))
                 }
             },
+            bottomBar = bottomBar,
         ) { padding -> isi(padding) }
     }
 }

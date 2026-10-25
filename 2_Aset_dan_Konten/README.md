@@ -1,18 +1,35 @@
 # 2. Aset dan Konten
 
-Sumber kebenaran untuk semua gambar, audio, logo, dan data konten. Setelah mengubah apa pun di sini, jalankan dari root repo:
+Sumber kebenaran untuk semua gambar, audio, logo, dan data konten.
+
+## Aset gambar/audio
+
+Setelah mengubah aset, jalankan dari root repo:
 
     python3 2_Aset_dan_Konten/tools/sync_assets.py
 
-Skrip menyalin ke `app/src/main/res` (gambar, audio) dan `app/src/main/assets/content` (JSON), serta membuat ulang `core/art/Art.kt`. Skrip menolak nama tidak valid (harus huruf kecil, angka, underscore, diawali huruf).
+Skrip menyalin ke `app/src/main/res` (gambar, audio), membuat ulang `core/art/Art.kt`, dan menolak nama tidak valid (huruf kecil, angka, underscore, diawali huruf).
 
 | Folder | Isi |
 |---|---|
 | `assets-source/NN_Fitur/` | 197 PNG transparan (10 folder fitur + logo). Pakai di kode: `Art.nama_file` |
-| `audio/` | 12 audio: `bgm_aquarium` (loop 30 dtk, diputar di semua layar) dan 11 efek suara |
-| `konten/` | `stages.json` (soal 10 stage), `misi.json` (7 misi Sandbox), `ikan_config.json` (15 ikan, kelangkaan, aturan umpan) |
+| `audio/` | 12 audio: `bgm_aquarium` (loop, diputar di semua layar) dan 11 efek suara |
 | `logo/` | Logo resmi: SVG (sumber) dan PNG transparan |
-| `tools/` | `sync_assets.py` |
+| `tools/` | `sync_assets.py`, `generate_seed.js`, `inspect_misi.js` |
+
+## Konten seed (Room)
+
+Sumber kanonik: `konten/seed/*.json`.
+
+    node 2_Aset_dan_Konten/tools/generate_seed.js
+
+Generator membaca konten prototipe di `app/src/main/assets/content/`, lalu menulis:
+- `2_Aset_dan_Konten/konten/seed/` — salinan untuk tim konten.
+- `app/src/main/assets/seed/` — yang dibaca `SeedLoader` saat aplikasi pertama dibuka.
+
+Isi seed: 10 stage, 9 materi, 45 soal (5 per stage), 50 komposisi kuis, 48 ikan (15 berilustrasi + 33 placeholder), dan 7 misi Sandbox. Setelah mengubah seed, naikkan `SeedLoader.SEED_VERSION` di `core/db/SeedLoader.kt` agar konten diperbarui saat aplikasi dibuka kembali.
+
+15 ikan berilustrasi memakai aset `ikan_teri` … `ikan_hiu_merah`; 33 sisanya memakai `tanda_tanya_ikan` dengan label “Segera hadir — menunggu aset”.
 
 ## Audio
 

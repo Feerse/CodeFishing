@@ -21,19 +21,27 @@ enum class Screen(val id: Int, val judul: String) {
     GaleriAset(99, "Galeri Aset"),
 }
 
-/** Satu entri di tumpukan navigasi. stage/misi dipakai layar Belajar dan Sandbox. */
+/** Satu entri di tumpukan navigasi. stage/misi/hasil dipakai layar terkait. */
 data class NavEntry(
     val screen: Screen,
     val stage: Int = 0,
     val misi: Int = 0,
+    val hasil: Long = 0,
 )
 
-/** Enam tujuan di drawer hamburger (sama di semua layar, kecuali Pengenalan). */
+/** Lima tujuan drawer hamburger sesuai DFD K9. Koleksi ada di bottom nav. */
 enum class DrawerItem(val label: String, val target: Screen) {
     Home("Home", Screen.Home),
     ModeBelajar("Mode Belajar", Screen.Peta),
     ModeExpert("Mode Expert", Screen.Sandbox),
     Akuarium("Akuarium", Screen.Akuarium),
-    Koleksi("Koleksi", Screen.Koleksi),
     Pengaturan("Pengaturan", Screen.Pengaturan),
+}
+
+/** Empat tab bottom navigation sesuai DFD K9. */
+enum class BottomItem(val label: String, val simbol: String, val target: Screen) {
+    Home("Home", "⌂", Screen.Home),
+    Peta("Peta", "⚓", Screen.Peta),
+    Expert("Expert", "⌘", Screen.Sandbox),
+    Koleksi("Koleksi", "🐟", Screen.Koleksi),
 }

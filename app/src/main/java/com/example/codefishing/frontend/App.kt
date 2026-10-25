@@ -1,13 +1,21 @@
 package com.example.codefishing.frontend
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.nav.AppNavigator
+import com.example.codefishing.core.nav.BottomItem
 import com.example.codefishing.core.nav.DrawerItem
 import com.example.codefishing.core.nav.Screen
-import com.example.codefishing.pemula.BaitStore
 import com.example.codefishing.frontend.components.AppScaffold
 import com.example.codefishing.frontend.components.IndikatorUmpan
 import com.example.codefishing.frontend.screens.AkuariumScreen
@@ -31,31 +39,42 @@ private val layarUmpan = setOf(
     Screen.Peta, Screen.Materi, Screen.Kuis, Screen.HasilStage, Screen.UmpanHabis, Screen.Boss,
 )
 
+/** Layar yang menampilkan bottom navigation 4 tab. */
+private val layarBottom = setOf(
+    Screen.Home, Screen.PilihMode, Screen.Peta, Screen.Materi, Screen.HasilStage,
+    Screen.Sandbox, Screen.HasilProgram, Screen.Koleksi, Screen.Akuarium, Screen.Pengaturan,
+)
+
 /** Layar mana yang menyorot item drawer yang mana. */
 private fun aktifDrawer(s: Screen): DrawerItem? = when (s) {
     Screen.Home, Screen.PilihMode -> DrawerItem.Home
     Screen.Peta, Screen.Materi, Screen.Kuis, Screen.HasilStage, Screen.UmpanHabis, Screen.Boss -> DrawerItem.ModeBelajar
     Screen.Sandbox, Screen.HasilProgram -> DrawerItem.ModeExpert
     Screen.Akuarium -> DrawerItem.Akuarium
-    Screen.Koleksi -> DrawerItem.Koleksi
     Screen.Pengaturan, Screen.GaleriAset -> DrawerItem.Pengaturan
-    Screen.Pengenalan -> null
+    Screen.Koleksi, Screen.Pengenalan -> null
 }
 
-/** Akar tampilan: memilih layar dari navigator, memasang toolbar hamburger seragam. */
+private fun aktifBottom(s: Screen): BottomItem? = when (s) {
+    Screen.Home, Screen.PilihMode -> BottomItem.Home
+    Screen.Peta, Screen.Materi, Screen.Kuis, Screen.HasilStage, Screen.UmpanHabis, Screen.Boss -> BottomItem.Peta
+    Screen.Sandbox, Screen.HasilProgram -> BottomItem.Expert
+    Screen.Koleksi, Screen.Akuarium -> BottomItem.Koleksi
+    Screen.Pengaturan, Screen.GaleriAset, Screen.Pengenalan -> null
+}
+
+/** Akar tampilan: memilih layar dari navigator, memasang toolbar + bottom navigation seragam. */
 @Composable
 fun App() {
     val c = LocalContainer.current
     val nav = remember {
         AppNavigator(if (c.progress.onboardingSeen) Screen.Home else Screen.Pengenalan)
     }
-    val bait = remember { BaitStore(c.progress, c.content.config) }
 
     BackHandler(enabled = nav.canGoBack) { nav.back() }
 
     val saatIni = nav.current
     if (saatIni.screen == Screen.Pengenalan) {
-        // Pengenalan: tanpa toolbar, muncul sekali (atau lewat Pengaturan).
         PengenalanScreen(onSelesai = {
             c.progress.onboardingSeen = true
             if (nav.canGoBack) nav.back() else nav.resetTo(Screen.Home)
@@ -63,11 +82,36 @@ fun App() {
         return
     }
 
+    val umpan by c.game.observeUmpan().collectAsState(null)
+    LaunchedEffect(saatIni.screen) {
+        c.game.muatUmpan()
+    }
+
     AppScaffold(
         judul = saatIni.screen.judul,
         aktif = aktifDrawer(saatIni.screen),
         onDrawerItem = { nav.resetTo(it.target) },
-        kanan = { if (saatIni.screen in layarUmpan) IndikatorUmpan(bait.jumlah()) },
+        kanan = { if (saatIni.screen in layarUmpan) IndikatorUmpan(umpan?.sisa ?: 0) },
+        bottomBar = {
+            if (saatIni.screen in layarBottom) {
+                val aktif = aktifBottom(saatIni.screen)
+                NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
+                    BottomItem.entries.forEach { item ->
+                        NavigationBarItem(
+                            selected = aktif == item,
+                            onClick = { nav.resetTo(item.target) },
+                            icon = { Text(item.simbol) },
+                            label = { Text(item.label) },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = MaterialTheme.colorScheme.primary,
+                                selectedTextColor = MaterialTheme.colorScheme.primary,
+                                indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.16f),
+                            ),
+                        )
+                    }
+                }
+            }
+        },
     ) { padding ->
         when (saatIni.screen) {
             Screen.Home -> HomeScreen(nav, padding)
@@ -84,7 +128,7 @@ fun App() {
             Screen.Boss -> BossScreen(nav, padding)
             Screen.Akuarium -> AkuariumScreen(nav, padding)
             Screen.GaleriAset -> GaleriAsetScreen(padding)
-            Screen.Pengenalan -> Unit // sudah ditangani di atas
+            Screen.Pengenalan -> Unit
         }
     }
 }

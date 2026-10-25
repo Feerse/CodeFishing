@@ -13,6 +13,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.LocalContainer
@@ -21,6 +22,7 @@ import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.Gambar
+import kotlinx.coroutines.launch
 
 /**
  * 02 Pilih Mode. Frontend.
@@ -28,16 +30,25 @@ import com.example.codefishing.frontend.components.Gambar
  */
 @Composable
 fun PilihModeScreen(nav: AppNavigator, padding: PaddingValues) {
-    val audio = LocalContainer.current.audio
+    val c = LocalContainer.current
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         KartuMode("Belajar", "Pemula", Art.ikon_mode_belajar, Art.latar_bawah_laut) {
-            audio.play(Sfx.Klik); nav.go(Screen.Peta)
+            c.audio.play(Sfx.Klik)
+            scope.launch {
+                c.game.simpanPosisi(null, "belajar")
+                nav.go(Screen.Peta)
+            }
         }
         KartuMode("Sandbox", "Expert", Art.ikon_mode_expert, Art.adegan_kapal) {
-            audio.play(Sfx.Klik); nav.go(Screen.Sandbox)
+            c.audio.play(Sfx.Klik)
+            scope.launch {
+                c.game.simpanPosisi(null, "expert")
+                nav.go(Screen.Sandbox)
+            }
         }
     }
 }
