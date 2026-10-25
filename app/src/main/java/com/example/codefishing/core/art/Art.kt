@@ -204,6 +204,7 @@ object Art {
     @DrawableRes val serpihan_makanan: Int = R.drawable.serpihan_makanan
 
     // 10_Pendukung_UI
+    @DrawableRes val ic_logo_fg: Int = R.drawable.ic_logo_fg
     @DrawableRes val ikon_akuarium: Int = R.drawable.ikon_akuarium
     @DrawableRes val ikon_android: Int = R.drawable.ikon_android
     @DrawableRes val ikon_hamburger: Int = R.drawable.ikon_hamburger
@@ -423,6 +424,7 @@ object Art {
             "serpihan_makanan" to R.drawable.serpihan_makanan,
         ),
         "10_Pendukung_UI" to listOf(
+            "ic_logo_fg" to R.drawable.ic_logo_fg,
             "ikon_akuarium" to R.drawable.ikon_akuarium,
             "ikon_android" to R.drawable.ikon_android,
             "ikon_hamburger" to R.drawable.ikon_hamburger,
