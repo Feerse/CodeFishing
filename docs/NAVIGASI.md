@@ -22,8 +22,8 @@ Navigasi di kode: `core/nav/` (`Screen`, `AppNavigator`, `DrawerItem`, `BottomIt
 | 4 | Materi | `MateriScreen` | Judul dengan gambar ikan stage, zona, konsep, materi, contoh kode, output, trik nelayan | Ke Kuis → 05 · bottom nav |
 | 5 | Kuis | `KuisScreen` | Progres 5 soal, kartu soal + kode PYTHON, 4 pilihan, umpan berkurang saat salah, pembahasan, combo/XP | Selesai → 06 · Umpan habis → 11 · Back sistem |
 | 6 | Hasil Stage | `HasilStageScreen` | Ikon lulus/gagal, skor, benar/total, XP, ikan target + tier/bobot, bonus combo, rekor baru | Stage berikutnya → 04 / 12 · Peta → 03 · bottom nav |
-| 7 | Sandbox | `SandboxScreen` | Daftar 7 misi + bintang; editor kode Python, tombol Jalankan/Contoh, hasil tick/ikan/sampah, grid akhir, output, jejak gerak | Sukses → 08 · Akuarium → 13 · bottom nav |
-| 8 | Hasil Program | `HasilProgramScreen` | Ikon berhasil/gagal, bintang, tick/ikan/XP, error bila ada, hasil tangkapan, output, kode terakhir | Ubah Kode → 07 · Misi berikutnya → 07 · Akuarium → 13 · bottom nav |
+| 7 | Sandbox | `SandboxScreen` | Daftar 7 misi + bintang; editor kode Python, tombol Jalankan/Contoh, hasil inline berisi tick/ikan/sampah/XP, grid akhir, output, jejak gerak; draf kode per misi | Tetap di editor · Daftar → 07 · bottom nav |
+| 8 | Hasil Program | `HasilProgramScreen` | Layar hasil tersimpan: ikon berhasil/gagal, bintang, tick/ikan/XP, error bila ada, hasil tangkapan, output, kode terakhir (tidak dibuka otomatis dari Sandbox) | Ubah Kode → 07 · Misi berikutnya → 07 · Akuarium → 13 · bottom nav |
 | 9 | Koleksi | `KoleksiScreen` | Grid 48 ikan, filter tier, status dimiliki/terkunci, detail + konsep Python, beri makan | Akuarium → 13 · bottom nav |
 | 10 | Pengaturan | `PengaturanScreen` | Statistik pemain, saklar efek suara/musik/haptik/pewarnaan, Lihat Pengenalan, reset progres, galeri aset (debug) | Pengenalan → 14 · bottom nav |
 | 11 | Umpan Habis | `UmpanHabisScreen` | Hitung mundur besar, jumlah umpan, emas, tombol Lanjutkan aktif saat umpan ≥ 1, tukar umpan emas | Lanjutkan Kuis → 05 · Baca Materi → 04 · Peta → 03 |

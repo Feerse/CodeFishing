@@ -27,8 +27,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -57,11 +59,11 @@ import com.example.codefishing.core.data.TangkapanMasuk
 import com.example.codefishing.core.db.IkanEntity
 import com.example.codefishing.expert.MisiPeta
 import com.example.codefishing.expert.SandboxContent
+import com.example.codefishing.expert.SandboxDraft
 import com.example.codefishing.expert.SandboxEngine
 import com.example.codefishing.expert.SandboxRun
 import com.example.codefishing.expert.py.Langkah
 import com.example.codefishing.core.nav.AppNavigator
-import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.Bintang
 import com.example.codefishing.frontend.components.Gambar
 import com.example.codefishing.frontend.components.Kartu
@@ -71,11 +73,13 @@ import com.example.codefishing.frontend.components.TombolUtama
 import com.example.codefishing.frontend.components.gambarIkan
 import com.example.codefishing.pemula.FishRules
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
  * 07 Mode Expert: daftar 7 misi dan editor kode Python.
+ * Hasil eksekusi tampil inline di editor (tanpa pindah layar).
  * 15 angka batas tick, 3 bintang di par, 2 bintang di 1,5x par.
  */
 private val kataKunciPython = Regex(
@@ -168,13 +172,13 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
                 }
             }
         } else {
-            EditorMisi(nav, m, onKembali = { aktif = null })
+            EditorMisi(m, onKembali = { aktif = null })
         }
     }
 }
 
 @Composable
-private fun EditorMisi(nav: AppNavigator, misi: MisiPeta, onKembali: () -> Unit) {
+private fun EditorMisi(misi: MisiPeta, onKembali: () -> Unit) {
     val c = LocalContainer.current
     val scope = rememberCoroutineScope()
     val engine = remember { SandboxEngine() }
@@ -191,14 +195,27 @@ private fun EditorMisi(nav: AppNavigator, misi: MisiPeta, onKembali: () -> Unit)
         }
     }
 
-    var kode by remember(misi.kode) { mutableStateOf(misi.kodeAwal) }
-    var hasil by remember(misi.kode) { mutableStateOf<SandboxRun?>(null) }
-    var berjalan by remember(misi.kode) { mutableStateOf(false) }
+    var kode by remember(misi.nomor) { mutableStateOf(SandboxDraft.ambil(misi.nomor, misi.kodeAwal)) }
+    var hasil by remember(misi.nomor) { mutableStateOf<SandboxRun?>(null) }
+    var berjalan by remember(misi.nomor) { mutableStateOf(false) }
+    var pesanSimpan by remember(misi.nomor) { mutableStateOf<String?>(null) }
+    var xpDidapat by remember(misi.nomor) { mutableIntStateOf(0) }
+    val scroll = rememberScrollState()
+
+    // Jangan tinggalkan editor saat program masih dijalankan/disimpan.
+    BackHandler(enabled = berjalan) { }
+
+    LaunchedEffect(hasil) {
+        if (hasil != null) {
+            delay(80)
+            scroll.animateScrollTo(scroll.maxValue)
+        }
+    }
 
     Column(
         Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scroll)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
@@ -211,6 +228,7 @@ private fun EditorMisi(nav: AppNavigator, misi: MisiPeta, onKembali: () -> Unit)
                 teks = "Daftar",
                 onClick = onKembali,
                 modifier = Modifier.width(110.dp),
+                enabled = !berjalan,
             )
         }
         Text(misi.deskripsi, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -222,7 +240,13 @@ private fun EditorMisi(nav: AppNavigator, misi: MisiPeta, onKembali: () -> Unit)
 
         OutlinedTextField(
             value = kode,
-            onValueChange = { kode = it },
+            onValueChange = {
+                kode = it
+                SandboxDraft.simpan(misi.nomor, it)
+                hasil = null
+                pesanSimpan = null
+                xpDidapat = 0
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp),
@@ -242,56 +266,79 @@ private fun EditorMisi(nav: AppNavigator, misi: MisiPeta, onKembali: () -> Unit)
             TombolUtama(
                 teks = if (berjalan) "Menjalankan..." else "Jalankan",
                 onClick = {
-                    if (berjalan) return@TombolUtama
+                    if (berjalan || semuaIkan.isEmpty()) return@TombolUtama
                     berjalan = true
+                    pesanSimpan = null
+                    xpDidapat = 0
                     c.audio.play(Sfx.KlikUtama)
                     scope.launch {
-                        val run = withContext(Dispatchers.Default) { engine.jalankan(kode, misi) }
-                        val status = when {
-                            !run.hasil.berhasil -> "error"
-                            run.evaluasi.sukses -> "sukses"
-                            else -> "gagal"
-                        }
-                        val tangkapan = run.dunia.tangkapan
-                            .groupingBy { it }
-                            .eachCount()
-                            .map { (nama, jumlah) ->
-                                val ikan = petaIkan[nama.lowercase()]
-                                TangkapanMasuk(
-                                    nama = ikan?.nama ?: nama,
-                                    bobot = FishRules.bobotAcak(ikan?.bobot_kg ?: 1.0),
-                                    jumlah = jumlah,
-                                )
+                        try {
+                            val run = withContext(Dispatchers.Default) { engine.jalankan(kode, misi) }
+                            hasil = run
+                            val status = when {
+                                !run.hasil.berhasil -> "error"
+                                run.evaluasi.sukses -> "sukses"
+                                else -> "gagal"
                             }
-                        val simpan = c.game.simpanHasilProgram(
-                            misiId = misi.dbId,
-                            kode = kode,
-                            output = run.hasil.keluaran.joinToString("\n"),
-                            error = run.hasil.pesanError,
-                            ticks = run.hasil.ticks,
-                            status = status,
-                            tangkapan = tangkapan,
-                        )
-                        hasil = run
-                        berjalan = false
-                        if (status == "sukses" && simpan != null) {
-                            c.audio.play(Sfx.Benar)
-                            nav.goHasil(Screen.HasilProgram, simpan.hasil.id, misi = misi.nomor)
-                        } else {
+                            val tangkapan = run.dunia.tangkapan
+                                .groupingBy { it }
+                                .eachCount()
+                                .map { (nama, jumlah) ->
+                                    val ikan = petaIkan[nama.lowercase()]
+                                    TangkapanMasuk(
+                                        nama = ikan?.nama ?: nama,
+                                        bobot = FishRules.bobotAcak(ikan?.bobot_kg ?: 1.0),
+                                        jumlah = jumlah,
+                                    )
+                                }
+                            try {
+                                val simpan = c.game.simpanHasilProgram(
+                                    misiId = misi.dbId,
+                                    kode = kode,
+                                    output = run.hasil.keluaran.joinToString("\n"),
+                                    error = run.hasil.pesanError,
+                                    ticks = run.hasil.ticks,
+                                    status = status,
+                                    tangkapan = tangkapan,
+                                )
+                                if (simpan != null) {
+                                    xpDidapat = simpan.hasil.xp + simpan.tangkapan.sumOf { it.xpDidapat }
+                                } else {
+                                    pesanSimpan = "Program berjalan, tetapi hasil tidak dapat dibaca kembali dari penyimpanan."
+                                }
+                            } catch (e: Exception) {
+                                pesanSimpan = "Program berjalan, tetapi hasil gagal disimpan: ${e.message ?: "kesalahan penyimpanan"}"
+                            }
+                            c.audio.play(if (status == "sukses") Sfx.Benar else Sfx.Salah)
+                        } catch (e: Exception) {
+                            pesanSimpan = "Gagal menjalankan program: ${e.message ?: "kesalahan tidak dikenal"}"
                             c.audio.play(Sfx.Salah)
+                        } finally {
+                            berjalan = false
                         }
                     }
                 },
                 modifier = Modifier.weight(1f),
+                enabled = semuaIkan.isNotEmpty() && !berjalan,
             )
             TombolSekunder(
                 teks = "Contoh",
                 onClick = {
                     kode = misi.kodeAwal
+                    SandboxDraft.simpan(misi.nomor, misi.kodeAwal)
                     hasil = null
+                    pesanSimpan = null
+                    xpDidapat = 0
                 },
                 modifier = Modifier.width(110.dp),
+                enabled = !berjalan,
             )
+        }
+
+        if (pesanSimpan != null) {
+            Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF41232A)) {
+                Text(pesanSimpan!!, style = MaterialTheme.typography.bodySmall)
+            }
         }
 
         val r = hasil
@@ -318,6 +365,9 @@ private fun EditorMisi(nav: AppNavigator, misi: MisiPeta, onKembali: () -> Unit)
                         Text("Tick ${r.hasil.ticks}", style = MaterialTheme.typography.labelMedium)
                         Text("Tangkap ${r.hasil.tertangkap}", style = MaterialTheme.typography.labelMedium)
                         Text("Sampah ${r.hasil.sampah}", style = MaterialTheme.typography.labelMedium)
+                        if (xpDidapat > 0) {
+                            Text("+$xpDidapat XP", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.tertiary)
+                        }
                         Bintang(r.evaluasi.bintang, ukuran = 16)
                     }
                 }

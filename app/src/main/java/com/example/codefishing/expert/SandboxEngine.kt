@@ -48,7 +48,7 @@ object SandboxContent {
                 goalTipe = goal.getString("t"),
                 goalN = goal.optInt("n", 0),
                 goalSpesies = goal.optString("sp", "").ifBlank { null },
-                par = o.optInt("par_tick", 0).takeIf { it in 1..998 },
+                par = Scoring.parEfektif(o.optInt("par_tick", 0)),
                 xp = o.optInt("xp_reward", 0),
                 dbId = o.getInt("id"),
             )
@@ -121,6 +121,9 @@ class SandboxEngine {
         }
         if (misi.kode == "m5") {
             val target = misi.goalSpesies ?: "gurame"
+            if (hasil.sampah > 0) {
+                return EvaluasiMisi(false, 0, "Kail mengangkat sampah. Hindari petak sampah.")
+            }
             val salah = hasil.tangkapan.count { it != target }
             if (salah > 0) return EvaluasiMisi(false, 0, "Ada ikan lain yang ikut tertangkap. Fokus pada $target.")
             if (dunia.sisaSpesies(target) > 0) {

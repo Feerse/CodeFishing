@@ -88,6 +88,25 @@ class SandboxEngineTest {
     }
 
     @Test
+    fun sampahJugaMenggagalkanMisiGurame() {
+        val cells = listOf("sampah", "gurame") + List(34) { "" }
+        val m = misi("m5", 6, cells, "only", goalSpesies = "gurame")
+        val run = SandboxEngine().jalankan("lempar()\ngerak(Timur)\nlempar()\n", m)
+        assertTrue(run.hasil.berhasil)
+        assertEquals(1, run.hasil.sampah)
+        assertTrue(run.hasil.tangkapan.all { it == "gurame" })
+        assertFalse(run.evaluasi.sukses)
+    }
+
+    @Test
+    fun parDiLuarRentangDianggapTanpaPar() {
+        assertEquals(3, Scoring.bintang(1000, 999))
+        assertEquals(3, Scoring.bintang(1000, null))
+        assertEquals(2, Scoring.bintang(15, 10))
+        assertEquals(1, Scoring.bintang(16, 10))
+    }
+
+    @Test
     fun gerakDiTepiMengembalikanFalseDanTetapHitungTick() {
         val dunia = Dunia(3, List(9) { "" })
         assertFalse(dunia.gerak(Arah.Barat))

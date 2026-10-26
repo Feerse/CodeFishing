@@ -344,43 +344,52 @@ class GameRepository(
         tier: String,
         now: Long = System.currentTimeMillis(),
         bobotPaksa: Double? = null,
+        jumlah: Int = 1,
+        xpPerEkor: Boolean = false,
     ): TangkapanData {
+        val n = jumlah.coerceAtLeast(1)
         val bobot = bobotPaksa ?: FishRules.bobotAcak(ikan.bobot_kg, Random)
         val lama = collectionDao.koleksi(ikan.id)
         val baru = lama == null
         val tierBaru = if (lama != null && FishRules.lebihTinggi(lama.tier_didapat, tier)) lama.tier_didapat else tier
+        val xpDidapat = when {
+            xpPerEkor -> ikan.nilai_xp * n
+            baru -> ikan.nilai_xp
+            else -> 0
+        }
         if (baru) {
             collectionDao.simpan(
                 KoleksiIkanEntity(
                     ikan_id = ikan.id,
-                    jumlah = 1,
+                    jumlah = n,
                     bobot_terbesar = bobot,
                     tier_didapat = tierBaru,
-                    xp = ikan.nilai_xp,
+                    xp = xpDidapat,
                     kenyang = 100,
                     diperbarui_pada = now,
                     pertama_didapat = now,
                 ),
             )
-            tambahXp(ikan.nilai_xp)
         } else {
             collectionDao.simpan(
                 lama.copy(
-                    jumlah = lama.jumlah + 1,
+                    jumlah = lama.jumlah + n,
                     bobot_terbesar = maxOf(lama.bobot_terbesar, bobot),
                     tier_didapat = tierBaru,
+                    xp = if (xpPerEkor) lama.xp + xpDidapat else lama.xp,
                     diperbarui_pada = now,
                 ),
             )
         }
+        tambahXp(xpDidapat)
         tandaiHarianSelesai(ikan.id, now)
         return TangkapanData(
             ikan = ikan,
             tier = tierBaru,
             bobot = bobot,
-            jumlah = (lama?.jumlah ?: 0) + 1,
+            jumlah = (lama?.jumlah ?: 0) + n,
             baru = baru,
-            xpDidapat = if (baru) ikan.nilai_xp else 0,
+            xpDidapat = xpDidapat,
         )
     }
 
@@ -459,7 +468,7 @@ class GameRepository(
     ): HasilProgramData? {
         val misi = misiId?.let { id -> contentDao.semuaMisi().firstOrNull { it.id == id } }
         val sukses = status == "sukses"
-        val bintang = if (sukses) Scoring.bintang(ticks, misi?.par_tick) else 0
+        val bintang = if (sukses) Scoring.bintang(ticks, Scoring.parEfektif(misi?.par_tick)) else 0
         val sebelum = misiId?.let { resultDao.bintangTerbaik(it) } ?: 0
         val xp = if (sukses && sebelum == 0) (misi?.xp_reward ?: 0) else 0
         val hasilId = resultDao.simpanHasil(
@@ -482,7 +491,7 @@ class GameRepository(
         for (t in tangkapan) {
             val ikan = contentDao.ikanByNama(t.nama) ?: continue
             rows.add(HasilTangkapanEntity(hasil_id = hasilId, ikan_id = ikan.id, jumlah = t.jumlah, bobot_kg = t.bobot))
-            data.add(beriIkan(ikan, ikan.tier, now, t.bobot))
+            data.add(beriIkan(ikan, ikan.tier, now, t.bobot, jumlah = t.jumlah, xpPerEkor = true))
         }
         if (rows.isNotEmpty()) resultDao.simpanTangkapan(rows)
         if (xp > 0) tambahXp(xp)
@@ -497,7 +506,13 @@ class GameRepository(
         val tangkapan = rows.mapNotNull { row ->
             contentDao.ikan(row.ikan_id)?.let {
                 val tier = collectionDao.koleksi(it.id)?.tier_didapat ?: it.tier
-                TangkapanData(it, tier, row.bobot_kg, row.jumlah)
+                TangkapanData(
+                    ikan = it,
+                    tier = tier,
+                    bobot = row.bobot_kg,
+                    jumlah = row.jumlah,
+                    xpDidapat = it.nilai_xp * row.jumlah,
+                )
             }
         }
         return HasilProgramData(h, tangkapan)

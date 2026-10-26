@@ -169,7 +169,7 @@ interface ContentDao {
     @Query("SELECT * FROM ikan WHERE id = :id")
     suspend fun ikan(id: Int): IkanEntity?
 
-    @Query("SELECT * FROM ikan WHERE nama = :nama LIMIT 1")
+    @Query("SELECT * FROM ikan WHERE nama = :nama COLLATE NOCASE LIMIT 1")
     suspend fun ikanByNama(nama: String): IkanEntity?
 
     @Query("SELECT * FROM misi ORDER BY urutan")

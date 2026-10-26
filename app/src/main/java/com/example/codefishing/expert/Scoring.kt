@@ -6,10 +6,14 @@ package com.example.codefishing.expert
  * selain itu 1 bintang. Misi tanpa par selalu 3 bintang bila berhasil.
  */
 object Scoring {
+    /** Par di luar 1..998 (mis. 999 pada mode Bebas) dianggap tanpa par. */
+    fun parEfektif(par: Int?): Int? = par?.takeIf { it in 1..998 }
+
     fun bintang(ticks: Int, par: Int?): Int {
-        if (par == null || par <= 0) return 3
-        if (ticks <= par) return 3
-        val batasDua = kotlin.math.ceil(par * 1.5).toInt()
+        val p = parEfektif(par)
+        if (p == null) return 3
+        if (ticks <= p) return 3
+        val batasDua = kotlin.math.ceil(p * 1.5).toInt()
         return if (ticks <= batasDua) 2 else 1
     }
 }

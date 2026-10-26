@@ -3,7 +3,7 @@
 Game Android edukasi offline untuk satu pemain: **belajar Python sambil memancing**. Proyek PPBM Kelompok 1. Kotlin + Jetpack Compose + Room.
 
 - **Mode Belajar (Pemula)**: 10 stage Python, kuis 5 soal per stage, umpan (nyawa), boss 4/5, koleksi ikan.
-- **Mode Expert (Sandbox)**: tulis program Python subset untuk menggerakkan kapal dan menyelesaikan 7 misi, dinilai bintang.
+- **Mode Expert (Sandbox)**: tulis program Python subset untuk menggerakkan kapal dan menyelesaikan 7 misi, hasil tampil inline, dinilai bintang dan XP per ekor.
 - **Akuarium** dan **Koleksi 48 ikan**: 15 ikan berilustrasi dan 33 placeholder “Segera hadir — menunggu aset”.
 - **Tantangan harian** dan umpan emas.
 - Sepenuhnya offline; aplikasi tidak meminta izin internet.

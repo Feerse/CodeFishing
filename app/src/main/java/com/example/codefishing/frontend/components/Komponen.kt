@@ -39,11 +39,11 @@ fun IndikatorUmpan(jumlah: Int) {
 }
 
 @Composable
-fun TombolUtama(teks: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Button(onClick = onClick, modifier = Modifier.fillMaxWidth().then(modifier)) { Text(teks) }
+fun TombolUtama(teks: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
+    Button(onClick = onClick, modifier = Modifier.fillMaxWidth().then(modifier), enabled = enabled) { Text(teks) }
 }
 
 @Composable
-fun TombolSekunder(teks: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    OutlinedButton(onClick = onClick, modifier = Modifier.fillMaxWidth().then(modifier)) { Text(teks) }
+fun TombolSekunder(teks: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
+    OutlinedButton(onClick = onClick, modifier = Modifier.fillMaxWidth().then(modifier), enabled = enabled) { Text(teks) }
 }

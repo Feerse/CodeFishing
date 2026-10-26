@@ -33,6 +33,7 @@ import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.HasilProgramData
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
+import com.example.codefishing.expert.SandboxDraft
 import com.example.codefishing.frontend.components.Bintang
 import com.example.codefishing.frontend.components.ChipTier
 import com.example.codefishing.frontend.components.Gambar
@@ -57,6 +58,7 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
         return
     }
     val sukses = d.hasil.status == "sukses"
+    val xpTotal = d.hasil.xp + d.tangkapan.sumOf { it.xpDidapat }
 
     Box(
         Modifier
@@ -90,7 +92,7 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
             Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
                 LabelNilai("Tick", "${d.hasil.ticks}")
                 LabelNilai("Ikan", "${d.tangkapan.sumOf { it.jumlah }}")
-                LabelNilai("XP", "+${d.hasil.xp}")
+                LabelNilai("XP", "+$xpTotal")
             }
 
             if (!sukses && !d.hasil.error.isNullOrBlank()) {
@@ -139,6 +141,7 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
                 teks = "Ubah Kode",
                 onClick = {
                     c.audio.play(Sfx.Klik)
+                    SandboxDraft.simpan(nav.current.misi, d.hasil.kode)
                     nav.replace(Screen.Sandbox, misi = nav.current.misi)
                 },
             )
