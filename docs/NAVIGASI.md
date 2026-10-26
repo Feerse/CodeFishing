@@ -18,7 +18,7 @@ Navigasi di kode: `core/nav/` (`Screen`, `AppNavigator`, `DrawerItem`, `BottomIt
 |---|---|---|---|---|
 | 1 | Home | `HomeScreen` | Latar langit malam, logo, kartu pemain (level, XP, umpan, stage), tantangan harian, kartu Lanjutkan, progres koleksi | Lanjutkan → 04 / 07 / 12 sesuai posisi terakhir · Mulai Main → 02 · bottom nav |
 | 2 | Pilih Mode | `PilihModeScreen` | Dua kartu bergambar: Belajar (Pemula) dan Sandbox (Expert), tanpa kalimat penjelasan | Belajar → 03 · Sandbox → 07 · bottom nav |
-| 3 | Peta Perairan | `PetaScreen` | Rute 10 stage dengan status terkunci/aktif/selesai, skor terbaik, dan ikan target. Ketuk stage terbuka untuk masuk | Stage 1–9 → 04 · Stage 10 (Boss) → 12 · bottom nav |
+| 3 | Peta Perairan | `PetaScreen` | Peta nautical SVG vertikal 1000×2800 yang digeser atas-bawah: pulau, gunung es, mercusuar, kompas, rute berliku, kapal, 10 node stage dengan progress ring dan status, gerbang Antartika. Ketuk node untuk membuka lembar info | Stage 1–9 → 04 · Stage 10 (Boss) → 12 · bottom nav |
 | 4 | Materi | `MateriScreen` | Judul dengan gambar ikan stage, zona, konsep, materi, contoh kode, output, trik nelayan | Ke Kuis → 05 · bottom nav |
 | 5 | Kuis | `KuisScreen` | Progres 5 soal, kartu soal + kode PYTHON, 4 pilihan, umpan berkurang saat salah, pembahasan, combo/XP | Selesai → 06 · Umpan habis → 11 · Back sistem |
 | 6 | Hasil Stage | `HasilStageScreen` | Ikon lulus/gagal, skor, benar/total, XP, ikan target + tier/bobot, bonus combo, rekor baru | Stage berikutnya → 04 / 12 · Peta → 03 · bottom nav |

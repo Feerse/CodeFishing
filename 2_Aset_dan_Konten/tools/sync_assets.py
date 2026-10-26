@@ -2,6 +2,7 @@
 """Sinkronkan folder 2_Aset_dan_Konten ke dalam proyek Android.
 
   assets-source/NN_Folder/*.png -> app/src/main/res/drawable-nodpi   (+ buat core/art/Art.kt)
+  assets-source/01_Peta_Perairan/peta_perairan.svg -> app/src/main/assets/peta
   audio/*.mp3|ogg               -> app/src/main/res/raw
   konten/*.json                 -> app/src/main/assets/content
 
@@ -38,6 +39,16 @@ def sync_dir(files, dst, keep_ext):
             os.remove(os.path.join(dst, f))
 
 
+def sync_svg():
+    """Peta perairan memakai SVG asli, dirender AndroidSVG saat layar dibuka."""
+    src = os.path.join(SRC, "01_Peta_Perairan", "peta_perairan.svg")
+    dst = os.path.join(REPO, "app/src/main/assets/peta")
+    if not os.path.exists(src):
+        return
+    os.makedirs(dst, exist_ok=True)
+    shutil.copyfile(src, os.path.join(dst, "peta_perairan.svg"))
+
+
 errors, seen, groups = [], {}, []
 for d in sorted(os.listdir(SRC)):
     p = os.path.join(SRC, d)
@@ -67,6 +78,7 @@ if errors:
 sync_dir([os.path.join(SRC, d, n + ".png") for d, ns in groups for n in ns], DRAW, ".png")
 sync_dir(audio, RAW, (".mp3", ".ogg", ".wav", ".m4a"))
 sync_dir([os.path.join(KONTEN, f) for f in sorted(os.listdir(KONTEN)) if f.endswith(".json")], CONTENT, ".json")
+sync_svg()
 
 
 def ident(n):

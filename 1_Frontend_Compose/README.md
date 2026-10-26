@@ -4,6 +4,7 @@ Kode: `app/src/main/java/com/example/codefishing/frontend/`
 
 - `App.kt`: akar tampilan, drawer 5 tujuan, bottom navigation 4 tab, routing hasil.
 - `screens/`: 14 layar + GaleriAset (debug). Semua sudah memakai UI asli.
+- `peta/`: `PetaGeometri` (rute dan posisi stage), `PetaSvg` (render SVG ke bitmap).
 - `components/`: `AppScaffold`, `UI.kt` (kartu, chip tier, bintang, kode, proses, grid), `Komponen.kt` (tombol, indikator umpan).
 
 Status: seluruh layar selesai. `LayarSementara` tidak lagi dipakai.

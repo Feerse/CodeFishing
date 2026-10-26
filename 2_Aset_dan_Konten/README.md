@@ -8,14 +8,20 @@ Setelah mengubah aset, jalankan dari root repo:
 
     python3 2_Aset_dan_Konten/tools/sync_assets.py
 
-Skrip menyalin ke `app/src/main/res` (gambar, audio), membuat ulang `core/art/Art.kt`, dan menolak nama tidak valid (huruf kecil, angka, underscore, diawali huruf).
+Skrip menyalin ke `app/src/main/res` (gambar, audio), menyalin `peta_perairan.svg` ke `app/src/main/assets/peta`, membuat ulang `core/art/Art.kt`, dan menolak nama tidak valid (huruf kecil, angka, underscore, diawali huruf).
+
+Peta perairan vertikal dibuat ulang dengan:
+
+    node 2_Aset_dan_Konten/tools/generate_peta_svg.js
+
+Skrip tersebut menulis SVG sumber di `assets-source/01_Peta_Perairan/peta_perairan.svg` sekaligus salinan yang dibaca aplikasi di `app/src/main/assets/peta/peta_perairan.svg`.
 
 | Folder | Isi |
 |---|---|
-| `assets-source/NN_Fitur/` | 197 PNG transparan (10 folder fitur + logo). Pakai di kode: `Art.nama_file` |
+| `assets-source/NN_Fitur/` | 197 PNG transparan (10 folder fitur + logo) + `peta_perairan.svg`. Pakai PNG di kode: `Art.nama_file` |
 | `audio/` | 12 audio: `bgm_aquarium` (loop, diputar di semua layar) dan 11 efek suara |
 | `logo/` | Logo resmi: SVG (sumber) dan PNG transparan |
-| `tools/` | `sync_assets.py`, `generate_seed.js`, `inspect_misi.js` |
+| `tools/` | `sync_assets.py`, `generate_seed.js`, `generate_peta_svg.js` |
 
 ## Konten seed (Room)
 
