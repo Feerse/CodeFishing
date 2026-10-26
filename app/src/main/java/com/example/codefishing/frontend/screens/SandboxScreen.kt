@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -58,6 +59,7 @@ import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.TangkapanMasuk
 import com.example.codefishing.core.db.IkanEntity
+import com.example.codefishing.expert.Dunia
 import com.example.codefishing.expert.MisiPeta
 import com.example.codefishing.expert.SandboxContent
 import com.example.codefishing.expert.SandboxDraft
@@ -201,15 +203,17 @@ private fun EditorMisi(misi: MisiPeta, onKembali: () -> Unit) {
     var berjalan by remember(misi.nomor) { mutableStateOf(false) }
     var pesanSimpan by remember(misi.nomor) { mutableStateOf<String?>(null) }
     var xpDidapat by remember(misi.nomor) { mutableIntStateOf(0) }
+    val duniaAwal = remember(misi.nomor) { Dunia(misi.grid, misi.cells) }
     val scroll = rememberScrollState()
 
     // Jangan tinggalkan editor saat program masih dijalankan/disimpan.
     BackHandler(enabled = berjalan) { }
 
+    // Setelah dijalankan, kembali ke papan agar posisi akhir kapal langsung terlihat.
     LaunchedEffect(hasil) {
         if (hasil != null) {
             delay(80)
-            scroll.animateScrollTo(scroll.maxValue)
+            scroll.animateScrollTo(0)
         }
     }
 
@@ -243,6 +247,13 @@ private fun EditorMisi(misi: MisiPeta, onKembali: () -> Unit) {
             )
         }
         Text(misi.deskripsi, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        PapanMisi(
+            misi = misi,
+            dunia = hasil?.dunia ?: duniaAwal,
+            hasil = hasil,
+            petaIkan = petaIkan,
+            memuat = semuaIkan.isEmpty(),
+        )
         Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF2A2A17)) {
             Text("Petunjuk", style = MaterialTheme.typography.labelLarge, color = Color(0xFFFFD98A))
             Spacer(Modifier.height(4.dp))
@@ -389,8 +400,6 @@ private fun EditorMisi(misi: MisiPeta, onKembali: () -> Unit) {
                 KodeBlok(r.hasil.keluaran.joinToString("\n"), judul = "OUTPUT")
             }
 
-            GridDunia(r.dunia.ukuran, r.dunia.x, r.dunia.y, r.dunia::petakDi, petaIkan)
-
             if (r.hasil.trace.isNotEmpty()) {
                 Text("Jejak gerak", style = MaterialTheme.typography.labelLarge)
                 JejakRingkas(r.hasil.trace)
@@ -407,6 +416,100 @@ private fun EditorMisi(misi: MisiPeta, onKembali: () -> Unit) {
 }
 
 @Composable
+private fun PapanMisi(
+    misi: MisiPeta,
+    dunia: Dunia,
+    hasil: SandboxRun?,
+    petaIkan: Map<String, IkanEntity>,
+    memuat: Boolean,
+) {
+    Column(
+        Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(7.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Text(
+                    if (hasil == null) "Peta Misi" else "Posisi Akhir",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.tertiary,
+                )
+                Text(
+                    "${misi.grid} × ${misi.grid} petak" + if (hasil == null) "" else " · ${hasil.hasil.ticks} tick",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            StatusPapan(hasil)
+        }
+
+        if (memuat) {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(170.dp)
+                    .background(Color(0xFF061A24), RoundedCornerShape(14.dp)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    "Memuat peta misi...",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        } else {
+            GridDunia(dunia.ukuran, dunia.x, dunia.y, dunia::petakDi, petaIkan)
+        }
+
+        Text(
+            if (hasil == null) {
+                "Kapal mulai di (0, 0)."
+            } else {
+                "Kapal berakhir di (${dunia.x}, ${dunia.y}) · ${dunia.sisaIkan} ikan tersisa"
+            },
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Text(
+            "Bingkai oranye = kapal · Petak biru = ikan · 🗑 = sampah",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+        )
+        if (hasil != null) {
+            Text(
+                hasil.hasil.pesanError ?: hasil.evaluasi.alasan,
+                style = MaterialTheme.typography.bodySmall,
+                color = when {
+                    !hasil.hasil.berhasil -> Color(0xFFFF8B8B)
+                    hasil.evaluasi.sukses -> Color(0xFF5FD3A0)
+                    else -> Color(0xFFFFD98A)
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun StatusPapan(hasil: SandboxRun?) {
+    val (teks, warna) = when {
+        hasil == null -> "SIAP" to Color(0xFF9DB5BF)
+        !hasil.hasil.berhasil -> "ERROR" to Color(0xFFFF8B8B)
+        hasil.evaluasi.sukses -> "BERHASIL" to Color(0xFF5FD3A0)
+        else -> "BELUM TERCAPAI" to Color(0xFFFFD98A)
+    }
+    Text(
+        teks,
+        Modifier
+            .background(warna.copy(alpha = 0.14f), RoundedCornerShape(50))
+            .border(1.dp, warna.copy(alpha = 0.45f), RoundedCornerShape(50))
+            .padding(horizontal = 9.dp, vertical = 4.dp),
+        style = MaterialTheme.typography.labelSmall,
+        color = warna,
+        fontWeight = FontWeight.Bold,
+    )
+}
+
+@Composable
 private fun GridDunia(
     ukuran: Int,
     kapalX: Int,
@@ -414,51 +517,67 @@ private fun GridDunia(
     petak: (Int, Int) -> com.example.codefishing.expert.Petak,
     petaIkan: Map<String, IkanEntity>,
 ) {
-    val sel = if (ukuran >= 6) 38.dp else if (ukuran == 5) 46.dp else 54.dp
-    Column(
+    BoxWithConstraints(
         Modifier
             .fillMaxWidth()
             .background(Color(0xFF061A24), RoundedCornerShape(14.dp))
             .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(3.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        contentAlignment = Alignment.Center,
     ) {
-        for (y in ukuran - 1 downTo 0) {
-            Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-                for (x in 0 until ukuran) {
-                    val isi = petak(x, y).isi
-                    val adaKapal = x == kapalX && y == kapalY
-                    Box(
-                        Modifier
-                            .size(sel)
-                            .background(
-                                if (isi == "sampah") Color(0xFF4A3A27)
-                                else if (isi.isNotEmpty()) Color(0xFF123E4A)
-                                else Color(0xFF0C2B36),
-                                RoundedCornerShape(6.dp),
-                            )
-                            .border(
-                                1.dp,
-                                if (adaKapal) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.05f),
-                                RoundedCornerShape(6.dp),
-                            ),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        if (isi == "sampah") {
-                            Text("🗑", fontSize = 16.sp)
-                        } else if (isi.isNotEmpty()) {
-                            val ikan = petaIkan[isi.lowercase()]
-                            Gambar(gambarIkan(ikan?.gambar), ikan?.nama ?: isi, Modifier.size(sel * 0.7f))
-                        }
-                        if (adaKapal) {
-                            Gambar(com.example.codefishing.core.art.Art.kapal_pancing, "Kapal", Modifier.size(sel * 0.85f))
+        val sel = ((maxWidth - 16.dp - 3.dp * (ukuran - 1)) / ukuran).coerceIn(30.dp, 54.dp)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(3.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            for (y in ukuran - 1 downTo 0) {
+                Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                    for (x in 0 until ukuran) {
+                        val isi = petak(x, y).isi
+                        val adaKapal = x == kapalX && y == kapalY
+                        Box(
+                            Modifier
+                                .size(sel)
+                                .background(
+                                    if (isi == "sampah") Color(0xFF4A3A27)
+                                    else if (isi.isNotEmpty()) Color(0xFF123E4A)
+                                    else Color(0xFF0C2B36),
+                                    RoundedCornerShape(6.dp),
+                                )
+                                .border(
+                                    1.dp,
+                                    if (adaKapal) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.05f),
+                                    RoundedCornerShape(6.dp),
+                                ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            if (isi == "sampah") {
+                                Text("🗑", fontSize = (sel.value * 0.30f).sp)
+                            } else if (isi.isNotEmpty()) {
+                                val ikan = petaIkan[isi.lowercase()]
+                                Gambar(
+                                    gambarIkan(ikan?.gambar),
+                                    ikan?.nama ?: isi,
+                                    Modifier
+                                        .size(if (adaKapal) sel * 0.40f else sel * 0.70f)
+                                        .align(if (adaKapal) Alignment.TopStart else Alignment.Center),
+                                )
+                            }
+                            if (adaKapal) {
+                                Gambar(
+                                    com.example.codefishing.core.art.Art.kapal_pancing,
+                                    "Kapal",
+                                    Modifier
+                                        .size(sel * 0.68f)
+                                        .align(Alignment.BottomEnd),
+                                )
+                            }
                         }
                     }
                 }
             }
+            Spacer(Modifier.height(2.dp))
+            Text("Baris bawah = start. Kapal ditandai bingkai oranye.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Spacer(Modifier.height(2.dp))
-        Text("Baris bawah = start. Kapal ditandai bingkai kuning.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
