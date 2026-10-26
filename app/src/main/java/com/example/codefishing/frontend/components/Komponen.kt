@@ -3,10 +3,12 @@ package com.example.codefishing.frontend.components
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -39,11 +41,33 @@ fun IndikatorUmpan(jumlah: Int) {
 }
 
 @Composable
-fun TombolUtama(teks: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
-    Button(onClick = onClick, modifier = Modifier.fillMaxWidth().then(modifier), enabled = enabled) { Text(teks) }
+fun TombolUtama(
+    teks: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
+        enabled = enabled,
+        contentPadding = contentPadding,
+    ) { Text(teks) }
 }
 
 @Composable
-fun TombolSekunder(teks: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
-    OutlinedButton(onClick = onClick, modifier = Modifier.fillMaxWidth().then(modifier), enabled = enabled) { Text(teks) }
+fun TombolSekunder(
+    teks: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
+        enabled = enabled,
+        contentPadding = contentPadding,
+    ) { Text(teks) }
 }

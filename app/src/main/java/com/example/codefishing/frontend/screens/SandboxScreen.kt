@@ -51,6 +51,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.codefishing.core.LocalContainer
@@ -219,16 +220,26 @@ private fun EditorMisi(misi: MisiPeta, onKembali: () -> Unit) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             Column(Modifier.weight(1f)) {
                 Text("Misi ${misi.nomor}", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
-                Text(misi.judul, style = MaterialTheme.typography.headlineSmall)
+                Text(
+                    misi.judul,
+                    style = MaterialTheme.typography.headlineSmall,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
+            Spacer(Modifier.width(12.dp))
             TombolSekunder(
                 teks = "Daftar",
                 onClick = onKembali,
                 modifier = Modifier.width(110.dp),
                 enabled = !berjalan,
+                contentPadding = PaddingValues(horizontal = 10.dp),
             )
         }
         Text(misi.deskripsi, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -332,6 +343,7 @@ private fun EditorMisi(misi: MisiPeta, onKembali: () -> Unit) {
                 },
                 modifier = Modifier.width(110.dp),
                 enabled = !berjalan,
+                contentPadding = PaddingValues(horizontal = 10.dp),
             )
         }
 

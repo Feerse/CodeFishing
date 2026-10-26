@@ -145,6 +145,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                                     scope.launch { c.game.beriMakan(pilihan.ikan_id) }
                                 },
                                 modifier = Modifier.size(width = 120.dp, height = 44.dp),
+                                contentPadding = PaddingValues(horizontal = 10.dp),
                             )
                         }
                     }

@@ -144,6 +144,7 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                                     Unit
                                 },
                                 modifier = Modifier.size(width = 90.dp, height = 44.dp),
+                                contentPadding = PaddingValues(horizontal = 8.dp),
                             )
                         }
                     }
