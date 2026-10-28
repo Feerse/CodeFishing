@@ -10,6 +10,8 @@ Setelah mengubah aset, jalankan dari root repo:
 
 Skrip menyalin ke `app/src/main/res` (gambar, audio), menyalin `peta_perairan.svg` ke `app/src/main/assets/peta`, membuat ulang `core/art/Art.kt`, dan menolak nama tidak valid (huruf kecil, angka, underscore, diawali huruf).
 
+Foreground launcher memakai `assets-source/10_Pendukung_UI/ic_logo_fg_launcher.png` (logo sudah diberi padding, konten ±37% kanvas) dan disalin sebagai `app/src/main/res/drawable-xxxhdpi/ic_logo_fg.png`. Jangan memindahkannya ke `drawable-nodpi`: berkas 432 px di `nodpi` dianggap 432 dp sehingga ikon launcher terzoom dan terpotong.
+
 Peta perairan vertikal dibuat ulang dengan:
 
     node 2_Aset_dan_Konten/tools/generate_peta_svg.js
@@ -18,7 +20,7 @@ Skrip tersebut menulis SVG sumber di `assets-source/01_Peta_Perairan/peta_perair
 
 | Folder | Isi |
 |---|---|
-| `assets-source/NN_Fitur/` | 197 PNG transparan (10 folder fitur + logo) + `peta_perairan.svg`. Pakai PNG di kode: `Art.nama_file` |
+| `assets-source/NN_Fitur/` | 197 PNG transparan (10 folder fitur + logo) + `peta_perairan.svg` + `ic_logo_fg_launcher.png`. Pakai PNG di kode: `Art.nama_file` |
 | `audio/` | 12 audio: `bgm_aquarium` (loop, diputar di semua layar) dan 11 efek suara |
 | `logo/` | Logo resmi: SVG (sumber) dan PNG transparan |
 | `tools/` | `sync_assets.py`, `generate_seed.js`, `generate_peta_svg.js` |

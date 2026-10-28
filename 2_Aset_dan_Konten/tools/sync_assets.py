@@ -2,6 +2,7 @@
 """Sinkronkan folder 2_Aset_dan_Konten ke dalam proyek Android.
 
   assets-source/NN_Folder/*.png -> app/src/main/res/drawable-nodpi   (+ buat core/art/Art.kt)
+  assets-source/10_Pendukung_UI/ic_logo_fg.png -> app/src/main/res/drawable-xxxhdpi
   assets-source/01_Peta_Perairan/peta_perairan.svg -> app/src/main/assets/peta
   audio/*.mp3|ogg               -> app/src/main/res/raw
   konten/*.json                 -> app/src/main/assets/content
@@ -27,6 +28,13 @@ PNG_OK = re.compile(r"^[a-z][a-z0-9_]*\.png$")
 RAW_OK = re.compile(r"^[a-z][a-z0-9_]*\.(mp3|ogg|wav|m4a)$")
 KW = {"in", "is", "as", "do", "if", "for", "val", "var", "fun", "object", "class", "when", "try", "typealias", "interface"}
 
+# Foreground adaptive icon harus 108dp. Karena itu berkas ini tidak boleh
+# masuk drawable-nodpi (yang membuat 432px dianggap 432dp dan terpotong).
+# Sumber `ic_logo_fg_launcher.png` sudah diberi padding agar konten hanya ~46%
+# kanvas, sehingga tetap utuh meski launcher memperbesar layer foreground.
+LOGO_FG_SRC = "ic_logo_fg_launcher"
+LOGO_FG_DST = "ic_logo_fg"
+
 
 def sync_dir(files, dst, keep_ext):
     os.makedirs(dst, exist_ok=True)
@@ -49,6 +57,20 @@ def sync_svg():
     shutil.copyfile(src, os.path.join(dst, "peta_perairan.svg"))
 
 
+def sync_logo_fg():
+    """Simpan foreground launcher di drawable-xxxhdpi agar intrinsic-nya 108dp."""
+    src = os.path.join(SRC, "10_Pendukung_UI", LOGO_FG_SRC + ".png")
+    if not os.path.exists(src):
+        return
+    dst_dir = os.path.join(RES, "drawable-xxxhdpi")
+    os.makedirs(dst_dir, exist_ok=True)
+    shutil.copyfile(src, os.path.join(dst_dir, LOGO_FG_DST + ".png"))
+    # Bersihkan salinan lama di drawable-nodpi yang menyebabkan ikon terzoom.
+    lama = os.path.join(DRAW, LOGO_FG_DST + ".png")
+    if os.path.exists(lama):
+        os.remove(lama)
+
+
 errors, seen, groups = [], {}, []
 for d in sorted(os.listdir(SRC)):
     p = os.path.join(SRC, d)
@@ -60,6 +82,9 @@ for d in sorted(os.listdir(SRC)):
             continue
         if not PNG_OK.match(f):
             errors.append(f"Nama gambar tidak valid: {d}/{f}"); continue
+        if f == LOGO_FG_SRC + ".png":
+            # Dipakai khusus sebagai foreground launcher, bukan aset katalog.
+            continue
         if f in seen:
             errors.append(f"Nama gambar ganda: {f} ({seen[f]} dan {d})"); continue
         seen[f] = d; names.append(f[:-4])
@@ -75,10 +100,19 @@ for f in sorted(os.listdir(AUDIO)) if os.path.isdir(AUDIO) else []:
 if errors:
     print("\n".join(errors)); sys.exit(1)
 
-sync_dir([os.path.join(SRC, d, n + ".png") for d, ns in groups for n in ns], DRAW, ".png")
+sync_dir(
+    [
+        os.path.join(SRC, d, n + ".png")
+        for d, ns in groups
+        for n in ns
+    ],
+    DRAW,
+    ".png",
+)
 sync_dir(audio, RAW, (".mp3", ".ogg", ".wav", ".m4a"))
 sync_dir([os.path.join(KONTEN, f) for f in sorted(os.listdir(KONTEN)) if f.endswith(".json")], CONTENT, ".json")
 sync_svg()
+sync_logo_fg()
 
 
 def ident(n):
