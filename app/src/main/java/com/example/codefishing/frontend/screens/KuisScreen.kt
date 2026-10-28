@@ -19,7 +19,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,13 +48,17 @@ import com.example.codefishing.core.data.QuizData
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.BarProgres
+import com.example.codefishing.frontend.components.FasePancing
 import com.example.codefishing.frontend.components.Kartu
 import com.example.codefishing.frontend.components.KodeBlok
+import com.example.codefishing.frontend.components.MemancingScene
 import com.example.codefishing.frontend.components.Memuat
 import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
+import com.example.codefishing.pemula.PilihanKuis
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = null) {
     val c = LocalContainer.current
@@ -81,6 +88,8 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
     var comboMaks by remember(d) { mutableIntStateOf(0) }
     var xp by remember(d) { mutableIntStateOf(0) }
     var terpilih by remember(d) { mutableStateOf<Int?>(null) }
+    var kandidat by remember(d) { mutableStateOf<Int?>(null) }
+    var fase by remember(d) { mutableStateOf(FasePancing.Diam) }
     var jawabanBenar by remember(d) { mutableStateOf(false) }
     var umpanHabis by remember(d) { mutableStateOf(false) }
     var menyimpan by remember(d) { mutableStateOf(false) }
@@ -91,6 +100,49 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
 
     val soal = d.soal[indeks]
     val selesaiSoal = terpilih != null
+
+    /**
+     * Mengunci jawaban SETELAH dikonfirmasi pemain. Hanya di sini skor, combo, XP,
+     * umpan, dan riwayat Room berubah — menekan opsi saja tidak menyentuh apa pun.
+     */
+    fun kunciJawaban(pilihan: PilihanKuis, posisi: Int) {
+        if (menyimpan || terpilih != null) return
+        terpilih = posisi
+        jawabanBenar = pilihan.benar
+        menyimpan = true
+        fase = if (pilihan.benar) FasePancing.Dapat else FasePancing.Lepas
+        if (pengaturan?.haptik != 0) {
+            haptik.performHapticFeedback(
+                if (pilihan.benar) HapticFeedbackType.LongPress else HapticFeedbackType.TextHandleMove,
+            )
+        }
+        if (pilihan.benar) {
+            benar++
+            combo++
+            comboMaks = maxOf(comboMaks, combo)
+            xp += soal.poin
+            c.audio.play(Sfx.Benar)
+            scope.launch {
+                c.game.catatJawaban(soal.id, pilihan.id, true, combo)
+                menyimpan = false
+            }
+        } else {
+            salah++
+            combo = 0
+            c.audio.play(Sfx.Salah)
+            scope.launch {
+                c.game.catatJawaban(soal.id, pilihan.id, false, 0)
+                umpanHabis = c.game.pakaiUmpan().sisa <= 0
+                menyimpan = false
+            }
+        }
+    }
+
+    /** Membatalkan pilihan yang belum dikunci: umpan dan progres tetap utuh. */
+    fun batalPilih() {
+        kandidat = null
+        fase = FasePancing.Diam
+    }
 
     fun selesaikan() {
         if (menyelesaikan) return
@@ -132,6 +184,12 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
             }
             BarProgres((indeks + 1f) / d.soal.size)
 
+            MemancingScene(
+                fase = fase,
+                varianBoss = d.stage.tipe == "boss",
+                modifier = Modifier.fillMaxWidth(),
+            )
+
             if (d.stage.tipe == "boss") {
                 Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF3A1F2B)) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -158,14 +216,17 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
             soal.pilihan.forEachIndexed { i, p ->
                 val huruf = ('A' + i).toString()
                 val dipilih = terpilih == i
+                val kandidatIni = kandidat == i
                 val benarIni = p.benar
                 val warna = when {
+                    !selesaiSoal && kandidatIni -> Color(0xFF1B4A5F)
                     !selesaiSoal -> Color(0xFF133C4F)
                     benarIni -> Color(0xFF145A46)
                     dipilih -> Color(0xFF6A2430)
                     else -> Color(0xFF133C4F)
                 }
                 val border = when {
+                    !selesaiSoal && kandidatIni -> Color(0xFFF26A2E)
                     !selesaiSoal -> Color.White.copy(alpha = 0.08f)
                     benarIni -> Color(0xFF46D6A0)
                     dipilih -> Color(0xFFFF8B8B)
@@ -176,35 +237,14 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                         .fillMaxWidth()
                         .background(warna, RoundedCornerShape(14.dp))
                         .border(1.dp, border, RoundedCornerShape(14.dp))
-                        .clickable(enabled = !selesaiSoal) {
-                            terpilih = i
-                            jawabanBenar = benarIni
-                            menyimpan = true
+                        .clickable(enabled = !selesaiSoal && kandidat == null) {
+                            c.audio.play(Sfx.Klik)
                             if (pengaturan?.haptik != 0) {
-                                haptik.performHapticFeedback(
-                                    if (benarIni) HapticFeedbackType.LongPress else HapticFeedbackType.TextHandleMove,
-                                )
+                                haptik.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                             }
-                            if (benarIni) {
-                                benar++
-                                combo++
-                                comboMaks = maxOf(comboMaks, combo)
-                                xp += soal.poin
-                                c.audio.play(Sfx.Benar)
-                                scope.launch {
-                                    c.game.catatJawaban(soal.id, p.id, true, combo)
-                                    menyimpan = false
-                                }
-                            } else {
-                                salah++
-                                combo = 0
-                                c.audio.play(Sfx.Salah)
-                                scope.launch {
-                                    c.game.catatJawaban(soal.id, p.id, false, 0)
-                                    umpanHabis = c.game.pakaiUmpan().sisa <= 0
-                                    menyimpan = false
-                                }
-                            }
+                            // Belum dikunci: hanya membuka lembar konfirmasi.
+                            kandidat = i
+                            fase = FasePancing.Lempar
                         }
                         .padding(14.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -266,6 +306,8 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                             } else {
                                 indeks++
                                 terpilih = null
+                                kandidat = null
+                                fase = FasePancing.Diam
                             }
                         },
                     )
@@ -274,8 +316,71 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text("Benar $benar · Salah $salah · Combo $combo", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
+                Text(
+                    "Ketuk jawaban, lalu konfirmasi untuk menguncinya.",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
             Spacer(Modifier.height(8.dp))
+        }
+    }
+
+    // Lembar konfirmasi: jawaban belum tersubmit sampai pemain menekan tombol kunci.
+    val pilihanKandidat = kandidat
+    if (pilihanKandidat != null) {
+        val opsi = soal.pilihan[pilihanKandidat]
+        ModalBottomSheet(
+            onDismissRequest = { batalPilih() },
+            containerColor = Color(0xFF0E3342),
+            contentColor = Color(0xFFF4F8F9),
+            dragHandle = { BottomSheetDefaults.DragHandle(color = Color.White.copy(alpha = 0.25f)) },
+        ) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .padding(bottom = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Text("Kunci jawaban ini?", style = MaterialTheme.typography.titleLarge)
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF133C4F), RoundedCornerShape(14.dp))
+                        .padding(14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Box(
+                        Modifier
+                            .size(32.dp)
+                            .background(Color(0xFFF26A2E), CircleShape),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            ('A' + pilihanKandidat).toString(),
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF06212B),
+                        )
+                    }
+                    Text(opsi.teks, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+                }
+                Text(
+                    "Jawaban yang sudah dikunci tidak dapat diubah. Jawaban salah mengurangi 1 umpan.",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Color(0xFF9DB5BF),
+                )
+                TombolUtama("Ya, kunci jawaban", onClick = {
+                    c.audio.play(Sfx.Klik)
+                    kandidat = null
+                    kunciJawaban(opsi, pilihanKandidat)
+                })
+                TombolSekunder("Periksa lagi", onClick = {
+                    c.audio.play(Sfx.Klik)
+                    batalPilih()
+                })
+            }
         }
     }
 }

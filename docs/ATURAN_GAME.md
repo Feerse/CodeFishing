@@ -7,6 +7,8 @@ Semua permainan berjalan **offline** di perangkat; aplikasi tidak meminta izin i
 
 - 10 stage di Samudra Pasifik (Stage 10 = Boss). Perairan lain berstatus **Segera**.
 - Tiap stage: Materi (satu kalimat, contoh kode, keluaran) lalu Kuis 5 soal pilihan ganda.
+- **Konfirmasi jawaban**: mengetuk opsi hanya menandai pilihan (kail dilempar), jawaban belum tersubmit. Pemain harus menekan **Ya, kunci jawaban** pada lembar konfirmasi; **Periksa lagi** membatalkan tanpa mengurangi umpan. Ini mencegah salah pencet menghabiskan umpan.
+- **Animasi memancing**: di atas soal ada adegan vector (perahu, nelayan, kail, ikan). Kail terlempar saat opsi dipilih, ikan terangkat saat jawaban benar, dan tali putus saat jawaban salah.
 - **Umpan (nyawa)**: maksimum 5, pulih 1 umpan tiap 15 menit, jawaban salah mengurangi 1 umpan. Umpan habis membuka layar 11 (hitung mundur) sampai umpan >= 1.
 - **Lulus stage**: skor benar/5 × 100 ≥ 70 untuk stage biasa. **Boss Stage 10 lulus di 4 dari 5 (80%)**.
 - Lulus membuka stage berikutnya. Skor terbaik, combo tertinggi, dan percobaan disimpan di `progres_stage`.
