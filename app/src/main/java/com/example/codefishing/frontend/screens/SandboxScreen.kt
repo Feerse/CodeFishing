@@ -175,13 +175,21 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
                 }
             }
         } else {
-            EditorMisi(m, onKembali = { aktif = null })
+            EditorMisi(
+                misi = m,
+                onKembali = { aktif = null },
+                onLanjut = { nomor -> aktif = misi.firstOrNull { it.nomor == nomor } },
+            )
         }
     }
 }
 
 @Composable
-private fun EditorMisi(misi: MisiPeta, onKembali: () -> Unit) {
+private fun EditorMisi(
+    misi: MisiPeta,
+    onKembali: () -> Unit,
+    onLanjut: (Int) -> Unit,
+) {
     val c = LocalContainer.current
     val scope = rememberCoroutineScope()
     val engine = remember { SandboxEngine() }
@@ -208,6 +216,11 @@ private fun EditorMisi(misi: MisiPeta, onKembali: () -> Unit) {
 
     // Jangan tinggalkan editor saat program masih dijalankan/disimpan.
     BackHandler(enabled = berjalan) { }
+
+    // Saat pindah misi, mulai dari atas dan tampilkan papan misi baru.
+    LaunchedEffect(misi.nomor) {
+        scroll.scrollTo(0)
+    }
 
     // Setelah dijalankan, kembali ke papan agar posisi akhir kapal langsung terlihat.
     LaunchedEffect(hasil) {
@@ -254,6 +267,39 @@ private fun EditorMisi(misi: MisiPeta, onKembali: () -> Unit) {
             petaIkan = petaIkan,
             memuat = semuaIkan.isEmpty(),
         )
+
+        if (hasil?.evaluasi?.sukses == true) {
+            Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF113D34)) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        if (misi.nomor < 7) "Lanjut ke misi berikutnya" else "Semua misi selesai",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color(0xFF8BF0C7),
+                    )
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        if (misi.nomor < 7) {
+                            TombolUtama(
+                                teks = "Misi Berikutnya",
+                                onClick = {
+                                    c.audio.play(Sfx.KlikUtama)
+                                    onLanjut(misi.nomor + 1)
+                                },
+                                modifier = Modifier.weight(1f),
+                            )
+                        }
+                        TombolSekunder(
+                            teks = if (misi.nomor < 7) "Daftar" else "Kembali ke Daftar",
+                            onClick = {
+                                c.audio.play(Sfx.Klik)
+                                onKembali()
+                            },
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                }
+            }
+        }
+
         Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF2A2A17)) {
             Text("Petunjuk", style = MaterialTheme.typography.labelLarge, color = Color(0xFFFFD98A))
             Spacer(Modifier.height(4.dp))
@@ -462,11 +508,11 @@ private fun PapanMisi(
         }
 
         Text(
-            if (hasil == null) {
-                "Kapal mulai di (0, 0)."
+            (if (hasil == null) {
+                "Kapal mulai di (0, 0). "
             } else {
-                "Kapal berakhir di (${dunia.x}, ${dunia.y}) · ${dunia.sisaIkan} ikan tersisa"
-            },
+                "Kapal berakhir di (${dunia.x}, ${dunia.y}) · ${dunia.sisaIkan} ikan tersisa. "
+            }) + "Baris bawah = start.",
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -576,7 +622,6 @@ private fun GridDunia(
                 }
             }
             Spacer(Modifier.height(2.dp))
-            Text("Baris bawah = start. Kapal ditandai bingkai oranye.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

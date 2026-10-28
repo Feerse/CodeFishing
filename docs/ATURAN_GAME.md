@@ -44,6 +44,7 @@ Pemain menulis subset Python lalu menjalankan misi secara offline. Kapal bergera
 - Biaya waktu (ticks): `gerak(arah)` = **1**, `lempar()` = **1**, `lihat()` = **0**. `gerak` yang menabrak tepi tetap dihitung 1 tick.
 - **Bintang** (par = waktu acuan): ticks ≤ par → 3 bintang; ticks ≤ ceil(par × 1,5) → 2 bintang; selain itu 1 bintang. Misi tanpa par: 3 bintang bila berhasil.
 - **Papan misi di atas editor**: sebelum program dijalankan, papan menampilkan posisi awal kapal, ikan, dan sampah; setelah dijalankan, papan menampilkan posisi akhir kapal beserta status misi. Pemain tidak perlu menggulir ke bawah untuk melihat hasil gerak kapal.
+- **Tombol Misi Berikutnya** muncul tepat di bawah papan setelah misi dinyatakan berhasil, sehingga pemain bisa langsung lanjut ke misi berikutnya tanpa kembali ke daftar. Pada misi terakhir (Bebas), tombol berubah menjadi **Kembali ke Daftar**.
 - **Hasil ditampilkan inline di editor**: ringkasan misi, output, dan jejak gerak muncul di bawah tombol Jalankan. Pemain tidak dipindahkan ke layar hasil, sehingga bisa langsung mengubah kode dan mencoba lagi.
 - **XP Sandbox diberikan per ekor** sesuai `nilai_xp` ikan yang berhasil diangkat. XP misi (`xp_reward`) hanya diberikan saat misi pertama kali sukses. Ikan yang sama tetap memberi XP saat ditangkap lagi.
 - Draf kode per misi disimpan selama aplikasi berjalan, sehingga kode tidak kembali ke contoh saat berpindah misi/layar.

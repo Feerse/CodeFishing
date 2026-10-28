@@ -71,7 +71,9 @@ fun Kartu(
     warna: Color = MaterialTheme.colorScheme.surface,
     isi: @Composable () -> Unit,
 ) {
-    Box(
+    // Column, bukan Box: isi kartu sering terdiri dari beberapa teks/Spacer.
+    // Dengan Box semua child menumpuk di posisi yang sama.
+    Column(
         modifier
             .background(warna, RoundedCornerShape(20.dp))
             .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(20.dp))
