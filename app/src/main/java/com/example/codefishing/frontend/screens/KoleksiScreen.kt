@@ -52,6 +52,10 @@ import com.example.codefishing.frontend.components.Kosong
 import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
 import com.example.codefishing.frontend.components.gambarIkan
+import com.example.codefishing.frontend.components.gambarIkanTerkunci
+import com.example.codefishing.frontend.components.lencanaTier
+import com.example.codefishing.frontend.components.tierLabel
+import com.example.codefishing.core.art.Art
 import com.example.codefishing.frontend.components.tierWarna
 import kotlinx.coroutines.launch
 
@@ -156,20 +160,14 @@ private fun KartuIkan(ikan: KoleksiLengkapView, onClick: () -> Unit) {
     ) {
         Box(Modifier.fillMaxWidth().height(92.dp), contentAlignment = Alignment.Center) {
             Gambar(
-                gambarIkan(ikan.gambar),
+                if (dimiliki) gambarIkan(ikan.gambar) else gambarIkanTerkunci(ikan.gambar),
                 if (dimiliki) ikan.nama else "Ikan terkunci",
                 Modifier.size(84.dp),
             )
             if (!dimiliki) {
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(92.dp)
-                        .background(Color(0xAA061A24), RoundedCornerShape(12.dp)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text("🔒", fontSize = 26.sp)
-                }
+                Gambar(Art.ikon_gembok, "Terkunci", Modifier.align(Alignment.BottomEnd).size(24.dp))
+            } else {
+                Gambar(lencanaTier(ikan.tier), tierLabel(ikan.tier), Modifier.align(Alignment.TopStart).size(32.dp))
             }
         }
         Text(
@@ -204,10 +202,19 @@ private fun DetailIkan(ikan: KoleksiLengkapView, onTutup: () -> Unit, onBeriMaka
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Gambar(gambarIkan(ikan.gambar), if (dimiliki) ikan.nama else "Ikan terkunci", Modifier.size(150.dp))
+        Gambar(
+            if (dimiliki) gambarIkan(ikan.gambar) else gambarIkanTerkunci(ikan.gambar),
+            if (dimiliki) ikan.nama else "Ikan terkunci",
+            Modifier.size(150.dp),
+        )
         Text(if (dimiliki) ikan.nama else "Belum ditemukan", style = MaterialTheme.typography.headlineSmall)
         detail?.nama_ilmiah?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
-        if (dimiliki) ChipTier(ikan.tier)
+        if (dimiliki) {
+            Gambar(lencanaTier(ikan.tier), tierLabel(ikan.tier), Modifier.size(56.dp))
+            ChipTier(ikan.tier)
+        } else {
+            Gambar(Art.ikon_gembok, "Terkunci", Modifier.size(36.dp))
+        }
         Text(ikan.deskripsi, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
         if (!dimiliki) {
             Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF2A2A17)) {

@@ -287,6 +287,18 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                         )
                     }
 
+                    PetaGeometri.mulai.let { awal ->
+                        Gambar(
+                            Art.bendera_start,
+                            "Titik awal pelayaran",
+                            Modifier
+                                .offset(
+                                    x = lebar * (awal.x / PetaGeometri.LEBAR_DUNIA) + 22.dp,
+                                    y = tinggi * (awal.y / PetaGeometri.TINGGI_DUNIA) - 18.dp,
+                                )
+                                .size(34.dp),
+                        )
+                    }
                     KapalPeta(titikKapal, lebar, tinggi)
                 }
             }
@@ -302,6 +314,14 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
             ChipPeta("Samudra Pasifik", "10 stage · geser & ketuk titik")
             ChipPeta("$jumlahSelesai/10", "stage selesai", alignEnd = true)
         }
+        Gambar(
+            Art.kompas,
+            "Kompas",
+            Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 12.dp, bottom = 12.dp)
+                .size(46.dp),
+        )
 
         AnimatedVisibility(
             visible = terpilih != null,
@@ -393,18 +413,13 @@ private fun NodePeta(
     val selesai = stage.status == "selesai"
     val boss = stage.tipe == "boss"
     val ukuran = if (boss) 68.dp else 54.dp
-    val isi = when {
-        !buka -> Color(0xFF2A4656)
-        selesai -> Color(0xFF1C6B58)
-        boss -> Color(0xFF7B303D)
-        else -> Color(0xFFF26A2E)
-    }
-    val ring = when {
-        !buka -> Color(0xFF5F8796)
-        selesai -> Color(0xFF5FD3A0)
-        else -> Color(0xFFF26A2E)
-    }
     val progres = (stage.skor_terbaik.coerceIn(0, 100)) / 100f
+    val aset = when {
+        !buka -> Art.node_terkunci
+        selesai -> Art.node_selesai
+        boss -> Art.node_boss
+        else -> Art.node_aktif
+    }
     val status = when {
         !buka -> "terkunci"
         selesai -> "selesai"
@@ -421,16 +436,14 @@ private fun NodePeta(
             },
         contentAlignment = Alignment.Center,
     ) {
-        Canvas(Modifier.fillMaxSize()) {
-            val stroke = 4.dp.toPx()
-            val r = size.minDimension / 2f - stroke
-            drawCircle(Color(0x88000000), radius = r, center = center + Offset(0f, 3.dp.toPx()))
-            drawCircle(Color(0xFF071923), radius = r, center = center)
-            drawCircle(Color.White.copy(alpha = 0.20f), radius = r * 0.82f, style = Stroke(stroke))
-            if (buka && progres > 0f) {
-                val rr = r * 0.82f
+        // Node memakai aset final: node_aktif / node_selesai / node_terkunci / node_boss.
+        Gambar(aset, null, Modifier.fillMaxSize())
+        if (buka && progres > 0f && !selesai) {
+            Canvas(Modifier.fillMaxSize()) {
+                val stroke = 3.dp.toPx()
+                val rr = size.minDimension / 2f - stroke / 2f
                 drawArc(
-                    color = ring,
+                    color = Color(0xFF5FD3A0),
                     startAngle = -90f,
                     sweepAngle = progres * 360f,
                     useCenter = false,
@@ -439,38 +452,36 @@ private fun NodePeta(
                     style = Stroke(width = stroke, cap = StrokeCap.Round),
                 )
             }
-            drawCircle(isi, radius = r * 0.62f)
-            if (terpilih) {
+        }
+        if (buka && !boss) {
+            // Nomor stage di lencana kecil agar node tetap bisa dibaca.
+            Box(
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 3.dp)
+                    .size(20.dp)
+                    .background(Color(0xFF071923), CircleShape)
+                    .border(1.dp, Color(0xFFF26A2E), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    "${stage.nomor}",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFFFE7B0),
+                )
+            }
+        }
+        if (terpilih) {
+            Canvas(Modifier.fillMaxSize()) {
                 drawCircle(
                     color = Color.White,
-                    radius = r * 0.98f,
+                    radius = size.minDimension / 2f - 1.dp.toPx(),
                     style = Stroke(
                         width = 2.dp.toPx(),
                         pathEffect = PathEffect.dashPathEffect(floatArrayOf(5.dp.toPx(), 5.dp.toPx())),
                     ),
                 )
-            }
-        }
-        when {
-            !buka -> Text("🔒", fontSize = 16.sp)
-            boss -> Text("★", fontSize = 24.sp, color = Color(0xFFFFE7B0))
-            else -> Text(
-                "${stage.nomor}",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF062B2A),
-            )
-        }
-        if (selesai) {
-            Box(
-                Modifier
-                    .align(Alignment.TopEnd)
-                    .size(17.dp)
-                    .background(Color(0xFF5FD3A0), CircleShape)
-                    .border(2.dp, Color(0xFF071923), CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text("✓", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color(0xFF062B2A))
             }
         }
     }
@@ -490,23 +501,12 @@ private fun NodeGerbang(
             .semantics { contentDescription = "Gerbang Antartika, terkunci, segera hadir" },
         contentAlignment = Alignment.Center,
     ) {
-        Canvas(Modifier.fillMaxSize()) {
-            val r = size.minDimension / 2f
-            val path = Path()
-            for (i in 0 until 6) {
-                val sudut = Math.toRadians((60.0 * i - 90.0))
-                val px = center.x + (r * 0.82f * Math.cos(sudut)).toFloat()
-                val py = center.y + (r * 0.82f * Math.sin(sudut)).toFloat()
-                if (i == 0) path.moveTo(px, py) else path.lineTo(px, py)
-            }
-            path.close()
-            drawCircle(Color(0x88000000), radius = r, center = center + Offset(0f, 3.dp.toPx()))
-            drawPath(path, Color(0xFF245A70))
-            drawPath(path, Color(0xFF8FB2B8), style = Stroke(3.dp.toPx()))
-            if (terpilih) {
+        Gambar(Art.node_terkunci, null, Modifier.fillMaxSize())
+        if (terpilih) {
+            Canvas(Modifier.fillMaxSize()) {
                 drawCircle(
                     Color.White,
-                    radius = r * 0.98f,
+                    radius = size.minDimension / 2f - 1.dp.toPx(),
                     style = Stroke(
                         2.dp.toPx(),
                         pathEffect = PathEffect.dashPathEffect(floatArrayOf(5.dp.toPx(), 5.dp.toPx())),
@@ -514,7 +514,6 @@ private fun NodeGerbang(
                 )
             }
         }
-        Text("🔒", fontSize = 16.sp)
     }
 }
 

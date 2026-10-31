@@ -1,5 +1,8 @@
 package com.example.codefishing.core.nav
 
+import androidx.annotation.DrawableRes
+import com.example.codefishing.core.art.Art
+
 /** 14 layar sesuai prototipe HTML (nomor = id di prototipe) + 1 layar khusus debug. */
 enum class Screen(val id: Int, val judul: String) {
     Home(1, "CodeFishing"),
@@ -30,18 +33,18 @@ data class NavEntry(
 )
 
 /** Lima tujuan drawer hamburger sesuai DFD K9. Koleksi ada di bottom nav. */
-enum class DrawerItem(val label: String, val target: Screen) {
-    Home("Home", Screen.Home),
-    ModeBelajar("Mode Belajar", Screen.Peta),
-    ModeExpert("Mode Expert", Screen.Sandbox),
-    Akuarium("Akuarium", Screen.Akuarium),
-    Pengaturan("Pengaturan", Screen.Pengaturan),
+enum class DrawerItem(val label: String, val target: Screen, @DrawableRes val ikon: Int) {
+    Home("Home", Screen.Home, Art.ikon_home),
+    ModeBelajar("Mode Belajar", Screen.Peta, Art.ikon_mode_belajar),
+    ModeExpert("Mode Expert", Screen.Sandbox, Art.ikon_mode_expert),
+    Akuarium("Akuarium", Screen.Akuarium, Art.ikon_akuarium),
+    Pengaturan("Pengaturan", Screen.Pengaturan, Art.ikon_pengaturan),
 }
 
 /** Empat tab bottom navigation sesuai DFD K9. */
-enum class BottomItem(val label: String, val simbol: String, val target: Screen) {
-    Home("Home", "⌂", Screen.Home),
-    Peta("Peta", "⚓", Screen.Peta),
-    Expert("Expert", "⌘", Screen.Sandbox),
-    Koleksi("Koleksi", "🐟", Screen.Koleksi),
+enum class BottomItem(val label: String, @DrawableRes val ikon: Int, val target: Screen) {
+    Home("Home", Art.ikon_home, Screen.Home),
+    Peta("Peta", Art.ikon_mode_belajar, Screen.Peta),
+    Expert("Expert", Art.ikon_mode_expert, Screen.Sandbox),
+    Koleksi("Koleksi", Art.ikon_koleksi, Screen.Koleksi),
 }

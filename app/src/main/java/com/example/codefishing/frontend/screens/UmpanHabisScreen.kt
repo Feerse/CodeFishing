@@ -40,6 +40,7 @@ import com.example.codefishing.core.data.UmpanUi
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.Gambar
+import com.example.codefishing.frontend.components.IndikatorUmpan
 import com.example.codefishing.frontend.components.Kartu
 import com.example.codefishing.frontend.components.TombolSekunder
 import kotlinx.coroutines.delay
@@ -95,6 +96,7 @@ fun UmpanHabisScreen(nav: AppNavigator, padding: PaddingValues) {
             Spacer(Modifier.height(20.dp))
             Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF123B4A)) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Gambar(Art.jam_hitung_mundur, "Hitung mundur pemulihan umpan", Modifier.size(56.dp))
                     Text(
                         if ((u?.sisa ?: 0) > 0) "Umpan tersedia: ${u?.sisa}" else formatWaktu(u?.sisaMs ?: 0),
                         fontFamily = FontFamily.Monospace,
@@ -102,7 +104,11 @@ fun UmpanHabisScreen(nav: AppNavigator, padding: PaddingValues) {
                         fontWeight = FontWeight.Bold,
                         color = if ((u?.sisa ?: 0) > 0) MaterialTheme.colorScheme.primary else Color(0xFFFFB3B3),
                     )
-                    Text("${u?.sisa ?: 0}/${u?.maks ?: 5} umpan · 🪙 $emas emas", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    IndikatorUmpan(u?.sisa ?: 0, u?.maks ?: 5)
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Gambar(Art.lencana_plus_satu, "Umpan emas", Modifier.size(20.dp))
+                        Text("$emas umpan emas", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                 }
             }
             Spacer(Modifier.height(14.dp))

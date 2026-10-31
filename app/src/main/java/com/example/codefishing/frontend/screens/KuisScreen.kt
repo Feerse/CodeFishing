@@ -49,9 +49,14 @@ import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.BarProgres
 import com.example.codefishing.frontend.components.FasePancing
+import com.example.codefishing.core.art.Art
+import com.example.codefishing.frontend.components.Gambar
 import com.example.codefishing.frontend.components.Kartu
 import com.example.codefishing.frontend.components.KodeBlok
 import com.example.codefishing.frontend.components.MemancingScene
+import com.example.codefishing.frontend.components.adeganStage
+import com.example.codefishing.frontend.components.gambarIkan
+import com.example.codefishing.core.db.IkanEntity
 import com.example.codefishing.frontend.components.Memuat
 import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
@@ -94,6 +99,10 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
     var umpanHabis by remember(d) { mutableStateOf(false) }
     var menyimpan by remember(d) { mutableStateOf(false) }
     var menyelesaikan by remember(d) { mutableStateOf(false) }
+    // Ikan target stage: tampil di adegan saat jawaban benar.
+    val ikanTarget by produceState<IkanEntity?>(null, d.stage.ikan_target_id) {
+        value = d.stage.ikan_target_id?.let { c.game.ikan(it) }
+    }
 
     // Jangan biarkan Back sistem membatalkan penyimpanan jawaban/hasil ke Room.
     BackHandler(enabled = menyimpan || menyelesaikan) { }
@@ -188,6 +197,8 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                 fase = fase,
                 varianBoss = d.stage.tipe == "boss",
                 modifier = Modifier.fillMaxWidth(),
+                adegan = adeganStage(d.stage.nomor, d.stage.tipe == "boss"),
+                ikan = gambarIkan(ikanTarget?.gambar ?: "ikan_teri"),
             )
 
             if (d.stage.tipe == "boss") {
@@ -259,8 +270,8 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                         Text(huruf, fontWeight = FontWeight.Bold, color = Color.White)
                     }
                     Text(p.teks, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
-                    if (selesaiSoal && benarIni) Text("✓", color = Color(0xFF46D6A0), fontWeight = FontWeight.Bold)
-                    if (selesaiSoal && dipilih && !benarIni) Text("✕", color = Color(0xFFFF8B8B), fontWeight = FontWeight.Bold)
+                    if (selesaiSoal && benarIni) Gambar(Art.ikon_berhasil, "Jawaban benar", Modifier.size(26.dp))
+                    if (selesaiSoal && dipilih && !benarIni) Gambar(Art.ikon_error, "Jawaban salah", Modifier.size(26.dp))
                 }
             }
 

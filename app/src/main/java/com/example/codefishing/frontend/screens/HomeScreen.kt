@@ -104,10 +104,19 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                         Text("$xp XP", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
                     }
                     BarProgres(LevelRules.progresLevel(xp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("🎣 $umpan umpan", style = MaterialTheme.typography.labelMedium)
-                        Text("🪙 ${player?.umpan_emas ?: 0} umpan emas", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text("⭐ ${stageList.count { it.status == "selesai" }} stage", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Gambar(Art.umpan_penuh, "Umpan", Modifier.size(22.dp))
+                            Text("$umpan umpan", style = MaterialTheme.typography.labelMedium)
+                        }
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Gambar(Art.lencana_plus_satu, "Umpan emas", Modifier.size(20.dp))
+                            Text("${player?.umpan_emas ?: 0} emas", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Gambar(Art.bintang_penuh, "Stage selesai", Modifier.size(20.dp))
+                            Text("${stageList.count { it.status == "selesai" }} stage", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
                     }
                 }
             }

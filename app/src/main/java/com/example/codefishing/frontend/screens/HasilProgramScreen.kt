@@ -36,6 +36,7 @@ import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.expert.SandboxDraft
 import com.example.codefishing.frontend.components.Bintang
 import com.example.codefishing.frontend.components.ChipTier
+import com.example.codefishing.core.art.Art
 import com.example.codefishing.frontend.components.Gambar
 import com.example.codefishing.frontend.components.Kartu
 import com.example.codefishing.frontend.components.KodeBlok
@@ -79,14 +80,11 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Box(
-                Modifier
-                    .size(76.dp)
-                    .background(if (sukses) Color(0xFF1C6B58) else Color(0xFF7B303D), CircleShape),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(if (sukses) "✓" else "✕", style = MaterialTheme.typography.displaySmall)
-            }
+            Gambar(
+                if (sukses) Art.medali_misi_selesai else Art.ikon_error,
+                if (sukses) "Misi selesai" else "Program belum berhasil",
+                Modifier.size(88.dp),
+            )
             Text(if (sukses) "Program Berhasil" else "Program Belum Berhasil", style = MaterialTheme.typography.headlineSmall)
             Bintang(d.hasil.bintang, ukuran = 24)
             Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {

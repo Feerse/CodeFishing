@@ -35,6 +35,7 @@ import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.Bintang
 import com.example.codefishing.frontend.components.ChipTier
+import com.example.codefishing.core.art.Art
 import com.example.codefishing.frontend.components.Gambar
 import com.example.codefishing.frontend.components.Kartu
 import com.example.codefishing.frontend.components.LabelNilai
@@ -77,17 +78,15 @@ fun HasilStageScreen(nav: AppNavigator, padding: PaddingValues) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Box(
-                Modifier
-                    .size(88.dp)
-                    .background(
-                        if (hasil?.lulus == true) Color(0xFF1C6B58) else Color(0xFF7B303D),
-                        CircleShape,
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(if (hasil?.lulus == true) "✓" else "✕", style = MaterialTheme.typography.displayMedium)
-            }
+            Gambar(
+                when {
+                    hasil?.lulus == true && stage.tipe == "boss" -> Art.trofi_boss
+                    hasil?.lulus == true -> Art.tameng_lulus_70
+                    else -> Art.kail_putus
+                },
+                if (hasil?.lulus == true) "Lulus" else "Belum lulus",
+                Modifier.size(104.dp),
+            )
             Text(
                 if (hasil?.lulus == true) {
                     if (stage.tipe == "boss") "Boss Dikalahkan!" else "Stage Selesai!"

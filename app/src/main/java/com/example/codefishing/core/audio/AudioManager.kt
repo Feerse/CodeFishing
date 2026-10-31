@@ -38,6 +38,15 @@ enum class Sfx(@RawRes val res: Int) {
     Sukses3Bintang(R.raw.sfx_sukses_3),
 }
 
+/**
+ * Musik latar. [Umum] diputar di semua layar; [Akuarium] hanya di layar Akuarium.
+ * Pilihan trek diatur lewat [AudioManager.pilihBgm].
+ */
+enum class Bgm(@RawRes val res: Int) {
+    Umum(R.raw.bgm_umum),
+    Akuarium(R.raw.bgm_aquarium),
+}
+
 class AudioManager(context: Context, private val progress: ProgressRepository) {
     private val appContext = context.applicationContext
 
@@ -54,6 +63,8 @@ class AudioManager(context: Context, private val progress: ProgressRepository) {
     private val ids = HashMap<Sfx, Int>()
     private val siap: MutableSet<Int> = ConcurrentHashMap.newKeySet()
     private var bgm: MediaPlayer? = null
+    private var trackAktif: Bgm = Bgm.Umum
+    private var trackDimuat: Bgm? = null
 
     init {
         pool.setOnLoadCompleteListener { _, id, status -> if (status == 0) siap.add(id) }
@@ -67,18 +78,28 @@ class AudioManager(context: Context, private val progress: ProgressRepository) {
     }
 
     /**
-     * Musik latar (BGM-Aquarium, loop), diputar di SEMUA layar. Aman dipanggil berulang.
+     * Musik latar (loop). Trek umum (bgm_umum) diputar di semua layar, kecuali Akuarium
+     * yang memakai bgm_aquarium. Aman dipanggil berulang.
      * Mengikuti saklar Musik di Pengaturan.
      */
     fun startBgm() {
         if (!progress.musicOn) return
-        if (bgm == null) {
-            bgm = MediaPlayer.create(appContext, R.raw.bgm_aquarium)?.apply {
+        if (bgm == null || trackDimuat != trackAktif) {
+            bgm?.release()
+            bgm = MediaPlayer.create(appContext, trackAktif.res)?.apply {
                 isLooping = true
                 setVolume(0.4f, 0.4f)
             }
+            trackDimuat = trackAktif
         }
         bgm?.let { if (!it.isPlaying) it.start() }
+    }
+
+    /** Ganti trek musik latar (dipanggil saat layar berganti). Tidak melakukan apa-apa bila trek sama. */
+    fun pilihBgm(track: Bgm) {
+        if (trackAktif == track) return
+        trackAktif = track
+        if (progress.musicOn) startBgm()
     }
 
     fun stopBgm() {

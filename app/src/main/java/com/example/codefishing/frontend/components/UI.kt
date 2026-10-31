@@ -65,6 +65,35 @@ fun gambarIkan(gambar: String?): Int = when (gambar) {
     else -> Art.tanda_tanya_ikan
 }
 
+/** Siluet ikan yang belum dimiliki (aset ikan_terkunci_*). Ikan tanpa ilustrasi memakai tanda tanya. */
+fun gambarIkanTerkunci(gambar: String?): Int = when (gambar) {
+    "ikan_teri" -> Art.ikan_terkunci_teri
+    "ikan_bandeng" -> Art.ikan_terkunci_bandeng
+    "ikan_bawal" -> Art.ikan_terkunci_bawal
+    "ikan_mujair" -> Art.ikan_terkunci_mujair
+    "ikan_nila" -> Art.ikan_terkunci_nila
+    "ikan_lele" -> Art.ikan_terkunci_lele
+    "ikan_patin" -> Art.ikan_terkunci_patin
+    "ikan_gurame" -> Art.ikan_terkunci_gurame
+    "ikan_sepat" -> Art.ikan_terkunci_sepat
+    "ikan_gabus" -> Art.ikan_terkunci_gabus
+    "ikan_kerapu" -> Art.ikan_terkunci_kerapu
+    "ikan_barakuda" -> Art.ikan_terkunci_barakuda
+    "ikan_tenggiri" -> Art.ikan_terkunci_tenggiri
+    "ikan_arwana" -> Art.ikan_terkunci_arwana
+    "ikan_hiu_merah" -> Art.ikan_terkunci_hiu_merah
+    else -> Art.tanda_tanya_ikan
+}
+
+/** Lencana kelangkaan bergambar (Common sampai Mythic) untuk tier ikan. */
+fun lencanaTier(tier: String): Int = when (tier) {
+    "langka" -> Art.lencana_rare
+    "epik" -> Art.lencana_epic
+    "legenda" -> Art.lencana_legend
+    "mitos" -> Art.lencana_mythic
+    else -> Art.lencana_common
+}
+
 @Composable
 fun Kartu(
     modifier: Modifier = Modifier,
@@ -100,10 +129,10 @@ fun ChipTier(tier: String, modifier: Modifier = Modifier) {
 fun Bintang(jumlah: Int, modifier: Modifier = Modifier, ukuran: Int = 20) {
     Row(modifier, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
         repeat(3) { i ->
-            Text(
-                text = if (i < jumlah) "★" else "☆",
-                color = if (i < jumlah) RarityLegend else MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = ukuran.sp,
+            Gambar(
+                if (i < jumlah) Art.bintang_penuh else Art.bintang_kosong,
+                if (i < jumlah) "Bintang terisi" else "Bintang kosong",
+                Modifier.size((ukuran * 1.3f).dp),
             )
         }
     }

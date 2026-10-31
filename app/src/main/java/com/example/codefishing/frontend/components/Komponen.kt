@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -31,12 +32,23 @@ fun Gambar(
     Image(painterResource(id), contentDescription = deskripsi, modifier = modifier, contentScale = skala)
 }
 
-/** Indikator umpan di toolbar layar Mode Belajar. */
+/** Indikator umpan di toolbar layar Mode Belajar: lima cacing, terisi sebanyak sisa umpan. */
 @Composable
-fun IndikatorUmpan(jumlah: Int) {
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        Gambar(Art.umpan_penuh, "Umpan", Modifier.size(22.dp))
-        Text("$jumlah", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onBackground)
+fun IndikatorUmpan(jumlah: Int, maks: Int = 5) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+        repeat(maks) { i ->
+            Gambar(
+                if (i < jumlah) Art.umpan_penuh else Art.umpan_kosong,
+                if (i < jumlah) "Umpan terisi" else "Umpan kosong",
+                Modifier.size(18.dp),
+            )
+        }
+        Text(
+            "$jumlah/$maks",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.padding(start = 4.dp),
+        )
     }
 }
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DrawerValue
@@ -64,6 +65,7 @@ fun AppScaffold(
                 DrawerItem.entries.forEach { item ->
                     NavigationDrawerItem(
                         label = { Text(item.label) },
+                        icon = { Gambar(item.ikon, null, Modifier.size(28.dp)) },
                         selected = item == aktif,
                         onClick = {
                             audio.play(Sfx.KlikUtama)

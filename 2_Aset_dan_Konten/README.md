@@ -21,7 +21,7 @@ Skrip tersebut menulis SVG sumber di `assets-source/01_Peta_Perairan/peta_perair
 | Folder | Isi |
 |---|---|
 | `assets-source/NN_Fitur/` | 197 PNG transparan (10 folder fitur + logo) + `peta_perairan.svg` + `ic_logo_fg_launcher.png`. Pakai PNG di kode: `Art.nama_file` |
-| `audio/` | 12 audio: `bgm_aquarium` (loop, diputar di semua layar) dan 11 efek suara |
+| `audio/` | 13 audio: 2 musik latar (`bgm_umum` di semua layar, `bgm_aquarium` hanya di Akuarium) dan 11 efek suara |
 | `logo/` | Logo resmi: SVG (sumber) dan PNG transparan |
 | `tools/` | `sync_assets.py`, `generate_seed.js`, `generate_peta_svg.js` |
 
@@ -43,8 +43,9 @@ Isi seed: 10 stage, 9 materi, 45 soal (5 per stage), 50 komposisi kuis, 48 ikan 
 
 | Nama | Dipakai untuk (`Sfx` di `core/audio/AudioManager.kt`) |
 |---|---|
-| `bgm_aquarium` | Musik latar semua layar, mengikuti saklar Musik di Pengaturan |
-| `sfx_klik_1` / `sfx_klik_2` | Klik biasa / hamburger, drawer, tombol utama |
+| `bgm_umum` | Musik latar semua layar kecuali Akuarium, mengikuti saklar Musik di Pengaturan |
+| `bgm_aquarium` | Musik latar khusus layar Akuarium (loop 30 detik) |
+| `sfx_klik_1` / `sfx_klik_2` | Klik biasa / hamburger, drawer, tombol utama (`sfx_klik_1` kini versi final UI_Click1.mp3, bukan .ogg kasar) |
 | `sfx_benar` / `sfx_salah_1` / `sfx_salah_2` | Jawaban benar / salah / stage gagal |
 | `sfx_error` | Kode Sandbox error |
 | `sfx_cipratan` | Lempar kail |

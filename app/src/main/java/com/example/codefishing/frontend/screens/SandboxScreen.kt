@@ -68,7 +68,9 @@ import com.example.codefishing.expert.SandboxRun
 import com.example.codefishing.expert.py.Langkah
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.frontend.components.Bintang
+import com.example.codefishing.core.art.Art
 import com.example.codefishing.frontend.components.Gambar
+import androidx.compose.ui.layout.ContentScale
 import com.example.codefishing.frontend.components.Kartu
 import com.example.codefishing.frontend.components.KodeBlok
 import com.example.codefishing.frontend.components.TombolSekunder
@@ -147,14 +149,7 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
                             },
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            Box(
-                                Modifier
-                                    .size(44.dp)
-                                    .background(Color(0xFF163E4E), RoundedCornerShape(12.dp)),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Text("${item.nomor}", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-                            }
+                            Gambar(lencanaMisi(item.nomor), "Misi ${item.nomor}", Modifier.size(52.dp))
                             Column(Modifier.weight(1f)) {
                                 Text(item.judul, style = MaterialTheme.typography.titleMedium)
                                 Text(item.deskripsi, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -517,7 +512,7 @@ private fun PapanMisi(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
-            "Bingkai oranye = kapal · Petak biru = ikan · 🗑 = sampah",
+            "Bingkai oranye = kapal · Petak berisi ikan = tangkapan · Sepatu bot = sampah",
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
         )
@@ -555,6 +550,17 @@ private fun StatusPapan(hasil: SandboxRun?) {
     )
 }
 
+/** Lencana bergambar untuk daftar misi (misi 7 dan seterusnya = mode bebas). */
+private fun lencanaMisi(nomor: Int): Int = when (nomor) {
+    1 -> Art.lencana_misi_1
+    2 -> Art.lencana_misi_2
+    3 -> Art.lencana_misi_3
+    4 -> Art.lencana_misi_4
+    5 -> Art.lencana_misi_5
+    6 -> Art.lencana_misi_6
+    else -> Art.lencana_misi_bebas
+}
+
 @Composable
 private fun GridDunia(
     ukuran: Int,
@@ -581,24 +587,21 @@ private fun GridDunia(
                         val isi = petak(x, y).isi
                         val adaKapal = x == kapalX && y == kapalY
                         Box(
-                            Modifier
-                                .size(sel)
-                                .background(
-                                    if (isi == "sampah") Color(0xFF4A3A27)
-                                    else if (isi.isNotEmpty()) Color(0xFF123E4A)
-                                    else Color(0xFF0C2B36),
-                                    RoundedCornerShape(6.dp),
-                                )
-                                .border(
-                                    1.dp,
-                                    if (adaKapal) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.05f),
-                                    RoundedCornerShape(6.dp),
-                                ),
+                            Modifier.size(sel),
                             contentAlignment = Alignment.Center,
                         ) {
-                            if (isi == "sampah") {
-                                Text("🗑", fontSize = (sel.value * 0.30f).sp)
-                            } else if (isi.isNotEmpty()) {
+                            // Alas petak memakai aset final: laut, sampah (sepatu bot), atau bingkai kapal.
+                            Gambar(
+                                when {
+                                    adaKapal -> Art.petak_kapal_sekarang
+                                    isi == "sampah" -> Art.petak_sampah
+                                    else -> Art.petak_laut
+                                },
+                                null,
+                                Modifier.fillMaxSize(),
+                                ContentScale.FillBounds,
+                            )
+                            if (isi.isNotEmpty() && isi != "sampah") {
                                 val ikan = petaIkan[isi.lowercase()]
                                 Gambar(
                                     gambarIkan(ikan?.gambar),
@@ -610,7 +613,7 @@ private fun GridDunia(
                             }
                             if (adaKapal) {
                                 Gambar(
-                                    com.example.codefishing.core.art.Art.kapal_pancing,
+                                    Art.kapal_atas_timur,
                                     "Kapal",
                                     Modifier
                                         .size(sel * 0.68f)

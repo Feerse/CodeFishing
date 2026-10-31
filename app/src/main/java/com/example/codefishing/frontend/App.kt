@@ -11,12 +11,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.LocalContainer
+import com.example.codefishing.core.audio.Bgm
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.BottomItem
 import com.example.codefishing.core.nav.DrawerItem
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.AppScaffold
+import com.example.codefishing.frontend.components.Gambar
 import com.example.codefishing.frontend.components.IndikatorUmpan
 import com.example.codefishing.frontend.screens.AkuariumScreen
 import com.example.codefishing.frontend.screens.BossScreen
@@ -74,6 +80,10 @@ fun App() {
     BackHandler(enabled = nav.canGoBack) { nav.back() }
 
     val saatIni = nav.current
+    // Musik: trek umum di semua layar, trek khusus di Akuarium.
+    LaunchedEffect(saatIni.screen) {
+        c.audio.pilihBgm(if (saatIni.screen == Screen.Akuarium) Bgm.Akuarium else Bgm.Umum)
+    }
     if (saatIni.screen == Screen.Pengenalan) {
         PengenalanScreen(onSelesai = {
             c.progress.onboardingSeen = true
@@ -100,7 +110,13 @@ fun App() {
                         NavigationBarItem(
                             selected = aktif == item,
                             onClick = { nav.resetTo(item.target) },
-                            icon = { Text(item.simbol) },
+                            icon = {
+                                Gambar(
+                                    item.ikon,
+                                    null,
+                                    Modifier.size(28.dp).alpha(if (aktif == item) 1f else 0.7f),
+                                )
+                            },
                             label = { Text(item.label) },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = MaterialTheme.colorScheme.primary,
