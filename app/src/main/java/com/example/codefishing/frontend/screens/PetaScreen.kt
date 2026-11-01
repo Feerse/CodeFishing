@@ -51,7 +51,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
@@ -85,6 +84,7 @@ import com.example.codefishing.frontend.components.gambarIkan
 import com.example.codefishing.frontend.peta.PetaGeometri
 import com.example.codefishing.frontend.peta.PetaSvg
 import com.example.codefishing.frontend.peta.TitikPeta
+import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -101,13 +101,14 @@ private sealed interface PilihanPeta {
 @Composable
 fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
     val c = LocalContainer.current
+    val warna = LocalWarna.current
     val stages by c.game.observeStages().collectAsState(emptyList())
     val player by c.game.observePlayer().collectAsState(null)
     val ikan by produceState<List<IkanEntity>>(emptyList()) { value = c.game.semuaIkan() }
     val petaIkan = remember(ikan) { ikan.associateBy { it.id } }
     val context = LocalContext.current
-    val latarPeta by produceState<ImageBitmap?>(null) {
-        value = withContext(Dispatchers.IO) { PetaSvg.ambil(context) }
+    val latarPeta by produceState<ImageBitmap?>(null, warna.gelap) {
+        value = withContext(Dispatchers.IO) { PetaSvg.ambil(context, !warna.gelap) }
     }
     var terpilih by remember { mutableStateOf<PilihanPeta?>(null) }
     var pilihanTampil by remember { mutableStateOf<PilihanPeta?>(null) }
@@ -131,7 +132,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
         Modifier
             .fillMaxSize()
             .padding(padding)
-            .background(Color(0xFF071923)),
+            .background(warna.petaLatar),
     ) {
         BoxWithConstraints(Modifier.fillMaxSize()) {
             val lebar = maxWidth
@@ -172,7 +173,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                                 .fillMaxSize()
                                 .background(
                                     Brush.verticalGradient(
-                                        listOf(Color(0xFF123F55), Color(0xFF0B2F42), Color(0xFF07171F)),
+                                        listOf(warna.petaLatar, warna.petaLatarBawah),
                                     ),
                                 ),
                         )
@@ -205,7 +206,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                                 Text(
                                     "BOSS",
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = Color(0xFFFFB3B3),
+                                    color = warna.bahayaTeks,
                                     fontWeight = FontWeight.Bold,
                                     letterSpacing = 2.sp,
                                 )
@@ -219,7 +220,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                                         y = tinggi * (titik.y / PetaGeometri.TINGGI_DUNIA) + ukuran / 2 + 1.dp,
                                     )
                                     .width(lebarLabel)
-                                    .background(Color(0xB3081B26), RoundedCornerShape(6.dp))
+                                    .background(warna.petaLabelLatar, RoundedCornerShape(6.dp))
                                     .padding(horizontal = 4.dp, vertical = 1.dp),
                                 contentAlignment = Alignment.Center,
                             ) {
@@ -229,7 +230,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                                     overflow = TextOverflow.Ellipsis,
                                     textAlign = TextAlign.Center,
                                     style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, lineHeight = 11.sp),
-                                    color = if (stage.terbuka == 1) Color(0xFFE8F4F6) else Color(0xFF9DB5BF).copy(alpha = 0.55f),
+                                    color = if (stage.terbuka == 1) warna.petaTeks else warna.petaTeksRedup.copy(alpha = 0.55f),
                                 )
                             }
                         }
@@ -257,14 +258,14 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                             Text(
                                 "ANTARTIKA",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = Color(0xFFD8EDF5),
+                                color = warna.petaTeks,
                                 fontWeight = FontWeight.Bold,
                                 letterSpacing = 1.4.sp,
                             )
                             Text(
                                 "segera hadir",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = Color(0xFF9FC4D6).copy(alpha = 0.75f),
+                                color = warna.petaTeksRedup.copy(alpha = 0.75f),
                             )
                         }
                     }
@@ -281,7 +282,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                         Text(
                             "PERAIRAN ANTARTIKA",
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color(0xFFD8EDF5).copy(alpha = 0.55f),
+                            color = warna.petaTeks.copy(alpha = 0.55f),
                             textAlign = TextAlign.Center,
                             letterSpacing = 2.sp,
                         )
@@ -315,7 +316,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
             ChipPeta("$jumlahSelesai/10", "stage selesai", alignEnd = true)
         }
         Gambar(
-            Art.kompas,
+            if (warna.gelap) Art.kompas else Art.kompas_terang,
             "Kompas",
             Modifier
                 .align(Alignment.BottomEnd)
@@ -354,29 +355,31 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
 
 @Composable
 private fun ChipPeta(judul: String, sub: String, alignEnd: Boolean = false) {
+    val warna = LocalWarna.current
     Column(
         Modifier
-            .background(Color(0xCC081B26), RoundedCornerShape(12.dp))
-            .border(1.dp, Color.White.copy(alpha = 0.10f), RoundedCornerShape(12.dp))
+            .background(warna.petaChipLatar, RoundedCornerShape(12.dp))
+            .border(1.dp, warna.petaTeks.copy(alpha = 0.10f), RoundedCornerShape(12.dp))
             .padding(horizontal = 12.dp, vertical = 7.dp),
         horizontalAlignment = if (alignEnd) Alignment.End else Alignment.Start,
     ) {
         Text(
             judul,
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = warna.petaTeks,
             fontWeight = FontWeight.Bold,
         )
         Text(
             sub,
             style = MaterialTheme.typography.labelSmall,
-            color = Color(0xFF9DB5BF),
+            color = warna.petaTeksRedup,
         )
     }
 }
 
 @Composable
 private fun RutePeta(jumlahSelesai: Int, modifier: Modifier = Modifier) {
+    val warna = LocalWarna.current
     val warnaAktif = MaterialTheme.colorScheme.primary
     Canvas(modifier) {
         val sx = size.width / PetaGeometri.LEBAR_DUNIA
@@ -384,7 +387,7 @@ private fun RutePeta(jumlahSelesai: Int, modifier: Modifier = Modifier) {
         val semua = PetaGeometri.pathDari(PetaGeometri.ruteLengkap(), sx, sy)
         drawPath(
             path = semua,
-            color = Color(0xFF8FB2B8).copy(alpha = 0.55f),
+            color = warna.petaGaris.copy(alpha = 0.55f),
             style = Stroke(
                 width = 3.dp.toPx(),
                 cap = StrokeCap.Round,
@@ -409,6 +412,8 @@ private fun NodePeta(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val warna = LocalWarna.current
+    val warnaProgres = MaterialTheme.colorScheme.tertiary
     val buka = stage.terbuka == 1
     val selesai = stage.status == "selesai"
     val boss = stage.tipe == "boss"
@@ -443,7 +448,7 @@ private fun NodePeta(
                 val stroke = 3.dp.toPx()
                 val rr = size.minDimension / 2f - stroke / 2f
                 drawArc(
-                    color = Color(0xFF5FD3A0),
+                    color = warnaProgres,
                     startAngle = -90f,
                     sweepAngle = progres * 360f,
                     useCenter = false,
@@ -460,22 +465,22 @@ private fun NodePeta(
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 3.dp)
                     .size(20.dp)
-                    .background(Color(0xFF071923), CircleShape)
-                    .border(1.dp, Color(0xFFF26A2E), CircleShape),
+                    .background(warna.petaLatar, CircleShape)
+                    .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
                     "${stage.nomor}",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFFFFE7B0),
+                    color = warna.petaNomorTeks,
                 )
             }
         }
         if (terpilih) {
             Canvas(Modifier.fillMaxSize()) {
                 drawCircle(
-                    color = Color.White,
+                    color = warna.petaTeks,
                     radius = size.minDimension / 2f - 1.dp.toPx(),
                     style = Stroke(
                         width = 2.dp.toPx(),
@@ -493,6 +498,7 @@ private fun NodeGerbang(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val warna = LocalWarna.current
     Box(
         modifier
             .size(58.dp)
@@ -505,7 +511,7 @@ private fun NodeGerbang(
         if (terpilih) {
             Canvas(Modifier.fillMaxSize()) {
                 drawCircle(
-                    Color.White,
+                    warna.petaTeks,
                     radius = size.minDimension / 2f - 1.dp.toPx(),
                     style = Stroke(
                         2.dp.toPx(),
@@ -550,13 +556,14 @@ private fun LembarStage(
     onTutup: () -> Unit,
     onBerlayar: () -> Unit,
 ) {
+    val warna = LocalWarna.current
     val buka = stage.terbuka == 1
     val selesai = stage.status == "selesai"
     Kartu(
         Modifier
             .fillMaxWidth()
             .padding(12.dp),
-        warna = Color(0xF20C2B36),
+        warna = warna.kartu.copy(alpha = 0.97f),
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -576,7 +583,7 @@ private fun LembarStage(
                         .clickable(onClick = onTutup)
                         .padding(8.dp)
                         .semantics { contentDescription = "Tutup info stage" },
-                    color = Color(0xFF9DB5BF),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 16.sp,
                 )
             }
@@ -604,7 +611,7 @@ private fun LembarStage(
                             else -> "Belum dimulai"
                         },
                         style = MaterialTheme.typography.labelMedium,
-                        color = if (buka) MaterialTheme.colorScheme.tertiary else Color(0xFF9DB5BF),
+                        color = if (buka) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     if (buka) {
                         Text(
@@ -618,13 +625,13 @@ private fun LembarStage(
             if (buka) {
                 BarProgres(
                     stage.skor_terbaik / 100f,
-                    warna = if (selesai) Color(0xFF5FD3A0) else MaterialTheme.colorScheme.primary,
+                    warna = if (selesai) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
                 )
             } else {
                 Text(
                     "Selesaikan Stage ${stage.nomor - 1} untuk membuka rute ini.",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFFFFB3B3),
+                    color = warna.bahayaTeks,
                 )
             }
             Spacer(Modifier.height(2.dp))
@@ -643,16 +650,17 @@ private fun LembarStage(
 
 @Composable
 private fun LembarGerbang(onTutup: () -> Unit) {
+    val warna = LocalWarna.current
     Kartu(
         Modifier
             .fillMaxWidth()
             .padding(12.dp),
-        warna = Color(0xF20C2B36),
+        warna = warna.kartu.copy(alpha = 0.97f),
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("PERAIRAN BERIKUTNYA", style = MaterialTheme.typography.labelSmall, color = Color(0xFF9FC4D6), letterSpacing = 1.sp)
+                    Text("PERAIRAN BERIKUTNYA", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, letterSpacing = 1.sp)
                     Text("Antartika", style = MaterialTheme.typography.titleLarge)
                 }
                 Text(
@@ -662,7 +670,7 @@ private fun LembarGerbang(onTutup: () -> Unit) {
                         .clickable(onClick = onTutup)
                         .padding(8.dp)
                         .semantics { contentDescription = "Tutup info gerbang" },
-                    color = Color(0xFF9DB5BF),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 16.sp,
                 )
             }

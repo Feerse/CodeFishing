@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.nav.DrawerItem
+import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.launch
 
 /**
@@ -51,11 +52,12 @@ fun AppScaffold(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val audio = LocalContainer.current.audio
+    val gelap = LocalWarna.current.gelap
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet(drawerContainerColor = MaterialTheme.colorScheme.surface) {
                 Text(
                     text = "CodeFishing",
                     style = MaterialTheme.typography.titleLarge,
@@ -65,7 +67,7 @@ fun AppScaffold(
                 DrawerItem.entries.forEach { item ->
                     NavigationDrawerItem(
                         label = { Text(item.label) },
-                        icon = { Gambar(item.ikon, null, Modifier.size(28.dp)) },
+                        icon = { Gambar(if (gelap) item.ikon else item.ikonTerang, null, Modifier.size(28.dp)) },
                         selected = item == aktif,
                         onClick = {
                             audio.play(Sfx.KlikUtama)

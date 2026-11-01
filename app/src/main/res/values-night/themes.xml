@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Splash awal mengikuti mode gelap sistem. -->
+    <style name="Theme.CodeFishing" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/neutral_deep</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

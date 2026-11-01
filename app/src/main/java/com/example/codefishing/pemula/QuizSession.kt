@@ -23,7 +23,7 @@ class QuizSession(val stage: Stage, private val ambangPersen: Int) {
     val selesai: Boolean get() = indeks >= totalSoal
     val soalSaatIni get() = stage.soal[indeks]
 
-    data class Hasil(val benar: Boolean, val umpanBerkurang: Boolean, val keluaran: String)
+    data class Hasil(val benar: Boolean, val keluaran: String)
 
     /** Jawab soal saat ini dengan opsi ke-[pilihan]. Lanjut ke soal berikutnya lewat [lanjut]. */
     fun jawab(pilihan: Int): Hasil {
@@ -38,7 +38,7 @@ class QuizSession(val stage: Stage, private val ambangPersen: Int) {
             jumlahSalah++
             beruntun = 0
         }
-        return Hasil(benar, umpanBerkurang = !benar, keluaran = s.opsi[pilihan].keluaran)
+        return Hasil(benar, s.opsi[pilihan].keluaran)
     }
 
     fun lanjut() {
@@ -51,4 +51,7 @@ class QuizSession(val stage: Stage, private val ambangPersen: Int) {
 
     /** Tanpa kesalahan sama sekali: dasar kenaikan grade ikan Stage (Common -> Epic). */
     val sempurna: Boolean get() = selesai && jumlahSalah == 0
+
+    /** Penalti umpan dihitung sekali saat stage selesai dengan minimal 3 salah. */
+    val umpanBerkurang: Boolean get() = selesai && jumlahSalah >= 3
 }

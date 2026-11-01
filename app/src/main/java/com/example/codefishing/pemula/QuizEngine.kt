@@ -21,7 +21,6 @@ data class HasilJawab(
     val pembahasan: String,
     val poin: Int,
     val combo: Int,
-    val umpanBerkurang: Boolean,
 )
 
 /**
@@ -52,6 +51,9 @@ class QuizEngine(
     val lulus: Boolean get() = persen >= skorLulus
     val sempurna: Boolean get() = jumlahSalah == 0 && jumlahBenar == total && total > 0
 
+    /** Penalti umpan dihitung sekali saat semua soal selesai dengan minimal 3 salah. */
+    val umpanBerkurang: Boolean get() = selesai && jumlahSalah >= 3
+
     fun pilih(pilihanIndeks: Int): HasilJawab? {
         val q = soalSaatIni ?: return null
         val p = q.pilihan.getOrNull(pilihanIndeks) ?: return null
@@ -61,11 +63,11 @@ class QuizEngine(
             comboTertinggi = maxOf(comboTertinggi, combo)
             xp += q.poin
             indeks++
-            return HasilJawab(true, q.pembahasan, q.poin, combo, false)
+            return HasilJawab(true, q.pembahasan, q.poin, combo)
         }
         jumlahSalah++
         combo = 0
         indeks++
-        return HasilJawab(false, q.pembahasan, 0, 0, true)
+        return HasilJawab(false, q.pembahasan, 0, 0)
     }
 }

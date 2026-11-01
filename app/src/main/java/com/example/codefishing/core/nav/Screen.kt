@@ -33,18 +33,28 @@ data class NavEntry(
 )
 
 /** Lima tujuan drawer hamburger sesuai DFD K9. Koleksi ada di bottom nav. */
-enum class DrawerItem(val label: String, val target: Screen, @DrawableRes val ikon: Int) {
-    Home("Home", Screen.Home, Art.ikon_home),
-    ModeBelajar("Mode Belajar", Screen.Peta, Art.ikon_mode_belajar),
-    ModeExpert("Mode Expert", Screen.Sandbox, Art.ikon_mode_expert),
-    Akuarium("Akuarium", Screen.Akuarium, Art.ikon_akuarium),
-    Pengaturan("Pengaturan", Screen.Pengaturan, Art.ikon_pengaturan),
+enum class DrawerItem(
+    val label: String,
+    val target: Screen,
+    @DrawableRes val ikon: Int,
+    @DrawableRes val ikonTerang: Int,
+) {
+    Home("Home", Screen.Home, Art.ikon_home, Art.ikon_home_terang),
+    ModeBelajar("Mode Belajar", Screen.Peta, Art.ikon_mode_belajar, Art.ikon_mode_belajar_terang),
+    ModeExpert("Mode Expert", Screen.Sandbox, Art.ikon_mode_expert, Art.ikon_mode_expert_terang),
+    Akuarium("Akuarium", Screen.Akuarium, Art.ikon_akuarium, Art.ikon_akuarium_terang),
+    Pengaturan("Pengaturan", Screen.Pengaturan, Art.ikon_pengaturan, Art.ikon_pengaturan_terang),
 }
 
 /** Empat tab bottom navigation sesuai DFD K9. */
-enum class BottomItem(val label: String, @DrawableRes val ikon: Int, val target: Screen) {
-    Home("Home", Art.ikon_home, Screen.Home),
-    Peta("Peta", Art.ikon_mode_belajar, Screen.Peta),
-    Expert("Expert", Art.ikon_mode_expert, Screen.Sandbox),
-    Koleksi("Koleksi", Art.ikon_koleksi, Screen.Koleksi),
+enum class BottomItem(
+    val label: String,
+    @DrawableRes val ikon: Int,
+    @DrawableRes val ikonTerang: Int,
+    val target: Screen,
+) {
+    Home("Home", Art.ikon_home, Art.ikon_home_terang, Screen.Home),
+    Peta("Peta", Art.ikon_mode_belajar, Art.ikon_mode_belajar_terang, Screen.Peta),
+    Expert("Expert", Art.ikon_mode_expert, Art.ikon_mode_expert_terang, Screen.Sandbox),
+    Koleksi("Koleksi", Art.ikon_koleksi, Art.ikon_koleksi_terang, Screen.Koleksi),
 }

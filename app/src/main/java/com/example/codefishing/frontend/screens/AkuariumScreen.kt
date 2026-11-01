@@ -54,6 +54,7 @@ import com.example.codefishing.frontend.components.Kartu
 import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
 import com.example.codefishing.frontend.components.gambarIkan
+import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.cos
@@ -66,6 +67,7 @@ import kotlin.math.sin
 @Composable
 fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
     val c = LocalContainer.current
+    val warna = LocalWarna.current
     val ikan by c.game.observeAkuarium().collectAsState(emptyList())
     val scope = rememberCoroutineScope()
     var dipilih by remember { mutableStateOf<KoleksiLengkapView?>(null) }
@@ -83,10 +85,15 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
         Modifier
             .fillMaxSize()
             .padding(padding)
-            .background(Color(0xFF07212C)),
+            .background(warna.akuariumBawah),
     ) {
-        Gambar(Art.latar_akuarium, "Akuarium", Modifier.fillMaxSize(), ContentScale.Crop)
-        Box(Modifier.fillMaxSize().background(Color(0x33000000)))
+        Gambar(
+            if (warna.gelap) Art.latar_akuarium else Art.latar_akuarium_terang,
+            "Akuarium",
+            Modifier.fillMaxSize(),
+            ContentScale.Crop,
+        )
+        Box(Modifier.fillMaxSize().background(if (warna.gelap) Color(0x33000000) else Color.Transparent))
 
         BoxWithConstraints(Modifier.fillMaxSize()) {
             val lebar = maxWidth
@@ -131,7 +138,8 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                             )
                         }
                         .size(ukuranGel)
-                        .alpha(0.7f),
+                        .alpha(if (warna.gelap) 0.7f else 0.28f),
+                    warna = if (warna.gelap) null else warna.petaGaris,
                 )
             }
 
@@ -207,13 +215,13 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                 Text(
                     "Akuarium",
                     style = MaterialTheme.typography.headlineMedium,
-                    color = Color.White,
+                    color = warna.teksDiAdegan,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
                     "${ikan.size} jenis ikan berenang di sini",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.White.copy(alpha = 0.75f),
+                    color = warna.teksDiAdeganRedup,
                 )
             }
 
@@ -226,12 +234,12 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
             ) {
                 val pilihan = dipilih?.let { lama -> ikan.firstOrNull { it.ikan_id == lama.ikan_id } ?: lama }
                 if (pilihan != null) {
-                    Kartu(Modifier.fillMaxWidth(), warna = Color(0xEE0C2B36)) {
+                    Kartu(Modifier.fillMaxWidth(), warna = warna.kartu.copy(alpha = 0.95f)) {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             Gambar(gambarIkan(pilihan.gambar), pilihan.nama, Modifier.size(54.dp))
                             Column(Modifier.weight(1f)) {
-                                Text(pilihan.nama, color = Color.White, style = MaterialTheme.typography.titleMedium)
-                                Text("Jumlah ×${pilihan.jumlah} · ${"%.1f".format(pilihan.bobot_terbesar)} kg · kenyang ${pilihan.kenyang}%", style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.75f))
+                                Text(pilihan.nama, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.titleMedium)
+                                Text("Jumlah ×${pilihan.jumlah} · ${"%.1f".format(pilihan.bobot_terbesar)} kg · kenyang ${pilihan.kenyang}%", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                             TombolSekunder(
                                 teks = "Beri Makan",
@@ -246,10 +254,10 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                         }
                     }
                 } else if (ikan.isEmpty()) {
-                    Kartu(Modifier.fillMaxWidth(), warna = Color(0xEE0C2B36)) {
+                    Kartu(Modifier.fillMaxWidth(), warna = warna.kartu.copy(alpha = 0.95f)) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text("Akuarium masih kosong", color = Color.White, style = MaterialTheme.typography.titleMedium)
-                            Text("Tangkap ikan pertamamu di Mode Belajar atau Sandbox.", color = Color.White.copy(alpha = 0.7f), style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+                            Text("Akuarium masih kosong", color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.titleMedium)
+                            Text("Tangkap ikan pertamamu di Mode Belajar atau Sandbox.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
                             TombolUtama(
                                 teks = "Buka Peta",
                                 onClick = {

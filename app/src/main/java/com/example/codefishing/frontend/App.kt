@@ -39,6 +39,7 @@ import com.example.codefishing.frontend.screens.PetaScreen
 import com.example.codefishing.frontend.screens.PilihModeScreen
 import com.example.codefishing.frontend.screens.SandboxScreen
 import com.example.codefishing.frontend.screens.UmpanHabisScreen
+import com.example.codefishing.ui.theme.LocalWarna
 
 /** Layar Mode Belajar yang menampilkan indikator umpan di kanan toolbar. */
 private val layarUmpan = setOf(
@@ -80,6 +81,7 @@ fun App() {
     BackHandler(enabled = nav.canGoBack) { nav.back() }
 
     val saatIni = nav.current
+    val gelap = LocalWarna.current.gelap
     // Musik: trek umum di semua layar, trek khusus di Akuarium.
     LaunchedEffect(saatIni.screen) {
         c.audio.pilihBgm(if (saatIni.screen == Screen.Akuarium) Bgm.Akuarium else Bgm.Umum)
@@ -112,7 +114,7 @@ fun App() {
                             onClick = { nav.resetTo(item.target) },
                             icon = {
                                 Gambar(
-                                    item.ikon,
+                                    if (gelap) item.ikon else item.ikonTerang,
                                     null,
                                     Modifier.size(28.dp).alpha(if (aktif == item) 1f else 0.7f),
                                 )

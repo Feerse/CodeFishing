@@ -23,7 +23,6 @@ import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -43,10 +42,12 @@ import com.example.codefishing.frontend.components.Memuat
 import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
 import com.example.codefishing.frontend.components.gambarIkan
+import com.example.codefishing.ui.theme.LocalWarna
 
 @Composable
 fun HasilStageScreen(nav: AppNavigator, padding: PaddingValues) {
     val c = LocalContainer.current
+    val warna = LocalWarna.current
     val stageId = nav.current.stage.takeIf { it > 0 } ?: 1
     val hasil = c.game.hasilStageTerakhir?.takeIf { it.stage.id == stageId }
     val fallback by produceState<StageEntity?>(null, stageId, hasil) {
@@ -65,8 +66,8 @@ fun HasilStageScreen(nav: AppNavigator, padding: PaddingValues) {
             .padding(padding)
             .background(
                 Brush.verticalGradient(
-                    if (hasil?.lulus == true) listOf(Color(0xFF0C3A35), Color(0xFF071923))
-                    else listOf(Color(0xFF3A2028), Color(0xFF071923)),
+                    if (hasil?.lulus == true) listOf(warna.suksesLatar, warna.latarBawah)
+                    else listOf(warna.bahayaLatar, warna.latarBawah),
                 ),
             ),
     ) {
@@ -86,6 +87,7 @@ fun HasilStageScreen(nav: AppNavigator, padding: PaddingValues) {
                 },
                 if (hasil?.lulus == true) "Lulus" else "Belum lulus",
                 Modifier.size(104.dp),
+                warna = if (hasil?.lulus != true && !warna.gelap) warna.petaGaris else null,
             )
             Text(
                 if (hasil?.lulus == true) {
@@ -103,8 +105,17 @@ fun HasilStageScreen(nav: AppNavigator, padding: PaddingValues) {
                     LabelNilai("XP", "+${hasil.xpDidapat}")
                 }
 
+                if (hasil.umpanBerkurang) {
+                    Text(
+                        "Umpan −1 · stage selesai dengan 3+ jawaban salah",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = warna.bahayaTeks,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+
                 if (hasil.tangkapan != null) {
-                    Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF123B4A)) {
+                    Kartu(Modifier.fillMaxWidth(), warna = warna.kartuLembut) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             Text(
                                 when {
@@ -129,9 +140,9 @@ fun HasilStageScreen(nav: AppNavigator, padding: PaddingValues) {
                 }
 
                 if (hasil.bonus.isNotEmpty()) {
-                    Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF2B2B16)) {
+                    Kartu(Modifier.fillMaxWidth(), warna = warna.peringatanLatar) {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text("Bonus combo", style = MaterialTheme.typography.labelLarge, color = Color(0xFFFFD98A))
+                            Text("Bonus combo", style = MaterialTheme.typography.labelLarge, color = warna.peringatanTeks)
                             hasil.bonus.forEach { b ->
                                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                                     Gambar(gambarIkan(b.ikan.gambar), b.ikan.nama, Modifier.size(44.dp))

@@ -33,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -57,6 +56,7 @@ import com.example.codefishing.frontend.components.lencanaTier
 import com.example.codefishing.frontend.components.tierLabel
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.frontend.components.tierWarna
+import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.launch
 
 private val filterTier = listOf(
@@ -71,6 +71,7 @@ private val filterTier = listOf(
 @Composable
 fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
     val c = LocalContainer.current
+    val warna = LocalWarna.current
     var filter by remember { mutableStateOf<String?>(null) }
     val list by c.game.observeKoleksi(filter).collectAsState(emptyList())
     val statistik by c.game.observeStatistik().collectAsState(null)
@@ -81,7 +82,7 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
         Modifier
             .fillMaxSize()
             .padding(padding)
-            .background(Brush.verticalGradient(listOf(Color(0xFF0B2432), Color(0xFF071923)))),
+            .background(Brush.verticalGradient(listOf(warna.latarAtas, warna.latarBawah))),
     ) {
         Column(Modifier.fillMaxSize()) {
             Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -130,13 +131,14 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
 @Composable
 private fun FilterChip(value: String?, label: String, aktif: String?, onClick: (String?) -> Unit) {
     val on = aktif == value
+    val warna = LocalWarna.current
     Text(
         label,
         style = MaterialTheme.typography.labelMedium,
-        color = if (on) Color(0xFF062B2A) else MaterialTheme.colorScheme.onSurfaceVariant,
+        color = if (on) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = Modifier
             .background(
-                if (on) MaterialTheme.colorScheme.primary else Color.White.copy(alpha = 0.06f),
+                if (on) MaterialTheme.colorScheme.primary else warna.kartuLembut,
                 RoundedCornerShape(50),
             )
             .clickable { onClick(value) }
@@ -147,12 +149,13 @@ private fun FilterChip(value: String?, label: String, aktif: String?, onClick: (
 @Composable
 private fun KartuIkan(ikan: KoleksiLengkapView, onClick: () -> Unit) {
     val dimiliki = ikan.dimiliki == 1
-    val warna = if (dimiliki) tierWarna(ikan.tier) else Color(0xFF30424A)
+    val palet = LocalWarna.current
+    val warnaTier = if (dimiliki) tierWarna(ikan.tier) else palet.petaTeksRedup
     Column(
         Modifier
             .fillMaxWidth()
-            .background(Color(0xFF123340), RoundedCornerShape(16.dp))
-            .border(1.dp, warna.copy(alpha = 0.45f), RoundedCornerShape(16.dp))
+            .background(palet.kartuLembut, RoundedCornerShape(16.dp))
+            .border(1.dp, warnaTier.copy(alpha = 0.45f), RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
             .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -165,7 +168,11 @@ private fun KartuIkan(ikan: KoleksiLengkapView, onClick: () -> Unit) {
                 Modifier.size(84.dp),
             )
             if (!dimiliki) {
-                Gambar(Art.ikon_gembok, "Terkunci", Modifier.align(Alignment.BottomEnd).size(24.dp))
+                Gambar(
+                    if (palet.gelap) Art.ikon_gembok else Art.ikon_gembok_terang,
+                    "Terkunci",
+                    Modifier.align(Alignment.BottomEnd).size(24.dp),
+                )
             } else {
                 Gambar(lencanaTier(ikan.tier), tierLabel(ikan.tier), Modifier.align(Alignment.TopStart).size(32.dp))
             }
@@ -179,7 +186,7 @@ private fun KartuIkan(ikan: KoleksiLengkapView, onClick: () -> Unit) {
         Text(
             if (ikan.syarat_unlock?.contains("Segera hadir") == true) "Segera hadir" else if (dimiliki) "×${ikan.jumlah} · ${"%.1f".format(ikan.bobot_terbesar)} kg" else (ikan.syarat_unlock ?: "Belum ditemukan"),
             style = MaterialTheme.typography.labelSmall,
-            color = if (dimiliki) MaterialTheme.colorScheme.onSurfaceVariant else Color.White.copy(alpha = 0.42f),
+            color = if (dimiliki) MaterialTheme.colorScheme.onSurfaceVariant else palet.petaTeksRedup.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
         )
         if (dimiliki) ChipTier(ikan.tier)
@@ -192,11 +199,12 @@ private fun DetailIkan(ikan: KoleksiLengkapView, onTutup: () -> Unit, onBeriMaka
     val scope = rememberCoroutineScope()
     val detail by produceState<IkanEntity?>(null, ikan.ikan_id) { value = c.game.ikan(ikan.ikan_id) }
     val dimiliki = ikan.dimiliki == 1
+    val palet = LocalWarna.current
 
     Column(
         Modifier
             .fillMaxWidth()
-            .background(Color(0xFF0E2C39), RoundedCornerShape(24.dp))
+            .background(palet.kartuTinggi, RoundedCornerShape(24.dp))
             .padding(18.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -213,12 +221,16 @@ private fun DetailIkan(ikan: KoleksiLengkapView, onTutup: () -> Unit, onBeriMaka
             Gambar(lencanaTier(ikan.tier), tierLabel(ikan.tier), Modifier.size(56.dp))
             ChipTier(ikan.tier)
         } else {
-            Gambar(Art.ikon_gembok, "Terkunci", Modifier.size(36.dp))
+            Gambar(
+                if (palet.gelap) Art.ikon_gembok else Art.ikon_gembok_terang,
+                "Terkunci",
+                Modifier.size(36.dp),
+            )
         }
         Text(ikan.deskripsi, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
         if (!dimiliki) {
-            Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF2A2A17)) {
-                Text(ikan.syarat_unlock ?: "Selesaikan tantangan untuk membuka ikan ini.", style = MaterialTheme.typography.bodySmall, color = Color(0xFFFFD98A))
+            Kartu(Modifier.fillMaxWidth(), warna = palet.peringatanLatar) {
+                Text(ikan.syarat_unlock ?: "Selesaikan tantangan untuk membuka ikan ini.", style = MaterialTheme.typography.bodySmall, color = palet.peringatanTeks)
             }
         } else {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {

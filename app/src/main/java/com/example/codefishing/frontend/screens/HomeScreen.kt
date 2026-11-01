@@ -29,6 +29,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -46,11 +47,13 @@ import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
 import com.example.codefishing.frontend.components.gambarIkan
 import com.example.codefishing.pemula.LevelRules
+import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
     val c = LocalContainer.current
+    val warna = LocalWarna.current
     val player by c.game.observePlayer().collectAsState(null)
     val stageList by c.game.observeStages().collectAsState(emptyList())
     val statistik by c.game.observeStatistik().collectAsState(null)
@@ -69,16 +72,35 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
     val terkumpul = statistik?.ikan_terkumpul ?: 0
 
     Box(Modifier.fillMaxSize().padding(padding)) {
-        Gambar(Art.latar_langit_malam, null, Modifier.fillMaxSize(), ContentScale.Crop)
-        Box(
-            Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        listOf(Color.Transparent, Color(0xCC0C2B3A), Color(0xFF0C2B3A)),
+        if (warna.gelap) {
+            Gambar(Art.latar_langit_malam, null, Modifier.fillMaxSize(), ContentScale.Crop)
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(Color.Transparent, warna.latarBawah.copy(alpha = 0.82f), warna.latarBawah),
+                        ),
                     ),
-                ),
-        )
+            )
+        } else {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(Brush.verticalGradient(listOf(warna.latarAtas, warna.latarBawah))),
+            )
+            Gambar(
+                Art.ombak_pola,
+                null,
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(220.dp)
+                    .alpha(0.22f),
+                ContentScale.Crop,
+                warna = warna.ombak,
+            )
+        }
         Column(
             Modifier
                 .fillMaxSize()
@@ -122,7 +144,7 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
             }
 
             if (harian != null) {
-                Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF173F4E)) {
+                Kartu(Modifier.fillMaxWidth(), warna = warna.kartuTinggi) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         Gambar(gambarIkan(harian!!.ikan.gambar), harian!!.ikan.nama, Modifier.size(52.dp))
                         Column(Modifier.weight(1f)) {
@@ -160,7 +182,7 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                 }
             }
 
-            Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF133C4F)) {
+            Kartu(Modifier.fillMaxWidth(), warna = warna.kartu) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("Lanjutkan perjalanan", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
                     Text(judulLanjut, style = MaterialTheme.typography.titleLarge)
@@ -203,7 +225,7 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                         progress = { terkumpul / 48f },
                         modifier = Modifier.size(36.dp),
                         color = MaterialTheme.colorScheme.primary,
-                        trackColor = Color.White.copy(alpha = 0.1f),
+                        trackColor = warna.garis,
                     )
                 }
             }

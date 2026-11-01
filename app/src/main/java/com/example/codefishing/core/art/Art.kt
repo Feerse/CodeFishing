@@ -15,6 +15,7 @@ object Art {
     @DrawableRes val ikon_air_tenang: Int = R.drawable.ikon_air_tenang
     @DrawableRes val kapal_peta: Int = R.drawable.kapal_peta
     @DrawableRes val kompas: Int = R.drawable.kompas
+    @DrawableRes val kompas_terang: Int = R.drawable.kompas_terang
     @DrawableRes val mercusuar: Int = R.drawable.mercusuar
     @DrawableRes val node_aktif: Int = R.drawable.node_aktif
     @DrawableRes val node_boss: Int = R.drawable.node_boss
@@ -66,6 +67,7 @@ object Art {
     @DrawableRes val kapal_pancing_tanpa_joran: Int = R.drawable.kapal_pancing_tanpa_joran
     @DrawableRes val kapal_pukat: Int = R.drawable.kapal_pukat
     @DrawableRes val latar_bawah_laut: Int = R.drawable.latar_bawah_laut
+    @DrawableRes val latar_bawah_laut_terang: Int = R.drawable.latar_bawah_laut_terang
     @DrawableRes val latar_es_kutub: Int = R.drawable.latar_es_kutub
     @DrawableRes val latar_langit_badai: Int = R.drawable.latar_langit_badai
     @DrawableRes val latar_langit_malam: Int = R.drawable.latar_langit_malam
@@ -88,7 +90,9 @@ object Art {
     @DrawableRes val kaleng_umpan: Int = R.drawable.kaleng_umpan
     @DrawableRes val tameng_lulus_70: Int = R.drawable.tameng_lulus_70
     @DrawableRes val umpan_kosong: Int = R.drawable.umpan_kosong
+    @DrawableRes val umpan_kosong_terang: Int = R.drawable.umpan_kosong_terang
     @DrawableRes val umpan_penuh: Int = R.drawable.umpan_penuh
+    @DrawableRes val umpan_penuh_terang: Int = R.drawable.umpan_penuh_terang
     @DrawableRes val umpan_pulih: Int = R.drawable.umpan_pulih
 
     // 05_Ikan_Koleksi
@@ -123,6 +127,7 @@ object Art {
     @DrawableRes val ikan_terkunci_tenggiri: Int = R.drawable.ikan_terkunci_tenggiri
     @DrawableRes val ikan_terkunci_teri: Int = R.drawable.ikan_terkunci_teri
     @DrawableRes val ikon_gembok: Int = R.drawable.ikon_gembok
+    @DrawableRes val ikon_gembok_terang: Int = R.drawable.ikon_gembok_terang
     @DrawableRes val kartu_ikan_kosong: Int = R.drawable.kartu_ikan_kosong
     @DrawableRes val kartu_ikan_terkunci: Int = R.drawable.kartu_ikan_terkunci
     @DrawableRes val lencana_common: Int = R.drawable.lencana_common
@@ -155,6 +160,7 @@ object Art {
     @DrawableRes val ikon_misi: Int = R.drawable.ikon_misi
     @DrawableRes val ikon_reset: Int = R.drawable.ikon_reset
     @DrawableRes val ilustrasi_editor_kode: Int = R.drawable.ilustrasi_editor_kode
+    @DrawableRes val ilustrasi_editor_kode_terang: Int = R.drawable.ilustrasi_editor_kode_terang
     @DrawableRes val jejak_kapal: Int = R.drawable.jejak_kapal
     @DrawableRes val kapal_atas_barat: Int = R.drawable.kapal_atas_barat
     @DrawableRes val kapal_atas_selatan: Int = R.drawable.kapal_atas_selatan
@@ -165,8 +171,11 @@ object Art {
     @DrawableRes val petak_ikan: Int = R.drawable.petak_ikan
     @DrawableRes val petak_ikan_gurame: Int = R.drawable.petak_ikan_gurame
     @DrawableRes val petak_kapal_sekarang: Int = R.drawable.petak_kapal_sekarang
+    @DrawableRes val petak_kapal_sekarang_terang: Int = R.drawable.petak_kapal_sekarang_terang
     @DrawableRes val petak_laut: Int = R.drawable.petak_laut
+    @DrawableRes val petak_laut_terang: Int = R.drawable.petak_laut_terang
     @DrawableRes val petak_sampah: Int = R.drawable.petak_sampah
+    @DrawableRes val petak_sampah_terang: Int = R.drawable.petak_sampah_terang
     @DrawableRes val sorotan_baris_aktif: Int = R.drawable.sorotan_baris_aktif
     @DrawableRes val sorotan_baris_error: Int = R.drawable.sorotan_baris_error
 
@@ -176,6 +185,7 @@ object Art {
     @DrawableRes val bintang_2_dari_3: Int = R.drawable.bintang_2_dari_3
     @DrawableRes val bintang_3_dari_3: Int = R.drawable.bintang_3_dari_3
     @DrawableRes val bintang_kosong: Int = R.drawable.bintang_kosong
+    @DrawableRes val bintang_kosong_terang: Int = R.drawable.bintang_kosong_terang
     @DrawableRes val bintang_penuh: Int = R.drawable.bintang_penuh
     @DrawableRes val jam_par: Int = R.drawable.jam_par
     @DrawableRes val lencana_misi_1: Int = R.drawable.lencana_misi_1
@@ -200,25 +210,36 @@ object Art {
     @DrawableRes val kelp_3: Int = R.drawable.kelp_3
     @DrawableRes val kerang: Int = R.drawable.kerang
     @DrawableRes val latar_akuarium: Int = R.drawable.latar_akuarium
+    @DrawableRes val latar_akuarium_terang: Int = R.drawable.latar_akuarium_terang
     @DrawableRes val pasir_dasar: Int = R.drawable.pasir_dasar
     @DrawableRes val serpihan_makanan: Int = R.drawable.serpihan_makanan
 
     // 10_Pendukung_UI
     @DrawableRes val ic_logo_fg: Int = R.drawable.ic_logo_fg
     @DrawableRes val ikon_akuarium: Int = R.drawable.ikon_akuarium
+    @DrawableRes val ikon_akuarium_terang: Int = R.drawable.ikon_akuarium_terang
     @DrawableRes val ikon_android: Int = R.drawable.ikon_android
     @DrawableRes val ikon_hamburger: Int = R.drawable.ikon_hamburger
+    @DrawableRes val ikon_hamburger_terang: Int = R.drawable.ikon_hamburger_terang
     @DrawableRes val ikon_home: Int = R.drawable.ikon_home
+    @DrawableRes val ikon_home_terang: Int = R.drawable.ikon_home_terang
     @DrawableRes val ikon_koleksi: Int = R.drawable.ikon_koleksi
+    @DrawableRes val ikon_koleksi_terang: Int = R.drawable.ikon_koleksi_terang
     @DrawableRes val ikon_lanjutkan: Int = R.drawable.ikon_lanjutkan
     @DrawableRes val ikon_mode_belajar: Int = R.drawable.ikon_mode_belajar
+    @DrawableRes val ikon_mode_belajar_terang: Int = R.drawable.ikon_mode_belajar_terang
     @DrawableRes val ikon_mode_expert: Int = R.drawable.ikon_mode_expert
+    @DrawableRes val ikon_mode_expert_terang: Int = R.drawable.ikon_mode_expert_terang
     @DrawableRes val ikon_musik: Int = R.drawable.ikon_musik
+    @DrawableRes val ikon_musik_terang: Int = R.drawable.ikon_musik_terang
     @DrawableRes val ikon_offline: Int = R.drawable.ikon_offline
     @DrawableRes val ikon_pengaturan: Int = R.drawable.ikon_pengaturan
+    @DrawableRes val ikon_pengaturan_terang: Int = R.drawable.ikon_pengaturan_terang
     @DrawableRes val ikon_reset_progres: Int = R.drawable.ikon_reset_progres
     @DrawableRes val ikon_suara: Int = R.drawable.ikon_suara
     @DrawableRes val ikon_suara_mati: Int = R.drawable.ikon_suara_mati
+    @DrawableRes val ikon_suara_mati_terang: Int = R.drawable.ikon_suara_mati_terang
+    @DrawableRes val ikon_suara_terang: Int = R.drawable.ikon_suara_terang
     @DrawableRes val ikon_tersimpan: Int = R.drawable.ikon_tersimpan
     @DrawableRes val kartu_lanjutkan: Int = R.drawable.kartu_lanjutkan
     @DrawableRes val logo_app_ikon: Int = R.drawable.logo_app_ikon
@@ -235,6 +256,7 @@ object Art {
             "ikon_air_tenang" to R.drawable.ikon_air_tenang,
             "kapal_peta" to R.drawable.kapal_peta,
             "kompas" to R.drawable.kompas,
+            "kompas_terang" to R.drawable.kompas_terang,
             "mercusuar" to R.drawable.mercusuar,
             "node_aktif" to R.drawable.node_aktif,
             "node_boss" to R.drawable.node_boss,
@@ -286,6 +308,7 @@ object Art {
             "kapal_pancing_tanpa_joran" to R.drawable.kapal_pancing_tanpa_joran,
             "kapal_pukat" to R.drawable.kapal_pukat,
             "latar_bawah_laut" to R.drawable.latar_bawah_laut,
+            "latar_bawah_laut_terang" to R.drawable.latar_bawah_laut_terang,
             "latar_es_kutub" to R.drawable.latar_es_kutub,
             "latar_langit_badai" to R.drawable.latar_langit_badai,
             "latar_langit_malam" to R.drawable.latar_langit_malam,
@@ -308,7 +331,9 @@ object Art {
             "kaleng_umpan" to R.drawable.kaleng_umpan,
             "tameng_lulus_70" to R.drawable.tameng_lulus_70,
             "umpan_kosong" to R.drawable.umpan_kosong,
+            "umpan_kosong_terang" to R.drawable.umpan_kosong_terang,
             "umpan_penuh" to R.drawable.umpan_penuh,
+            "umpan_penuh_terang" to R.drawable.umpan_penuh_terang,
             "umpan_pulih" to R.drawable.umpan_pulih,
         ),
         "05_Ikan_Koleksi" to listOf(
@@ -343,6 +368,7 @@ object Art {
             "ikan_terkunci_tenggiri" to R.drawable.ikan_terkunci_tenggiri,
             "ikan_terkunci_teri" to R.drawable.ikan_terkunci_teri,
             "ikon_gembok" to R.drawable.ikon_gembok,
+            "ikon_gembok_terang" to R.drawable.ikon_gembok_terang,
             "kartu_ikan_kosong" to R.drawable.kartu_ikan_kosong,
             "kartu_ikan_terkunci" to R.drawable.kartu_ikan_terkunci,
             "lencana_common" to R.drawable.lencana_common,
@@ -375,6 +401,7 @@ object Art {
             "ikon_misi" to R.drawable.ikon_misi,
             "ikon_reset" to R.drawable.ikon_reset,
             "ilustrasi_editor_kode" to R.drawable.ilustrasi_editor_kode,
+            "ilustrasi_editor_kode_terang" to R.drawable.ilustrasi_editor_kode_terang,
             "jejak_kapal" to R.drawable.jejak_kapal,
             "kapal_atas_barat" to R.drawable.kapal_atas_barat,
             "kapal_atas_selatan" to R.drawable.kapal_atas_selatan,
@@ -385,8 +412,11 @@ object Art {
             "petak_ikan" to R.drawable.petak_ikan,
             "petak_ikan_gurame" to R.drawable.petak_ikan_gurame,
             "petak_kapal_sekarang" to R.drawable.petak_kapal_sekarang,
+            "petak_kapal_sekarang_terang" to R.drawable.petak_kapal_sekarang_terang,
             "petak_laut" to R.drawable.petak_laut,
+            "petak_laut_terang" to R.drawable.petak_laut_terang,
             "petak_sampah" to R.drawable.petak_sampah,
+            "petak_sampah_terang" to R.drawable.petak_sampah_terang,
             "sorotan_baris_aktif" to R.drawable.sorotan_baris_aktif,
             "sorotan_baris_error" to R.drawable.sorotan_baris_error,
         ),
@@ -396,6 +426,7 @@ object Art {
             "bintang_2_dari_3" to R.drawable.bintang_2_dari_3,
             "bintang_3_dari_3" to R.drawable.bintang_3_dari_3,
             "bintang_kosong" to R.drawable.bintang_kosong,
+            "bintang_kosong_terang" to R.drawable.bintang_kosong_terang,
             "bintang_penuh" to R.drawable.bintang_penuh,
             "jam_par" to R.drawable.jam_par,
             "lencana_misi_1" to R.drawable.lencana_misi_1,
@@ -420,25 +451,36 @@ object Art {
             "kelp_3" to R.drawable.kelp_3,
             "kerang" to R.drawable.kerang,
             "latar_akuarium" to R.drawable.latar_akuarium,
+            "latar_akuarium_terang" to R.drawable.latar_akuarium_terang,
             "pasir_dasar" to R.drawable.pasir_dasar,
             "serpihan_makanan" to R.drawable.serpihan_makanan,
         ),
         "10_Pendukung_UI" to listOf(
             "ic_logo_fg" to R.drawable.ic_logo_fg,
             "ikon_akuarium" to R.drawable.ikon_akuarium,
+            "ikon_akuarium_terang" to R.drawable.ikon_akuarium_terang,
             "ikon_android" to R.drawable.ikon_android,
             "ikon_hamburger" to R.drawable.ikon_hamburger,
+            "ikon_hamburger_terang" to R.drawable.ikon_hamburger_terang,
             "ikon_home" to R.drawable.ikon_home,
+            "ikon_home_terang" to R.drawable.ikon_home_terang,
             "ikon_koleksi" to R.drawable.ikon_koleksi,
+            "ikon_koleksi_terang" to R.drawable.ikon_koleksi_terang,
             "ikon_lanjutkan" to R.drawable.ikon_lanjutkan,
             "ikon_mode_belajar" to R.drawable.ikon_mode_belajar,
+            "ikon_mode_belajar_terang" to R.drawable.ikon_mode_belajar_terang,
             "ikon_mode_expert" to R.drawable.ikon_mode_expert,
+            "ikon_mode_expert_terang" to R.drawable.ikon_mode_expert_terang,
             "ikon_musik" to R.drawable.ikon_musik,
+            "ikon_musik_terang" to R.drawable.ikon_musik_terang,
             "ikon_offline" to R.drawable.ikon_offline,
             "ikon_pengaturan" to R.drawable.ikon_pengaturan,
+            "ikon_pengaturan_terang" to R.drawable.ikon_pengaturan_terang,
             "ikon_reset_progres" to R.drawable.ikon_reset_progres,
             "ikon_suara" to R.drawable.ikon_suara,
             "ikon_suara_mati" to R.drawable.ikon_suara_mati,
+            "ikon_suara_mati_terang" to R.drawable.ikon_suara_mati_terang,
+            "ikon_suara_terang" to R.drawable.ikon_suara_terang,
             "ikon_tersimpan" to R.drawable.ikon_tersimpan,
             "kartu_lanjutkan" to R.drawable.kartu_lanjutkan,
             "logo_app_ikon" to R.drawable.logo_app_ikon,

@@ -10,6 +10,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -29,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.codefishing.core.art.Art
+import com.example.codefishing.ui.theme.LocalWarna
 
 /**
  * Fase animasi nelayan pada layar Kuis Mode Belajar.
@@ -79,6 +80,7 @@ fun MemancingScene(
     @DrawableRes adegan: Int = adeganStage(1, varianBoss),
     @DrawableRes ikan: Int = Art.ikan_teri,
 ) {
+    val warna = LocalWarna.current
     val context = LocalContext.current
     val kurangiGerak = remember(context) {
         runCatching {
@@ -180,12 +182,14 @@ fun MemancingScene(
                     Modifier
                         .align(Alignment.TopCenter)
                         .padding(top = 12.dp)
+                        .background(warna.suksesLatar.copy(alpha = 0.94f), RoundedCornerShape(50))
+                        .padding(horizontal = 8.dp, vertical = 3.dp)
                         .alpha(a),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
-                    Gambar(Art.lencana_plus_satu, null, Modifier.size(28.dp))
-                    Text("+25 XP", color = Color(0xFF8BF0C7), fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                    Gambar(Art.lencana_plus_satu, null, Modifier.size(24.dp))
+                    Text("+25 XP", color = warna.suksesTeks, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 }
             }
             FasePancing.Lepas -> {
@@ -206,13 +210,15 @@ fun MemancingScene(
                         .alpha(1f - 0.7f * a),
                 )
                 Text(
-                    "Umpan \u22121",
-                    color = Color(0xFFFFB3B3),
+                    "Salah",
+                    color = warna.bahayaTeks,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(top = 14.dp)
+                        .background(warna.bahayaLatar.copy(alpha = 0.94f), RoundedCornerShape(50))
+                        .padding(horizontal = 10.dp, vertical = 3.dp)
                         .alpha(a),
                 )
             }

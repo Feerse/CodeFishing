@@ -22,6 +22,7 @@ import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.Gambar
+import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.launch
 
 /**
@@ -36,14 +37,28 @@ fun PilihModeScreen(nav: AppNavigator, padding: PaddingValues) {
         modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        KartuMode("Belajar", "Pemula", Art.ikon_mode_belajar, Art.latar_bawah_laut) {
+        KartuMode(
+            judul = "Belajar",
+            tag = "Pemula",
+            ikon = Art.ikon_mode_belajar,
+            ikonTerang = Art.ikon_mode_belajar_terang,
+            latar = Art.latar_bawah_laut,
+            latarTerang = Art.latar_bawah_laut_terang,
+        ) {
             c.audio.play(Sfx.Klik)
             scope.launch {
                 c.game.simpanPosisi(null, "belajar")
                 nav.go(Screen.Peta)
             }
         }
-        KartuMode("Sandbox", "Expert", Art.ikon_mode_expert, Art.adegan_kapal) {
+        KartuMode(
+            judul = "Sandbox",
+            tag = "Expert",
+            ikon = Art.ikon_mode_expert,
+            ikonTerang = Art.ikon_mode_expert_terang,
+            latar = Art.adegan_kapal,
+            latarTerang = Art.adegan_kapal,
+        ) {
             c.audio.play(Sfx.Klik)
             scope.launch {
                 c.game.simpanPosisi(null, "expert")
@@ -54,14 +69,23 @@ fun PilihModeScreen(nav: AppNavigator, padding: PaddingValues) {
 }
 
 @Composable
-private fun KartuMode(judul: String, tag: String, ikon: Int, latar: Int, onClick: () -> Unit) {
+private fun KartuMode(
+    judul: String,
+    tag: String,
+    ikon: Int,
+    ikonTerang: Int,
+    latar: Int,
+    latarTerang: Int,
+    onClick: () -> Unit,
+) {
+    val gelap = LocalWarna.current.gelap
     Card(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
-        Gambar(latar, null, Modifier.fillMaxWidth().height(150.dp))
+        Gambar(if (gelap) latar else latarTerang, null, Modifier.fillMaxWidth().height(150.dp))
         Column(Modifier.padding(16.dp)) {
-            Gambar(ikon, null, Modifier.height(28.dp))
+            Gambar(if (gelap) ikon else ikonTerang, null, Modifier.height(28.dp))
             Text(judul, style = MaterialTheme.typography.titleLarge)
             Text(tag, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
         }

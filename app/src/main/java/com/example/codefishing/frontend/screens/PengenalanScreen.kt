@@ -23,20 +23,37 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.frontend.components.Gambar
 import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
+import com.example.codefishing.ui.theme.LocalWarna
 
-private data class Halaman(val judul: String, val isi: String, val gambar: Int)
+private data class Halaman(
+    val judul: String,
+    val isi: String,
+    val gambar: Int,
+    val gambarTerang: Int = gambar,
+)
 
 private val halaman = listOf(
     Halaman("Belajar Python sambil memancing", "Semua soal dan kode memakai Python.", Art.logo_codefishing),
     Halaman("Pilih umpan kode yang benar", "Jawaban benar menangkap ikan.", Art.kaleng_umpan),
-    Halaman("Tulis programmu sendiri", "Mode Expert: kodemu menggerakkan kapal.", Art.ilustrasi_editor_kode),
-    Halaman("Kumpulkan ikan di akuarium", "Semua jalan offline, tanpa internet.", Art.latar_akuarium),
+    Halaman(
+        "Tulis programmu sendiri",
+        "Mode Expert: kodemu menggerakkan kapal.",
+        Art.ilustrasi_editor_kode,
+        Art.ilustrasi_editor_kode_terang,
+    ),
+    Halaman(
+        "Kumpulkan ikan di akuarium",
+        "Semua jalan offline, tanpa internet.",
+        Art.latar_akuarium,
+        Art.latar_akuarium_terang,
+    ),
 )
 
 /**
@@ -46,15 +63,21 @@ private val halaman = listOf(
 @Composable
 fun PengenalanScreen(onSelesai: () -> Unit) {
     var i by rememberSaveable { mutableIntStateOf(0) }
+    val warna = LocalWarna.current
     val h = halaman[i]
     val terakhir = i == halaman.lastIndex
 
     Column(
-        modifier = Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding().padding(24.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Brush.verticalGradient(listOf(warna.latarAtas, warna.latarBawah)))
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-            Gambar(h.gambar, null, Modifier.fillMaxWidth().height(260.dp))
+            Gambar(if (warna.gelap) h.gambar else h.gambarTerang, null, Modifier.fillMaxWidth().height(260.dp))
         }
         Text(h.judul, style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center)
         Text(

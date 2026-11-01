@@ -40,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -77,6 +76,8 @@ import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
 import com.example.codefishing.frontend.components.gambarIkan
 import com.example.codefishing.pemula.FishRules
+import com.example.codefishing.ui.theme.LocalWarna
+import com.example.codefishing.ui.theme.WarnaCodeFishing
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -92,14 +93,14 @@ private val kataKunciPython = Regex(
 )
 private val komentarPython = Regex("""#[^\n]*""")
 
-private fun warnaiKode(teks: String): AnnotatedString = buildAnnotatedString {
+private fun warnaiKode(teks: String, warna: WarnaCodeFishing): AnnotatedString = buildAnnotatedString {
     append(teks)
     kataKunciPython.findAll(teks).forEach {
-        addStyle(SpanStyle(color = Color(0xFFFFC46B)), it.range.first, it.range.last + 1)
+        addStyle(SpanStyle(color = warna.kodeKataKunci), it.range.first, it.range.last + 1)
     }
     // Komentar diberi warna terakhir agar tetap menutupi kata kunci di dalamnya.
     komentarPython.findAll(teks).forEach {
-        addStyle(SpanStyle(color = Color(0xFF7FB3C8)), it.range.first, it.range.last + 1)
+        addStyle(SpanStyle(color = warna.kodeKomentar), it.range.first, it.range.last + 1)
     }
 }
 
@@ -108,6 +109,7 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
     val context = LocalContext.current
     val misi = remember { SandboxContent.misi(context) }
     val c = LocalContainer.current
+    val warna = LocalWarna.current
     val bintang by c.game.observeBintangMisi().collectAsState(emptyList())
     val petaBintang = bintang.associateBy { it.id }
     var aktif by remember(nav.current.misi) {
@@ -120,7 +122,7 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
         Modifier
             .fillMaxSize()
             .padding(padding)
-            .background(Brush.verticalGradient(listOf(Color(0xFF0B2432), Color(0xFF071923)))),
+            .background(Brush.verticalGradient(listOf(warna.latarAtas, warna.latarBawah))),
     ) {
         val m = aktif
         if (m == null) {
@@ -188,15 +190,16 @@ private fun EditorMisi(
     val c = LocalContainer.current
     val scope = rememberCoroutineScope()
     val engine = remember { SandboxEngine() }
+    val warna = LocalWarna.current
     val semuaIkan by produceState<List<IkanEntity>>(emptyList()) { value = c.game.semuaIkan() }
     val pengaturan by c.game.observeSettings().collectAsState(null)
     val petaIkan = semuaIkan.associateBy { it.nama.lowercase() }
-    val transformasi = remember(pengaturan?.pewarnaan_sintaks) {
+    val transformasi = remember(pengaturan?.pewarnaan_sintaks, warna) {
         if (pengaturan?.pewarnaan_sintaks == 0) {
             VisualTransformation.None
         } else {
             VisualTransformation { teks ->
-                TransformedText(warnaiKode(teks.text), OffsetMapping.Identity)
+                TransformedText(warnaiKode(teks.text, warna), OffsetMapping.Identity)
             }
         }
     }
@@ -264,12 +267,12 @@ private fun EditorMisi(
         )
 
         if (hasil?.evaluasi?.sukses == true) {
-            Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF113D34)) {
+            Kartu(Modifier.fillMaxWidth(), warna = warna.suksesLatar) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
                         if (misi.nomor < 7) "Lanjut ke misi berikutnya" else "Semua misi selesai",
                         style = MaterialTheme.typography.titleMedium,
-                        color = Color(0xFF8BF0C7),
+                        color = warna.suksesTeks,
                     )
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         if (misi.nomor < 7) {
@@ -295,8 +298,8 @@ private fun EditorMisi(
             }
         }
 
-        Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF2A2A17)) {
-            Text("Petunjuk", style = MaterialTheme.typography.labelLarge, color = Color(0xFFFFD98A))
+        Kartu(Modifier.fillMaxWidth(), warna = warna.peringatanLatar) {
+            Text("Petunjuk", style = MaterialTheme.typography.labelLarge, color = warna.peringatanTeks)
             Spacer(Modifier.height(4.dp))
             Text(misi.hint, style = MaterialTheme.typography.bodySmall)
         }
@@ -318,10 +321,12 @@ private fun EditorMisi(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.None),
             visualTransformation = transformasi,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color(0xFF071E29),
-                unfocusedContainerColor = Color(0xFF071E29),
+                focusedContainerColor = warna.kodeLatar,
+                unfocusedContainerColor = warna.kodeLatar,
+                focusedTextColor = warna.kodeTeks,
+                unfocusedTextColor = warna.kodeTeks,
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color.White.copy(alpha = 0.12f),
+                unfocusedBorderColor = warna.garis,
             ),
         )
 
@@ -400,7 +405,7 @@ private fun EditorMisi(
         }
 
         if (pesanSimpan != null) {
-            Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF41232A)) {
+            Kartu(Modifier.fillMaxWidth(), warna = warna.bahayaLatar) {
                 Text(pesanSimpan!!, style = MaterialTheme.typography.bodySmall)
             }
         }
@@ -410,9 +415,9 @@ private fun EditorMisi(
             Kartu(
                 Modifier.fillMaxWidth(),
                 warna = when {
-                    !r.hasil.berhasil -> Color(0xFF41232A)
-                    r.evaluasi.sukses -> Color(0xFF113D34)
-                    else -> Color(0xFF3B3618)
+                    !r.hasil.berhasil -> warna.bahayaLatar
+                    r.evaluasi.sukses -> warna.suksesLatar
+                    else -> warna.peringatanLatar
                 },
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -464,6 +469,7 @@ private fun PapanMisi(
     petaIkan: Map<String, IkanEntity>,
     memuat: Boolean,
 ) {
+    val warna = LocalWarna.current
     Column(
         Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(7.dp),
@@ -489,7 +495,7 @@ private fun PapanMisi(
                 Modifier
                     .fillMaxWidth()
                     .height(170.dp)
-                    .background(Color(0xFF061A24), RoundedCornerShape(14.dp)),
+                    .background(warna.kodeLatar, RoundedCornerShape(14.dp)),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -521,9 +527,9 @@ private fun PapanMisi(
                 hasil.hasil.pesanError ?: hasil.evaluasi.alasan,
                 style = MaterialTheme.typography.bodySmall,
                 color = when {
-                    !hasil.hasil.berhasil -> Color(0xFFFF8B8B)
-                    hasil.evaluasi.sukses -> Color(0xFF5FD3A0)
-                    else -> Color(0xFFFFD98A)
+                    !hasil.hasil.berhasil -> warna.bahayaTeks
+                    hasil.evaluasi.sukses -> warna.suksesTeks
+                    else -> warna.peringatanTeks
                 },
             )
         }
@@ -532,11 +538,12 @@ private fun PapanMisi(
 
 @Composable
 private fun StatusPapan(hasil: SandboxRun?) {
+    val palet = LocalWarna.current
     val (teks, warna) = when {
-        hasil == null -> "SIAP" to Color(0xFF9DB5BF)
-        !hasil.hasil.berhasil -> "ERROR" to Color(0xFFFF8B8B)
-        hasil.evaluasi.sukses -> "BERHASIL" to Color(0xFF5FD3A0)
-        else -> "BELUM TERCAPAI" to Color(0xFFFFD98A)
+        hasil == null -> "SIAP" to palet.petaTeksRedup
+        !hasil.hasil.berhasil -> "ERROR" to palet.bahayaTeks
+        hasil.evaluasi.sukses -> "BERHASIL" to palet.suksesTeks
+        else -> "BELUM TERCAPAI" to palet.peringatanTeks
     }
     Text(
         teks,
@@ -569,10 +576,11 @@ private fun GridDunia(
     petak: (Int, Int) -> com.example.codefishing.expert.Petak,
     petaIkan: Map<String, IkanEntity>,
 ) {
+    val warna = LocalWarna.current
     BoxWithConstraints(
         Modifier
             .fillMaxWidth()
-            .background(Color(0xFF061A24), RoundedCornerShape(14.dp))
+            .background(warna.kodeLatar, RoundedCornerShape(14.dp))
             .padding(8.dp),
         contentAlignment = Alignment.Center,
     ) {
@@ -593,9 +601,9 @@ private fun GridDunia(
                             // Alas petak memakai aset final: laut, sampah (sepatu bot), atau bingkai kapal.
                             Gambar(
                                 when {
-                                    adaKapal -> Art.petak_kapal_sekarang
-                                    isi == "sampah" -> Art.petak_sampah
-                                    else -> Art.petak_laut
+                                    adaKapal -> if (warna.gelap) Art.petak_kapal_sekarang else Art.petak_kapal_sekarang_terang
+                                    isi == "sampah" -> if (warna.gelap) Art.petak_sampah else Art.petak_sampah_terang
+                                    else -> if (warna.gelap) Art.petak_laut else Art.petak_laut_terang
                                 },
                                 null,
                                 Modifier.fillMaxSize(),

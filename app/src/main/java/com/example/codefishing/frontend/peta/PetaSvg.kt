@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.graphics.createBitmap
 import com.caverock.androidsvg.SVG
 
-/** Merender latar SVG sekali lalu menyimpannya di memori. */
+/** Merender latar SVG sekali per tema lalu menyimpannya di memori. */
 object PetaSvg {
     private const val LEBAR_BITMAP = 1000
     private const val TINGGI_BITMAP = 2800
@@ -17,11 +17,16 @@ object PetaSvg {
     @Volatile
     private var cache: ImageBitmap? = null
 
-    fun ambil(context: Context): ImageBitmap? {
-        cache?.let { return it }
+    @Volatile
+    private var cacheTerang: Boolean? = null
+
+    /** [terang] memilih peta versi siang; cache lama diganti agar tidak menyimpan dua bitmap besar. */
+    fun ambil(context: Context, terang: Boolean): ImageBitmap? {
+        cache?.takeIf { cacheTerang == terang }?.let { return it }
         return synchronized(this) {
-            cache ?: runCatching {
-                val svg = context.assets.open("peta/peta_perairan.svg").use { input ->
+            cache?.takeIf { cacheTerang == terang } ?: runCatching {
+                val nama = if (terang) "peta/peta_perairan_terang.svg" else "peta/peta_perairan.svg"
+                val svg = context.assets.open(nama).use { input ->
                     SVG.getFromInputStream(input)
                 }
                 svg.setDocumentWidth(LEBAR_BITMAP.toFloat())
@@ -30,8 +35,11 @@ object PetaSvg {
                 svg.renderToCanvas(Canvas(bitmap))
                 bitmap.asImageBitmap()
             }.onFailure {
-                Log.e("PetaSvg", "Gagal merender peta_perairan.svg", it)
-            }.getOrNull()?.also { cache = it }
+                Log.e("PetaSvg", "Gagal merender peta (terang=$terang)", it)
+            }.getOrNull()?.also {
+                cache = it
+                cacheTerang = terang
+            }
         }
     }
 }

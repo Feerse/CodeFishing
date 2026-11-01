@@ -24,18 +24,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.codefishing.core.art.Art
-import com.example.codefishing.ui.theme.RarityCommon
-import com.example.codefishing.ui.theme.RarityEpic
-import com.example.codefishing.ui.theme.RarityLegend
-import com.example.codefishing.ui.theme.RarityMythic
-import com.example.codefishing.ui.theme.RarityRare
+import com.example.codefishing.ui.theme.LocalWarna
 
-fun tierWarna(tier: String): Color = when (tier) {
-    "langka" -> RarityRare
-    "epik" -> RarityEpic
-    "legenda" -> RarityLegend
-    "mitos" -> RarityMythic
-    else -> RarityCommon
+@Composable
+fun tierWarna(tier: String): Color {
+    val warna = LocalWarna.current
+    return when (tier) {
+        "langka" -> warna.rarityLangka
+        "epik" -> warna.rarityEpik
+        "legenda" -> warna.rarityLegenda
+        "mitos" -> warna.rarityMitos
+        else -> warna.rarityBiasa
+    }
 }
 
 fun tierLabel(tier: String): String = when (tier) {
@@ -105,7 +105,7 @@ fun Kartu(
     Column(
         modifier
             .background(warna, RoundedCornerShape(20.dp))
-            .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(20.dp))
+            .border(1.dp, LocalWarna.current.garis, RoundedCornerShape(20.dp))
             .padding(16.dp),
     ) { isi() }
 }
@@ -127,10 +127,15 @@ fun ChipTier(tier: String, modifier: Modifier = Modifier) {
 
 @Composable
 fun Bintang(jumlah: Int, modifier: Modifier = Modifier, ukuran: Int = 20) {
+    val gelap = LocalWarna.current.gelap
     Row(modifier, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
         repeat(3) { i ->
             Gambar(
-                if (i < jumlah) Art.bintang_penuh else Art.bintang_kosong,
+                when {
+                    i < jumlah -> Art.bintang_penuh
+                    gelap -> Art.bintang_kosong
+                    else -> Art.bintang_kosong_terang
+                },
                 if (i < jumlah) "Bintang terisi" else "Bintang kosong",
                 Modifier.size((ukuran * 1.3f).dp),
             )
@@ -140,16 +145,17 @@ fun Bintang(jumlah: Int, modifier: Modifier = Modifier, ukuran: Int = 20) {
 
 @Composable
 fun KodeBlok(kode: String, modifier: Modifier = Modifier, judul: String = "PYTHON") {
+    val warna = LocalWarna.current
     Column(
         modifier
             .fillMaxWidth()
-            .background(Color(0xFF071E29), RoundedCornerShape(14.dp))
-            .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(14.dp))
+            .background(warna.kodeLatar, RoundedCornerShape(14.dp))
+            .border(1.dp, warna.garis, RoundedCornerShape(14.dp))
             .padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(judul, color = MaterialTheme.colorScheme.tertiary, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 2.sp)
-        Text(kode, fontFamily = FontFamily.Monospace, fontSize = 14.sp, color = Color(0xFFE8F4F6), lineHeight = 22.sp)
+        Text(kode, fontFamily = FontFamily.Monospace, fontSize = 14.sp, color = warna.kodeTeks, lineHeight = 22.sp)
     }
 }
 
@@ -197,7 +203,7 @@ fun BarProgres(nilai: Float, modifier: Modifier = Modifier, warna: Color = Mater
         modifier
             .fillMaxWidth()
             .height(8.dp)
-            .background(Color.White.copy(alpha = 0.10f), RoundedCornerShape(50)),
+            .background(LocalWarna.current.garis, RoundedCornerShape(50)),
     ) {
         Box(
             Modifier

@@ -23,7 +23,6 @@ import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.art.Art
@@ -40,6 +39,7 @@ import com.example.codefishing.frontend.components.KodeBlok
 import com.example.codefishing.frontend.components.Memuat
 import com.example.codefishing.frontend.components.TombolUtama
 import com.example.codefishing.frontend.components.gambarIkan
+import com.example.codefishing.ui.theme.LocalWarna
 
 data class DataMateri(
     val stage: StageEntity,
@@ -50,6 +50,7 @@ data class DataMateri(
 @Composable
 fun MateriScreen(nav: AppNavigator, padding: PaddingValues) {
     val c = LocalContainer.current
+    val warna = LocalWarna.current
     val stageId = nav.current.stage.takeIf { it > 0 } ?: 1
     val data by produceState<DataMateri?>(null, stageId) {
         val stage = c.game.stageById(stageId)
@@ -69,7 +70,7 @@ fun MateriScreen(nav: AppNavigator, padding: PaddingValues) {
         Modifier
             .fillMaxSize()
             .padding(padding)
-            .background(Brush.verticalGradient(listOf(Color(0xFF0B2C3B), Color(0xFF071923)))),
+            .background(Brush.verticalGradient(listOf(warna.latarAtas, warna.latarBawah))),
     ) {
         Column(
             Modifier
@@ -85,7 +86,7 @@ fun MateriScreen(nav: AppNavigator, padding: PaddingValues) {
                         .background(MaterialTheme.colorScheme.primary, androidx.compose.foundation.shape.CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text("${d.stage.nomor}", color = Color(0xFF062B2A), style = MaterialTheme.typography.titleMedium)
+                    Text("${d.stage.nomor}", color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleMedium)
                 }
                 Column(Modifier.weight(1f)) {
                     Text(d.stage.nama, style = MaterialTheme.typography.headlineSmall)
@@ -99,7 +100,7 @@ fun MateriScreen(nav: AppNavigator, padding: PaddingValues) {
                 }
             }
 
-            Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF123B4A)) {
+            Kartu(Modifier.fillMaxWidth(), warna = warna.kartuLembut) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("Materi", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
                     Text(d.materi?.isi_markdown ?: "Siapkan dirimu. Stage ini adalah ujian akhir perairan.", style = MaterialTheme.typography.bodyLarge)
@@ -113,8 +114,8 @@ fun MateriScreen(nav: AppNavigator, padding: PaddingValues) {
             }
 
             if (!d.materi?.trik_nelayan.isNullOrBlank()) {
-                Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF2A2A17)) {
-                    Text("Trik Nelayan", style = MaterialTheme.typography.labelLarge, color = Color(0xFFFFD98A))
+                Kartu(Modifier.fillMaxWidth(), warna = warna.peringatanLatar) {
+                    Text("Trik Nelayan", style = MaterialTheme.typography.labelLarge, color = warna.peringatanTeks)
                     Spacer(Modifier.height(6.dp))
                     Text(d.materi!!.trik_nelayan!!, style = MaterialTheme.typography.bodyMedium)
                 }

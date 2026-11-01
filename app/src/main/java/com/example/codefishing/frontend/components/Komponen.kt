@@ -16,10 +16,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.art.Art
+import com.example.codefishing.ui.theme.LocalWarna
 
 /** Gambar dari katalog aset. Isi [deskripsi] dengan teks pembaca layar, atau null bila hanya hiasan. */
 @Composable
@@ -28,17 +31,29 @@ fun Gambar(
     deskripsi: String?,
     modifier: Modifier = Modifier,
     skala: ContentScale = ContentScale.Fit,
+    warna: Color? = null,
 ) {
-    Image(painterResource(id), contentDescription = deskripsi, modifier = modifier, contentScale = skala)
+    Image(
+        painterResource(id),
+        contentDescription = deskripsi,
+        modifier = modifier,
+        contentScale = skala,
+        colorFilter = warna?.let { ColorFilter.tint(it) },
+    )
 }
 
 /** Indikator umpan di toolbar layar Mode Belajar: lima cacing, terisi sebanyak sisa umpan. */
 @Composable
 fun IndikatorUmpan(jumlah: Int, maks: Int = 5) {
+    val gelap = LocalWarna.current.gelap
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
         repeat(maks) { i ->
             Gambar(
-                if (i < jumlah) Art.umpan_penuh else Art.umpan_kosong,
+                if (i < jumlah) {
+                    if (gelap) Art.umpan_penuh else Art.umpan_penuh_terang
+                } else {
+                    if (gelap) Art.umpan_kosong else Art.umpan_kosong_terang
+                },
                 if (i < jumlah) "Umpan terisi" else "Umpan kosong",
                 Modifier.size(18.dp),
             )

@@ -1,5 +1,6 @@
 package com.example.codefishing
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,9 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
 import com.example.codefishing.core.AppContainer
 import com.example.codefishing.core.LocalContainer
+import com.example.codefishing.core.data.ThemeStore
 import com.example.codefishing.frontend.App
 import com.example.codefishing.ui.theme.CodeFishingTheme
 
@@ -18,12 +24,32 @@ class MainActivity : ComponentActivity() {
     private lateinit var container: AppContainer
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Baca tema sebelum super.onCreate agar window/splash langsung memakai
+        // latar yang tepat, tanpa menunggu database game selesai dimuat.
+        val theme = ThemeStore(applicationContext)
+        val sistemGelap = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+            Configuration.UI_MODE_NIGHT_YES
+        val gelap = theme.mode.value.gelap(sistemGelap)
+        setTheme(
+            if (gelap) R.style.Theme_CodeFishing_Gelap
+            else R.style.Theme_CodeFishing_Terang,
+        )
+
         super.onCreate(savedInstanceState)
+        // Warna window langsung disamakan agar tidak ada kilatan gelap saat
+        // AppContainer menyiapkan database di awal.
+        window.setBackgroundDrawable(
+            ContextCompat.getColor(
+                this,
+                if (gelap) R.color.neutral_deep else R.color.neutral_light,
+            ).toDrawable(),
+        )
         enableEdgeToEdge()
-        container = AppContainer(applicationContext)
+        container = AppContainer(applicationContext, theme)
         setContent {
             CompositionLocalProvider(LocalContainer provides container) {
-                CodeFishingTheme {
+                val mode by container.theme.mode.collectAsState()
+                CodeFishingTheme(mode) {
                     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                         App()
                     }

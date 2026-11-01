@@ -6,13 +6,17 @@ import com.example.codefishing.core.audio.AudioManager
 import com.example.codefishing.core.content.ContentRepository
 import com.example.codefishing.core.data.GameRepository
 import com.example.codefishing.core.data.ProgressRepository
+import com.example.codefishing.core.data.ThemeStore
 import com.example.codefishing.core.db.CodeFishingDatabase
 import com.example.codefishing.core.db.SeedLoader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 /** Pegangan ke semua layanan app. Dibuat sekali di MainActivity, dibagikan lewat [LocalContainer]. */
-class AppContainer(context: Context) {
+class AppContainer(
+    context: Context,
+    val theme: ThemeStore = ThemeStore(context),
+) {
     private val appContext = context.applicationContext
     val db = CodeFishingDatabase.get(appContext)
     val game = GameRepository(appContext, db)

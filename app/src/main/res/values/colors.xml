@@ -5,4 +5,5 @@
     <color name="secondary_navy">#FF133C4F</color>
     <color name="tertiary_green">#FF5FD3A0</color>
     <color name="neutral_deep">#FF0C2B3A</color>
+    <color name="neutral_light">#FFF4F8F9</color>
 </resources>

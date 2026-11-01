@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.CodeFishing" parent="android:Theme.Material.NoActionBar">
+    <!-- Tema splash default: mengikuti sistem lewat values-night. -->
+    <style name="Theme.CodeFishing" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/neutral_light</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- Dipilih eksplisit dari MainActivity saat pengguna memilih Terang. -->
+    <style name="Theme.CodeFishing.Terang" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/neutral_light</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- Dipilih eksplisit dari MainActivity saat pengguna memilih Gelap. -->
+    <style name="Theme.CodeFishing.Gelap" parent="android:Theme.Material.NoActionBar">
         <item name="android:windowBackground">@color/neutral_deep</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>
