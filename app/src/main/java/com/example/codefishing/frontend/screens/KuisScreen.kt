@@ -110,6 +110,11 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
     val soal = d.soal[indeks]
     val selesaiSoal = terpilih != null
 
+    // Suara cipratan saat kail dilempar, sebelum jawaban dikunci.
+    LaunchedEffect(fase) {
+        if (fase == FasePancing.Lempar) c.audio.play(Sfx.Cipratan)
+    }
+
     /**
      * Mengunci jawaban SETELAH dikonfirmasi pemain. Hanya di sini skor, combo, XP,
      * umpan, dan riwayat Room berubah — menekan opsi saja tidak menyentuh apa pun.
@@ -198,6 +203,9 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                 modifier = Modifier.fillMaxWidth(),
                 adegan = adeganStage(d.stage.nomor, d.stage.tipe == "boss"),
                 ikan = gambarIkan(ikanTarget?.gambar ?: "ikan_teri"),
+                poin = soal.poin,
+                combo = combo,
+                nomorStage = d.stage.nomor,
             )
 
             if (d.stage.tipe == "boss") {
