@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -117,7 +119,13 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
         Modifier
             .fillMaxSize()
             .padding(padding)
-            .background(Brush.verticalGradient(listOf(warna.latarAtas, warna.latarBawah))),
+            .background(Brush.verticalGradient(listOf(warna.latarAtas, warna.latarBawah)))
+            // IME tidak lagi mengecilkan window (edge-to-edge, targetSdk 37), jadi
+            // viewport scroll harus dipersempit sendiri agar isi editor tidak
+            // terkubur di bawah keyboard. consumeWindowInsets mencegah tinggi
+            // bottom bar dihitung dua kali.
+            .consumeWindowInsets(padding)
+            .imePadding(),
     ) {
         val m = aktif
         if (m == null) {
