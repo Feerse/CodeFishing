@@ -26,6 +26,7 @@ import com.example.codefishing.pemula.FishRules
 import com.example.codefishing.pemula.LevelRules
 import com.example.codefishing.pemula.PilihanKuis
 import com.example.codefishing.pemula.SoalKuis
+import com.example.codefishing.pemula.urutanSoal
 import com.example.codefishing.expert.Scoring
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
@@ -211,18 +212,22 @@ class GameRepository(
         val stage = stageDao.berdasarkanId(stageId) ?: return null
         val rows = contentDao.soalStage(stageId)
         if (rows.isEmpty()) return null
-        val soal = rows.map { s ->
-            SoalKuis(
-                id = s.id,
-                teks = s.teks,
-                kode = s.kode_template ?: "",
-                pembahasan = s.pembahasan,
-                poin = s.poin,
-                pilihan = contentDao.pilihan(s.id).map { p ->
-                    PilihanKuis(p.id, p.teks, p.benar == 1)
-                },
-            )
-        }
+        val ulangi = (stageDao.progres(stageId)?.percobaan ?: 0) > 0
+        val soal = urutanSoal(
+            rows.map { s ->
+                SoalKuis(
+                    id = s.id,
+                    teks = s.teks,
+                    kode = s.kode_template ?: "",
+                    pembahasan = s.pembahasan,
+                    poin = s.poin,
+                    pilihan = contentDao.pilihan(s.id).map { p ->
+                        PilihanKuis(p.id, p.teks, p.benar == 1)
+                    },
+                )
+            },
+            ulangi,
+        )
         val lulus = if (stage.tipe == "boss") 80 else stage.skor_lulus
         return QuizData(stage, soal, lulus)
     }

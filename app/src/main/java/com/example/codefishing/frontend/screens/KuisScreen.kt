@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.QuizData
+import com.example.codefishing.core.data.SesiKuis
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.BarProgres
@@ -87,18 +88,66 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
         }
     }
 
-    var indeks by remember(d) { mutableIntStateOf(0) }
-    var benar by remember(d) { mutableIntStateOf(0) }
-    var salah by remember(d) { mutableIntStateOf(0) }
-    var combo by remember(d) { mutableIntStateOf(0) }
-    var comboMaks by remember(d) { mutableIntStateOf(0) }
-    var xp by remember(d) { mutableIntStateOf(0) }
-    var terpilih by remember(d) { mutableStateOf<Int?>(null) }
+    // Sesi yang belum selesai dipulihkan agar pemain kembali tepat di soal terakhir.
+    val sesiTersimpan = remember(d) {
+        c.progress.sesiKuis?.takeIf { sesi ->
+            sesi.stageId == d.stage.id &&
+                sesi.indeks in 0 until sesi.soalIds.size &&
+                sesi.soalIds.size == d.soal.size &&
+                sesi.soalIds.toSet() == d.soal.map { it.id }.toSet()
+        }
+    }
+    // Urutan soal mengikuti sesi (bisa hasil acak) supaya nomor soal tidak bergeser.
+    val daftarSoal = remember(d, sesiTersimpan) {
+        val sesi = sesiTersimpan
+        if (sesi == null) d.soal
+        else sesi.soalIds.mapNotNull { id -> d.soal.firstOrNull { it.id == id } }
+    }
+
+    var indeks by remember(d) { mutableIntStateOf(sesiTersimpan?.indeks ?: 0) }
+    var benar by remember(d) { mutableIntStateOf(sesiTersimpan?.benar ?: 0) }
+    var salah by remember(d) { mutableIntStateOf(sesiTersimpan?.salah ?: 0) }
+    var combo by remember(d) { mutableIntStateOf(sesiTersimpan?.combo ?: 0) }
+    var comboMaks by remember(d) { mutableIntStateOf(sesiTersimpan?.comboMaks ?: 0) }
+    var xp by remember(d) { mutableIntStateOf(sesiTersimpan?.xp ?: 0) }
+    var terpilih by remember(d) { mutableStateOf(sesiTersimpan?.terpilih?.takeIf { it >= 0 }) }
     var kandidat by remember(d) { mutableStateOf<Int?>(null) }
-    var fase by remember(d) { mutableStateOf(FasePancing.Diam) }
-    var jawabanBenar by remember(d) { mutableStateOf(false) }
+    var fase by remember(d) {
+        mutableStateOf(
+            when {
+                sesiTersimpan == null || sesiTersimpan.terpilih < 0 -> FasePancing.Diam
+                sesiTersimpan.jawabanBenar -> FasePancing.Dapat
+                else -> FasePancing.Lepas
+            },
+        )
+    }
+    var jawabanBenar by remember(d) { mutableStateOf(sesiTersimpan?.jawabanBenar ?: false) }
     var menyimpan by remember(d) { mutableStateOf(false) }
     var menyelesaikan by remember(d) { mutableStateOf(false) }
+
+    /** Menyimpan stage terakhir + seluruh isi sesi agar bisa dilanjutkan nanti. */
+    fun simpanSesi() {
+        c.progress.kuisTerakhirStage = d.stage.id
+        c.progress.sesiKuis = SesiKuis(
+            stageId = d.stage.id,
+            soalIds = daftarSoal.map { it.id },
+            indeks = indeks,
+            benar = benar,
+            salah = salah,
+            combo = combo,
+            comboMaks = comboMaks,
+            xp = xp,
+            terpilih = terpilih ?: -1,
+            jawabanBenar = jawabanBenar,
+        )
+    }
+
+    // Sesi baru disimpan setelah umpan dipastikan tersedia, agar layar Umpan Habis
+    // tidak menimpa sesi stage lain.
+    LaunchedEffect(d.stage.id, umpanAwal) {
+        val sisa = umpanAwal
+        if (sisa != null && sisa > 0) simpanSesi()
+    }
     // Ikan target stage: tampil di adegan saat jawaban benar.
     val ikanTarget by produceState<IkanEntity?>(null, d.stage.ikan_target_id) {
         value = d.stage.ikan_target_id?.let { c.game.ikan(it) }
@@ -107,7 +156,7 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
     // Jangan biarkan Back sistem membatalkan penyimpanan jawaban/hasil ke Room.
     BackHandler(enabled = menyimpan || menyelesaikan) { }
 
-    val soal = d.soal[indeks]
+    val soal = daftarSoal[indeks]
     val selesaiSoal = terpilih != null
 
     // Suara cipratan saat kail dilempar, sebelum jawaban dikunci.
@@ -149,6 +198,8 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                 menyimpan = false
             }
         }
+        // Simpan jawaban terkunci + skor berjalan agar sesi bisa dilanjutkan.
+        simpanSesi()
     }
 
     /** Membatalkan pilihan yang belum dikunci: umpan dan progres tetap utuh. */
@@ -164,11 +215,13 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
             val hasil = c.game.selesaikanStage(
                 stageId = d.stage.id,
                 benar = benar,
-                total = d.soal.size,
+                total = daftarSoal.size,
                 comboMaks = comboMaks,
                 sempurna = salah == 0,
             )
             if (hasil != null) {
+                // Sesi selesai: kunjungan berikutnya memulai kuis baru (dan diacak bila mengulang).
+                c.progress.sesiKuis = null
                 c.audio.play(if (hasil.lulus) Sfx.Benar else Sfx.Salah)
                 nav.replace(Screen.HasilStage, d.stage.id)
             }
@@ -191,11 +244,11 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text(d.stage.nama, style = MaterialTheme.typography.titleLarge)
-                    Text("Soal ${indeks + 1} dari ${d.soal.size} · ${d.stage.tipe.uppercase()}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text("Soal ${indeks + 1} dari ${daftarSoal.size} · ${d.stage.tipe.uppercase()}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Text("$xp XP", color = MaterialTheme.colorScheme.tertiary, style = MaterialTheme.typography.labelLarge)
             }
-            BarProgres((indeks + 1f) / d.soal.size)
+            BarProgres((indeks + 1f) / daftarSoal.size)
 
             MemancingScene(
                 fase = fase,
@@ -305,16 +358,18 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                     )
                 } else {
                     TombolUtama(
-                        teks = if (indeks == d.soal.size - 1) "Lihat Hasil" else "Soal Berikutnya",
+                        teks = if (indeks == daftarSoal.size - 1) "Lihat Hasil" else "Soal Berikutnya",
                         onClick = {
                             c.audio.play(Sfx.Klik)
-                            if (indeks == d.soal.size - 1) {
+                            if (indeks == daftarSoal.size - 1) {
                                 selesaikan()
                             } else {
                                 indeks++
                                 terpilih = null
+                                jawabanBenar = false
                                 kandidat = null
                                 fase = FasePancing.Diam
+                                simpanSesi()
                             }
                         },
                     )

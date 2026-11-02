@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -59,6 +60,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -113,6 +115,8 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
     var terpilih by remember { mutableStateOf<PilihanPeta?>(null) }
     var pilihanTampil by remember { mutableStateOf<PilihanPeta?>(null) }
     val scroll = rememberScrollState()
+    // Dinaikkan setiap kompas diketuk agar peta bergeser ke stage terakhir.
+    var mintaGeser by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(terpilih) {
         if (terpilih != null) pilihanTampil = terpilih
@@ -139,14 +143,27 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
             val tinggi = lebar * (PetaGeometri.TINGGI_DUNIA / PetaGeometri.LEBAR_DUNIA)
             val density = LocalDensity.current
 
+            suspend fun geserKe(titik: TitikPeta) {
+                val tinggiPeta = with(density) { tinggi.toPx() }
+                val tinggiLayar = with(density) { maxHeight.toPx() }
+                val target = tinggiPeta * (titik.y / PetaGeometri.TINGGI_DUNIA) - tinggiLayar / 2f
+                scroll.animateScrollTo(target.toInt().coerceIn(0, scroll.maxValue))
+            }
+
             LaunchedEffect(stages.size, player?.stage_terakhir_id, tinggi) {
                 if (stages.isNotEmpty()) {
                     delay(120)
-                    val tinggiPeta = with(density) { tinggi.toPx() }
-                    val tinggiLayar = with(density) { maxHeight.toPx() }
-                    val target = (tinggiPeta * (titikKapal.y / PetaGeometri.TINGGI_DUNIA) - tinggiLayar / 2f)
-                    scroll.animateScrollTo(target.toInt().coerceIn(0, scroll.maxValue))
+                    geserKe(titikKapal)
                 }
+            }
+
+            // Kompas: geser peta ke node stage yang terakhir dikerjakan.
+            LaunchedEffect(mintaGeser) {
+                if (mintaGeser == 0) return@LaunchedEffect
+                val nomor = stages.firstOrNull { it.id == c.progress.kuisTerakhirStage }?.nomor
+                    ?: stageAktif?.nomor
+                    ?: return@LaunchedEffect
+                PetaGeometri.titikStage(nomor)?.let { geserKe(it) }
             }
 
             Column(
@@ -312,17 +329,28 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top,
         ) {
-            ChipPeta("Samudra Pasifik", "10 stage · geser & ketuk titik")
+            ChipPeta("Samudra Pasifik")
             ChipPeta("$jumlahSelesai/10", "stage selesai", alignEnd = true)
         }
-        Gambar(
-            if (warna.gelap) Art.kompas else Art.kompas_terang,
-            "Kompas",
+        Box(
             Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 12.dp, bottom = 12.dp)
-                .size(46.dp),
-        )
+                .padding(end = 8.dp, bottom = 8.dp)
+                .size(48.dp)
+                .clip(CircleShape)
+                .clickable(role = Role.Button, onClickLabel = "Geser ke soal terakhir") {
+                    c.audio.play(Sfx.Klik)
+                    mintaGeser++
+                }
+                .semantics { contentDescription = "Geser peta ke soal terakhir dikerjakan" },
+            contentAlignment = Alignment.Center,
+        ) {
+            Gambar(
+                if (warna.gelap) Art.kompas else Art.kompas_terang,
+                null,
+                Modifier.size(46.dp),
+            )
+        }
 
         AnimatedVisibility(
             visible = terpilih != null,
@@ -354,7 +382,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
 }
 
 @Composable
-private fun ChipPeta(judul: String, sub: String, alignEnd: Boolean = false) {
+private fun ChipPeta(judul: String, sub: String? = null, alignEnd: Boolean = false) {
     val warna = LocalWarna.current
     Column(
         Modifier
@@ -369,11 +397,13 @@ private fun ChipPeta(judul: String, sub: String, alignEnd: Boolean = false) {
             color = warna.petaTeks,
             fontWeight = FontWeight.Bold,
         )
-        Text(
-            sub,
-            style = MaterialTheme.typography.labelSmall,
-            color = warna.petaTeksRedup,
-        )
+        if (sub != null) {
+            Text(
+                sub,
+                style = MaterialTheme.typography.labelSmall,
+                color = warna.petaTeksRedup,
+            )
+        }
     }
 }
 
