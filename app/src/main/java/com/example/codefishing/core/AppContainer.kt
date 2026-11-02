@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.example.codefishing.core.audio.AudioManager
 import com.example.codefishing.core.content.ContentRepository
+import com.example.codefishing.core.data.AquariumNameStore
 import com.example.codefishing.core.data.GameRepository
 import com.example.codefishing.core.data.ProgressRepository
 import com.example.codefishing.core.data.ThemeStore
@@ -22,6 +23,8 @@ class AppContainer(
     val game = GameRepository(appContext, db)
     /** Sementara dipertahankan untuk audio dan layar lama; data game memakai [game]. */
     val progress = ProgressRepository(appContext)
+    /** Nama panggilan ikan di Akuarium, terpisah dari nama katalog Koleksi. */
+    val namaAkuarium = AquariumNameStore(appContext)
     val content = ContentRepository(appContext)
     val audio = AudioManager(appContext, progress)
 
