@@ -19,3 +19,9 @@ __pycache__/
 *.pyc
 .idea/
 gradle/gradle-daemon-jvm.properties
+
+# Aset sumber & deck presentasi (biner besar)
+/assets/
+/docs/presentasi_assembly/
+/CodeFishing_*.pptx
+/CodeFishing_*.pdf
