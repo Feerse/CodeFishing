@@ -12,6 +12,8 @@ Semua permainan berjalan **offline** di perangkat; aplikasi tidak meminta izin i
 - **Umpan (nyawa)**: maksimum 5 dan pulih 1 umpan tiap 15 menit. Jawaban salah tidak langsung mengurangi umpan; umpan berkurang **1 sekali** saat stage selesai jika terdapat **minimal 3 jawaban salah**. Umpan 0 membuka layar 11 (hitung mundur) saat mencoba memulai stage berikutnya.
 - **Lulus stage**: skor benar/5 × 100 ≥ 70 untuk stage biasa. **Boss Stage 10 lulus di 4 dari 5 (80%)**.
 - Lulus membuka stage berikutnya. Skor terbaik, combo tertinggi, dan percobaan disimpan di `progres_stage`.
+- **Sesi kuis tersimpan otomatis**: posisi soal, urutan soal, jumlah benar/salah, combo, dan XP sesi disimpan sementara. Ikon kompas di Peta menggeser peta ke stage yang terakhir dikerjakan; membuka stage tersebut lewat node/Berlayar melanjutkan tepat di soal terakhir. Sesi dihapus setelah kuis selesai, sehingga mengulang stage dimulai dari soal 1.
+- **Pengacakan soal**: percobaan pertama memakai urutan kurikulum; saat stage diulang (sudah pernah diselesaikan), urutan soal diacak agar tidak dihafal. Urutan pilihan jawaban tetap.
 - Jawaban benar memberi **+25 XP** dan menaikkan combo; jawaban salah mereset combo ke 0.
 - Setiap stage memakai studi kasus (kapal, dermaga, selam, jala, es, bubu, trawler/boss).
 
@@ -31,6 +33,8 @@ Urutan 15 ikan berilustrasi: Teri, Bandeng, Bawal, Mujair, Nila, Lele, Patin, Gu
 Karena satu stage hanya 5 soal, ambang combo bonus adalah 3/4/5 dan semua bonus yang tercapai diberikan pada hasil stage.
 
 Ikan yang sama boleh ditangkap berulang; jumlah, bobot terbesar, tier terbaik, dan level/kenyang disimpan di `koleksi_ikan`.
+
+- **Nama panggilan Akuarium**: nama ikan bisa diubah saat ikan diketuk di Akuarium. Nama ini disimpan terpisah dari katalog, sehingga nama di Koleksi tidak berubah dan nama panggilan tetap ada setelah aplikasi ditutup.
 
 ### Tantangan harian
 
