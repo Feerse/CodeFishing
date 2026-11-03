@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -24,7 +25,10 @@ import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.ui.theme.LocalWarna
 
-/** Gambar dari katalog aset. Isi [deskripsi] dengan teks pembaca layar, atau null bila hanya hiasan. */
+/**
+ * Gambar dari katalog aset. Isi [deskripsi] dengan teks pembaca layar, atau null bila hanya hiasan.
+ * [blendMode] dipakai bersama [warna]; `Modulate` menggelapkan tanpa menghapus bayangan aset.
+ */
 @Composable
 fun Gambar(
     @DrawableRes id: Int,
@@ -32,13 +36,14 @@ fun Gambar(
     modifier: Modifier = Modifier,
     skala: ContentScale = ContentScale.Fit,
     warna: Color? = null,
+    blendMode: BlendMode = BlendMode.SrcIn,
 ) {
     Image(
         painterResource(id),
         contentDescription = deskripsi,
         modifier = modifier,
         contentScale = skala,
-        colorFilter = warna?.let { ColorFilter.tint(it) },
+        colorFilter = warna?.let { ColorFilter.tint(it, blendMode) },
     )
 }
 

@@ -49,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -80,6 +81,13 @@ import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
+
+/**
+ * Warna serpihan makanan di mode terang: tint modulate untuk menggelapkan emas pucat aset,
+ * dan halo gelap (alpha ±0.35) agar kontras terhadap air/pasir terang.
+ */
+private val MakananGelap = Color(0xFFA57430)
+private val MakananHalo = Color(0x594A2E00)
 
 /**
  * 13 Akuarium: maksimal 10 ekor ikan berenang di atas latar kertas.
@@ -250,21 +258,49 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
             }
 
             // Serpihan makanan jatuh saat "Beri Makan".
+            // Di mode terang warna aset (emas pucat) menyatu dengan air/pasir pucat, jadi serpihan
+            // digelapkan dengan tint modulate dan diberi halo gelap agar tetap terlihat.
             if (makanKe > 0 && jatuh.value < 1f) {
+                val terang = !warna.gelap
+                val lebarSerpihan = if (terang) 22.dp else 20.dp
+                val tinggiSerpihan = if (terang) 20.dp else 18.dp
+                val pudar = if (terang) 0.72f else 0.5f
+                val yAwal = tinggi * 0.12f
+                val rentangJatuh = tinggi * 0.66f
                 repeat(9) { s ->
-                    Gambar(
-                        Art.serpihan_makanan,
-                        null,
+                    Box(
                         Modifier
                             .offset {
                                 IntOffset(
                                     (lebar * (0.08f + 0.10f * s)).roundToPx(),
-                                    (tinggi * 0.78f * (jatuh.value * (0.8f + 0.03f * s))).roundToPx(),
+                                    (yAwal + rentangJatuh * (jatuh.value * (0.8f + 0.03f * s))).roundToPx(),
                                 )
                             }
-                            .size(20.dp, 18.dp)
-                            .alpha(1f - 0.5f * jatuh.value),
-                    )
+                            .size(lebarSerpihan, tinggiSerpihan)
+                            .alpha(1f - pudar * jatuh.value),
+                    ) {
+                        if (terang) {
+                            // Halo: siluet gelap sedikit lebih besar di belakang serpihan.
+                            Gambar(
+                                Art.serpihan_makanan,
+                                null,
+                                Modifier
+                                    .fillMaxSize()
+                                    .graphicsLayer {
+                                        scaleX = 1.2f
+                                        scaleY = 1.2f
+                                    },
+                                warna = MakananHalo,
+                            )
+                        }
+                        Gambar(
+                            Art.serpihan_makanan,
+                            null,
+                            Modifier.fillMaxSize(),
+                            warna = if (terang) MakananGelap else null,
+                            blendMode = BlendMode.Modulate,
+                        )
+                    }
                 }
             }
 
