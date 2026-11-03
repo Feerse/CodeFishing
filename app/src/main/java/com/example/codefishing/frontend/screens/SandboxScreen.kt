@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -27,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,15 +42,27 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isShiftPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
@@ -57,6 +72,7 @@ import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.TangkapanMasuk
 import com.example.codefishing.core.db.IkanEntity
+import com.example.codefishing.expert.EditorKode
 import com.example.codefishing.expert.MisiPeta
 import com.example.codefishing.expert.SandboxContent
 import com.example.codefishing.expert.SandboxDraft
@@ -64,11 +80,13 @@ import com.example.codefishing.expert.SandboxEngine
 import com.example.codefishing.expert.SandboxRun
 import com.example.codefishing.expert.py.Langkah
 import com.example.codefishing.core.nav.AppNavigator
+import com.example.codefishing.frontend.components.BarisPintasanKode
 import com.example.codefishing.frontend.components.Bintang
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.frontend.components.Gambar
 import com.example.codefishing.frontend.components.Kartu
 import com.example.codefishing.frontend.components.KodeBlok
+import com.example.codefishing.frontend.components.PanduanExpertSheet
 import com.example.codefishing.frontend.components.PapanMisi
 import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
@@ -101,6 +119,20 @@ private fun warnaiKode(teks: String, warna: WarnaCodeFishing): AnnotatedString =
     }
 }
 
+/** Tambahkan indentasi otomatis hanya saat satu newline baru diketik. */
+private fun autoIndent(lama: TextFieldValue, baru: TextFieldValue): TextFieldValue {
+    if (!baru.selection.collapsed) return baru
+    val indent = EditorKode.indentasiUntukBarisBaru(
+        lama = lama.text,
+        baru = baru.text,
+        kursor = baru.selection.start,
+    )
+    if (indent.isNullOrEmpty()) return baru
+    val pos = baru.selection.start
+    val teks = baru.text.substring(0, pos) + indent + baru.text.substring(pos)
+    return TextFieldValue(teks, TextRange(pos + indent.length))
+}
+
 @Composable
 fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
     val context = LocalContext.current
@@ -109,6 +141,8 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
     val warna = LocalWarna.current
     val bintang by c.game.observeBintangMisi().collectAsState(emptyList())
     val petaBintang = bintang.associateBy { it.id }
+    val petaBintangInt = remember(bintang) { bintang.associate { it.id to it.bintang } }
+    var panduan by remember { mutableStateOf(false) }
     var aktif by remember(nav.current.misi) {
         mutableStateOf(misi.firstOrNull { it.nomor == nav.current.misi })
     }
@@ -142,6 +176,37 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Spacer(Modifier.height(8.dp))
+                }
+                item {
+                    Kartu(
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                c.audio.play(Sfx.Klik)
+                                panduan = true
+                            },
+                        warna = warna.kartuLembut,
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            Gambar(Art.ikon_kode, null, Modifier.size(40.dp))
+                            Column(Modifier.weight(1f)) {
+                                Text("Panduan Expert", style = MaterialTheme.typography.titleMedium)
+                                Text(
+                                    "Perintah, sintaks Python, dan petunjuk semua misi",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                            Text(
+                                "Buka",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    }
                 }
                 items(misi, key = { it.kode }) { item ->
                     val b = petaBintang[item.dbId]
@@ -177,8 +242,24 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
         } else {
             EditorMisi(
                 misi = m,
+                semuaMisi = misi,
+                petaBintang = petaBintangInt,
                 onKembali = { aktif = null },
                 onLanjut = { nomor -> aktif = misi.firstOrNull { it.nomor == nomor } },
+            )
+        }
+        if (m == null && panduan) {
+            PanduanExpertSheet(
+                semuaMisi = misi,
+                misiAktif = null,
+                bintang = petaBintangInt,
+                onTutup = { panduan = false },
+                onPilihMisi = { nomor ->
+                    c.audio.play(Sfx.Klik)
+                    aktif = misi.firstOrNull { it.nomor == nomor }
+                    panduan = false
+                },
+                onSisip = null,
             )
         }
     }
@@ -187,6 +268,8 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
 @Composable
 private fun EditorMisi(
     misi: MisiPeta,
+    semuaMisi: List<MisiPeta>,
+    petaBintang: Map<Int, Int>,
     onKembali: () -> Unit,
     onLanjut: (Int) -> Unit,
 ) {
@@ -207,13 +290,49 @@ private fun EditorMisi(
         }
     }
 
-    var kode by remember(misi.nomor) { mutableStateOf(SandboxDraft.ambil(misi.nomor, misi.kodeAwal)) }
+    var kode by remember(misi.nomor) {
+        val awal = SandboxDraft.ambil(misi.nomor, misi.kodeAwal)
+        mutableStateOf(TextFieldValue(awal, TextRange(awal.length)))
+    }
     var hasil by remember(misi.nomor) { mutableStateOf<SandboxRun?>(null) }
     var tampilHasil by remember(misi.nomor, hasil) { mutableStateOf(hasil == null) }
     var berjalan by remember(misi.nomor) { mutableStateOf(false) }
     var pesanSimpan by remember(misi.nomor) { mutableStateOf<String?>(null) }
     var xpDidapat by remember(misi.nomor) { mutableIntStateOf(0) }
+    var panduan by remember(misi.nomor) { mutableStateOf(false) }
+    var panduanSintaks by remember(misi.nomor) { mutableStateOf(false) }
+    var pesanKodeAwal by remember(misi.nomor) { mutableStateOf<String?>(null) }
     val scroll = rememberScrollState()
+    val fokus = remember { FocusRequester() }
+    val keyboard = LocalSoftwareKeyboardController.current
+    val pengungkapPintasan = remember { BringIntoViewRequester() }
+
+    fun terapkanKode(nilai: TextFieldValue) {
+        kode = nilai
+        SandboxDraft.simpan(misi.nomor, nilai.text)
+        hasil = null
+        pesanSimpan = null
+        xpDidapat = 0
+    }
+
+    fun sisip(potongan: String, kursorMundur: Int) {
+        if (berjalan) return
+        pesanKodeAwal = null
+        val baru = EditorKode.sisipkan(
+            teks = kode.text,
+            mulai = kode.selection.start,
+            akhir = kode.selection.end,
+            potongan = potongan,
+            kursorMundur = kursorMundur,
+        )
+        terapkanKode(TextFieldValue(baru.teks, TextRange(baru.kursor)))
+        fokus.requestFocus()
+        keyboard?.show()
+        scope.launch {
+            delay(350)
+            pengungkapPintasan.bringIntoView()
+        }
+    }
 
     // Jangan tinggalkan editor saat program masih dijalankan/disimpan.
     BackHandler(enabled = berjalan) { }
@@ -303,23 +422,59 @@ private fun EditorMisi(
         }
 
         Kartu(Modifier.fillMaxWidth(), warna = warna.peringatanLatar) {
-            Text("Petunjuk", style = MaterialTheme.typography.labelLarge, color = warna.peringatanTeks)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    "Petunjuk",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = warna.peringatanTeks,
+                    modifier = Modifier.weight(1f),
+                )
+                TextButton(
+                    onClick = {
+                        c.audio.play(Sfx.Klik)
+                        keyboard?.hide()
+                        panduanSintaks = false
+                        panduan = true
+                    },
+                    enabled = !berjalan,
+                    contentPadding = PaddingValues(horizontal = 8.dp),
+                ) { Text("Panduan") }
+            }
             Spacer(Modifier.height(4.dp))
             Text(misi.hint, style = MaterialTheme.typography.bodySmall)
         }
 
         OutlinedTextField(
             value = kode,
-            onValueChange = {
-                kode = it
-                SandboxDraft.simpan(misi.nomor, it)
-                hasil = null
-                pesanSimpan = null
-                xpDidapat = 0
+            onValueChange = { baru ->
+                pesanKodeAwal = null
+                terapkanKode(autoIndent(kode, baru))
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp),
+                .height(300.dp)
+                .focusRequester(fokus)
+                .onFocusChanged { status ->
+                    if (status.isFocused) {
+                        scope.launch {
+                            delay(350)
+                            pengungkapPintasan.bringIntoView()
+                        }
+                    }
+                }
+                .onPreviewKeyEvent { event ->
+                    if (berjalan || event.type != KeyEventType.KeyDown || event.key != Key.Tab) {
+                        false
+                    } else {
+                        if (event.isShiftPressed) {
+                            val kurang = EditorKode.kurangiIndentasi(kode.text, kode.selection.start)
+                            terapkanKode(TextFieldValue(kurang.teks, TextRange(kurang.kursor)))
+                        } else {
+                            sisip("    ", 0)
+                        }
+                        true
+                    }
+                },
             textStyle = TextStyle(fontFamily = FontFamily.Monospace, fontSize = 14.sp, lineHeight = 20.sp),
             label = { Text("main.py") },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.None),
@@ -334,6 +489,15 @@ private fun EditorMisi(
             ),
         )
 
+        BarisPintasanKode(
+            onSisip = { tombol ->
+                c.audio.play(Sfx.Klik)
+                sisip(tombol.potongan, tombol.kursorMundur)
+            },
+            enabled = !berjalan,
+            modifier = Modifier.bringIntoViewRequester(pengungkapPintasan),
+        )
+
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             TombolUtama(
                 teks = if (berjalan) "Menjalankan..." else "Jalankan",
@@ -341,11 +505,12 @@ private fun EditorMisi(
                     if (berjalan || semuaIkan.isEmpty()) return@TombolUtama
                     berjalan = true
                     pesanSimpan = null
+                    pesanKodeAwal = null
                     xpDidapat = 0
                     c.audio.play(Sfx.KlikUtama)
                     scope.launch {
                         try {
-                            val run = withContext(Dispatchers.Default) { engine.jalankan(kode, misi) }
+                            val run = withContext(Dispatchers.Default) { engine.jalankan(kode.text, misi) }
                             hasil = run
                             val status = when {
                                 !run.hasil.berhasil -> "error"
@@ -366,7 +531,7 @@ private fun EditorMisi(
                             try {
                                 val simpan = c.game.simpanHasilProgram(
                                     misiId = misi.dbId,
-                                    kode = kode,
+                                    kode = kode.text,
                                     output = run.hasil.keluaran.joinToString("\n"),
                                     error = run.hasil.pesanError,
                                     ticks = run.hasil.ticks,
@@ -394,17 +559,27 @@ private fun EditorMisi(
                 enabled = semuaIkan.isNotEmpty() && !berjalan,
             )
             TombolSekunder(
-                teks = "Contoh",
+                teks = "Kode Awal",
                 onClick = {
-                    kode = misi.kodeAwal
-                    SandboxDraft.simpan(misi.nomor, misi.kodeAwal)
-                    hasil = null
-                    pesanSimpan = null
-                    xpDidapat = 0
+                    val sudahAwal = kode.text == misi.kodeAwal
+                    terapkanKode(TextFieldValue(misi.kodeAwal, TextRange(0)))
+                    pesanKodeAwal = if (sudahAwal) {
+                        "Kode memang sudah memakai contoh awal."
+                    } else {
+                        "Kode awal dimuat."
+                    }
                 },
                 modifier = Modifier.width(110.dp),
                 enabled = !berjalan,
                 contentPadding = PaddingValues(horizontal = 10.dp),
+            )
+        }
+
+        pesanKodeAwal?.let { pesan ->
+            Text(
+                pesan,
+                style = MaterialTheme.typography.labelMedium,
+                color = warna.suksesTeks,
             )
         }
 
@@ -443,6 +618,18 @@ private fun EditorMisi(
                         }
                         Bintang(r.evaluasi.bintang, ukuran = 16)
                     }
+                    if (!r.evaluasi.sukses) {
+                        TextButton(
+                            onClick = {
+                                c.audio.play(Sfx.Klik)
+                                keyboard?.hide()
+                                panduanSintaks = true
+                                panduan = true
+                            },
+                            contentPadding = PaddingValues(),
+                            modifier = Modifier.align(Alignment.End),
+                        ) { Text("Cari solusi di panduan") }
+                    }
                 }
             }
 
@@ -462,6 +649,25 @@ private fun EditorMisi(
             )
         }
         Spacer(Modifier.height(12.dp))
+    }
+
+    if (panduan) {
+        PanduanExpertSheet(
+            semuaMisi = semuaMisi,
+            misiAktif = misi.nomor,
+            bintang = petaBintang,
+            onTutup = { panduan = false },
+            onPilihMisi = { nomor ->
+                c.audio.play(Sfx.Klik)
+                panduan = false
+                onLanjut(nomor)
+            },
+            onSisip = { potongan, kursorMundur ->
+                sisip(potongan, kursorMundur)
+                panduan = false
+            },
+            bukaSintaks = panduanSintaks,
+        )
     }
 }
 
