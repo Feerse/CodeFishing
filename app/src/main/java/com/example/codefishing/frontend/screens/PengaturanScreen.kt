@@ -151,7 +151,7 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
         AlertDialog(
             onDismissRequest = { konfirmasi = false },
             title = { Text("Reset progres?") },
-            text = { Text("Semua progres stage, ikan, hasil program, dan tantangan harian akan dihapus. Pengaturan tetap disimpan.") },
+            text = { Text("Semua progres stage, ikan, hasil program, tantangan harian, dan nama ikan akan dihapus. Pengaturan tetap disimpan.") },
             confirmButton = {
                 TextButton({
                     konfirmasi = false

@@ -35,11 +35,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.audio.Sfx
+import com.example.codefishing.core.data.HasilTambahAkuarium
+import com.example.codefishing.core.data.KAPASITAS_AKUARIUM
+import com.example.codefishing.core.data.cekTambahAkuarium
 import com.example.codefishing.core.db.IkanEntity
 import com.example.codefishing.core.db.KoleksiLengkapView
 import com.example.codefishing.core.nav.AppNavigator
@@ -75,6 +79,8 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
     var filter by remember { mutableStateOf<String?>(null) }
     val list by c.game.observeKoleksi(filter).collectAsState(emptyList())
     val statistik by c.game.observeStatistik().collectAsState(null)
+    val jumlahAkuarium by c.game.observeJumlahAkuarium().collectAsState(emptyMap())
+    val totalAkuarium = jumlahAkuarium.values.sum()
     var dipilih by remember { mutableStateOf<KoleksiLengkapView?>(null) }
     val dimiliki = statistik?.ikan_terkumpul ?: list.count { it.dimiliki == 1 }
 
@@ -87,7 +93,11 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
         Column(Modifier.fillMaxSize()) {
             Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("Koleksi Ikan", style = MaterialTheme.typography.headlineMedium)
-                Text("$dimiliki dari 48 ikan sudah masuk akuarium.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    "$dimiliki dari 48 jenis ikan sudah dikoleksi · akuarium $totalAkuarium/${KAPASITAS_AKUARIUM} ekor",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxWidth()) {
                     filterTier.take(3).forEach { (value, label) -> FilterChip(value, label, filter) { filter = it } }
                 }
@@ -107,7 +117,7 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
                     modifier = Modifier.weight(1f),
                 ) {
                     items(list, key = { it.ikan_id }) { ikan ->
-                        KartuIkan(ikan) {
+                        KartuIkan(ikan, jumlahAkuarium[ikan.ikan_id] ?: 0) {
                             c.audio.play(Sfx.Klik)
                             dipilih = ikan
                         }
@@ -119,11 +129,17 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
 
     dipilih?.let { k ->
         Dialog(onDismissRequest = { dipilih = null }) {
-            DetailIkan(k, onTutup = { dipilih = null }, onBeriMakan = {
-                c.audio.play(Sfx.Benar)
-                dipilih = null
-                nav.resetTo(Screen.Akuarium)
-            })
+            DetailIkan(
+                ikan = k,
+                jumlahDiAkuarium = jumlahAkuarium[k.ikan_id] ?: 0,
+                totalDiAkuarium = totalAkuarium,
+                onTutup = { dipilih = null },
+                onLihatAkuarium = {
+                    c.audio.play(Sfx.Klik)
+                    dipilih = null
+                    nav.resetTo(Screen.Akuarium)
+                },
+            )
         }
     }
 }
@@ -147,7 +163,7 @@ private fun FilterChip(value: String?, label: String, aktif: String?, onClick: (
 }
 
 @Composable
-private fun KartuIkan(ikan: KoleksiLengkapView, onClick: () -> Unit) {
+private fun KartuIkan(ikan: KoleksiLengkapView, jumlahAkuarium: Int, onClick: () -> Unit) {
     val dimiliki = ikan.dimiliki == 1
     val palet = LocalWarna.current
     val warnaTier = if (dimiliki) tierWarna(ikan.tier) else palet.petaTeksRedup
@@ -184,22 +200,38 @@ private fun KartuIkan(ikan: KoleksiLengkapView, onClick: () -> Unit) {
             textAlign = TextAlign.Center,
         )
         Text(
-            if (ikan.syarat_unlock?.contains("Segera hadir") == true) "Segera hadir" else if (dimiliki) "×${ikan.jumlah} · ${"%.1f".format(ikan.bobot_terbesar)} kg" else (ikan.syarat_unlock ?: "Belum ditemukan"),
+            if (dimiliki) {
+                val stat = if (ikan.syarat_unlock?.contains("Segera hadir") == true) "Segera hadir" else "×${ikan.jumlah} · ${"%.1f".format(ikan.bobot_terbesar)} kg"
+                if (jumlahAkuarium > 0) "$stat · $jumlahAkuarium di akuarium" else stat
+            } else {
+                if (ikan.syarat_unlock?.contains("Segera hadir") == true) "Segera hadir" else (ikan.syarat_unlock ?: "Belum ditemukan")
+            },
             style = MaterialTheme.typography.labelSmall,
             color = if (dimiliki) MaterialTheme.colorScheme.onSurfaceVariant else palet.petaTeksRedup.copy(alpha = 0.7f),
             textAlign = TextAlign.Center,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
         )
         if (dimiliki) ChipTier(ikan.tier)
     }
 }
 
 @Composable
-private fun DetailIkan(ikan: KoleksiLengkapView, onTutup: () -> Unit, onBeriMakan: () -> Unit) {
+private fun DetailIkan(
+    ikan: KoleksiLengkapView,
+    jumlahDiAkuarium: Int,
+    totalDiAkuarium: Int,
+    onTutup: () -> Unit,
+    onLihatAkuarium: () -> Unit,
+) {
     val c = LocalContainer.current
     val scope = rememberCoroutineScope()
     val detail by produceState<IkanEntity?>(null, ikan.ikan_id) { value = c.game.ikan(ikan.ikan_id) }
     val dimiliki = ikan.dimiliki == 1
     val palet = LocalWarna.current
+    var pesan by remember { mutableStateOf<String?>(null) }
+    val bisaTambah = cekTambahAkuarium(jumlahDiAkuarium, ikan.jumlah, totalDiAkuarium) ==
+        HasilTambahAkuarium.Berhasil
 
     Column(
         Modifier
@@ -238,16 +270,75 @@ private fun DetailIkan(ikan: KoleksiLengkapView, onTutup: () -> Unit, onBeriMaka
                 Text("Terberat ${"%.1f".format(ikan.bobot_terbesar)} kg", style = MaterialTheme.typography.labelLarge)
                 Text("Kenyang ${ikan.kenyang}%", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
             }
+            Kartu(Modifier.fillMaxWidth(), warna = palet.kartuLembut) {
+                Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text("Akuarium", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                    Text(
+                        "$jumlahDiAkuarium dari ${ikan.jumlah} ekor di akuarium · $totalDiAkuarium/${KAPASITAS_AKUARIUM} ekor terisi",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        TombolSekunder(
+                            teks = "− Kurangi",
+                            onClick = {
+                                c.audio.play(Sfx.Klik)
+                                pesan = null
+                                scope.launch { c.game.kurangiIkanDariAkuarium(ikan.ikan_id) }
+                            },
+                            modifier = Modifier.weight(1f),
+                            enabled = jumlahDiAkuarium > 0,
+                        )
+                        TombolSekunder(
+                            teks = "+ Tambah",
+                            onClick = {
+                                c.audio.play(Sfx.Klik)
+                                scope.launch {
+                                    pesan = when (c.game.tambahIkanKeAkuarium(ikan.ikan_id)) {
+                                        HasilTambahAkuarium.Berhasil -> null
+                                        HasilTambahAkuarium.Penuh -> "Akuarium penuh ($KAPASITAS_AKUARIUM/$KAPASITAS_AKUARIUM). Keluarkan ikan lain dulu."
+                                        HasilTambahAkuarium.StokHabis -> "Semua ekor jenis ini sudah ada di akuarium."
+                                        HasilTambahAkuarium.TidakDimiliki -> "Ikan ini belum ada di koleksi."
+                                    }
+                                }
+                            },
+                            modifier = Modifier.weight(1f),
+                            enabled = bisaTambah,
+                        )
+                    }
+                    if (pesan != null) {
+                        pesan?.let { p ->
+                            Text(p, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.error)
+                        }
+                    } else if (totalDiAkuarium >= KAPASITAS_AKUARIUM) {
+                        Text(
+                            "Akuarium penuh. Keluarkan ikan lain dulu.",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                    } else if (jumlahDiAkuarium >= ikan.jumlah) {
+                        Text(
+                            "Semua ekor jenis ini sudah ada di akuarium.",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            }
             Text("Konsep: ${ikan.konsep_python}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
             TombolSekunder(
-                teks = "Beri Makan di Akuarium",
+                teks = "Beri Makan",
                 onClick = {
-                    scope.launch {
-                        c.game.beriMakan(ikan.ikan_id)
-                        onBeriMakan()
-                    }
+                    c.audio.play(Sfx.Benar)
+                    scope.launch { c.game.beriMakan(ikan.ikan_id) }
                 },
             )
+            if (jumlahDiAkuarium > 0) {
+                TombolSekunder(teks = "Lihat di Akuarium", onClick = onLihatAkuarium)
+            }
         }
         TombolUtama(teks = "Tutup", onClick = onTutup)
         Spacer(Modifier.height(4.dp))

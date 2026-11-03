@@ -267,6 +267,42 @@ interface CollectionDao {
     suspend fun reset()
 }
 
+/** Ringkasan jumlah ekor per spesies yang sedang dipajang di akuarium. */
+data class JumlahAkuariumRow(
+    val ikan_id: Int,
+    val jumlah: Int,
+)
+
+@Dao
+interface AkuariumDao {
+    @Query("SELECT * FROM ikan_akuarium WHERE pemain_id = 1 ORDER BY ditambahkan_pada, id")
+    fun observe(): Flow<List<IkanAkuariumEntity>>
+
+    @Query("SELECT COUNT(*) FROM ikan_akuarium WHERE pemain_id = 1")
+    suspend fun jumlah(): Int
+
+    @Query("SELECT COUNT(*) FROM ikan_akuarium WHERE pemain_id = 1 AND ikan_id = :ikanId")
+    suspend fun jumlahSpesies(ikanId: Int): Int
+
+    @Query("SELECT ikan_id, COUNT(*) AS jumlah FROM ikan_akuarium WHERE pemain_id = 1 GROUP BY ikan_id")
+    fun observeJumlahSpesies(): Flow<List<JumlahAkuariumRow>>
+
+    @Insert
+    suspend fun tambah(ikan: IkanAkuariumEntity): Long
+
+    @Query("SELECT id FROM ikan_akuarium WHERE pemain_id = 1 AND ikan_id = :ikanId ORDER BY ditambahkan_pada DESC, id DESC LIMIT 1")
+    suspend fun slotTerbaru(ikanId: Int): Long?
+
+    @Query("DELETE FROM ikan_akuarium WHERE pemain_id = 1 AND id = :id")
+    suspend fun hapus(id: Long)
+
+    @Query("UPDATE ikan_akuarium SET nama = :nama WHERE pemain_id = 1 AND id = :id")
+    suspend fun gantiNama(id: Long, nama: String?)
+
+    @Query("DELETE FROM ikan_akuarium WHERE pemain_id = 1")
+    suspend fun reset()
+}
+
 @Dao
 interface ResultDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

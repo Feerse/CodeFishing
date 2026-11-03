@@ -214,6 +214,23 @@ data class KoleksiIkanEntity(
     val terakhir_makan: Long? = null,
 )
 
+/** Satu ekor ikan yang dipajang di akuarium; nama custom menempel pada baris ini. */
+@Entity(
+    tableName = "ikan_akuarium",
+    foreignKeys = [
+        ForeignKey(entity = PemainEntity::class, parentColumns = ["id"], childColumns = ["pemain_id"], onDelete = ForeignKey.CASCADE),
+        ForeignKey(entity = IkanEntity::class, parentColumns = ["id"], childColumns = ["ikan_id"], onDelete = ForeignKey.RESTRICT),
+    ],
+    indices = [Index("pemain_id"), Index("ikan_id")],
+)
+data class IkanAkuariumEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val pemain_id: Int = 1,
+    val ikan_id: Int,
+    val nama: String? = null,
+    val ditambahkan_pada: Long,
+)
+
 @Entity(
     tableName = "misi",
     indices = [Index(value = ["nomor"], unique = true)],

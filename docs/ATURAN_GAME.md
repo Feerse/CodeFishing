@@ -34,7 +34,9 @@ Karena satu stage hanya 5 soal, ambang combo bonus adalah 3/4/5 dan semua bonus 
 
 Ikan yang sama boleh ditangkap berulang; jumlah, bobot terbesar, tier terbaik, dan level/kenyang disimpan di `koleksi_ikan`.
 
-- **Nama panggilan Akuarium**: nama ikan bisa diubah saat ikan diketuk di Akuarium. Nama ini disimpan terpisah dari katalog, sehingga nama di Koleksi tidak berubah dan nama panggilan tetap ada setelah aplikasi ditutup.
+- **Nama panggilan Akuarium**: nama bisa diubah saat ikan diketuk di Akuarium dan disimpan **per ekor**, jadi beberapa ikan sejenis bisa punya nama berbeda. Nama custom tampil sebagai heading di atas ikan, sedangkan nama spesies selalu tampil di bawah ikan. Nama menempel pada baris ikan di akuarium sehingga tidak berubah saat ikan lain ditambah/dikeluarkan.
+- **Kapasitas dan isi Akuarium**: akuarium menampung maksimal 10 ekor. Pemain menambah atau mengurangi ikan dari detail ikan di Koleksi, lalu bisa mengeluarkan ikan tertentu dari detail ikan di Akuarium. Mengeluarkan ikan **tidak mengurangi koleksi**. Setelah pembaruan aplikasi, akuarium mulai kosong dan diisi ulang oleh pemain.
+- **Kenyang di Akuarium**: status kenyang tetap disimpan per spesies. Memberi makan satu ekor memengaruhi seluruh ekor spesies yang sama, termasuk yang belum dipajang.
 
 ### Tantangan harian
 

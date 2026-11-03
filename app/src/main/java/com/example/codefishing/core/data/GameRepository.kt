@@ -7,6 +7,7 @@ import com.example.codefishing.core.db.CodeFishingDatabase
 import com.example.codefishing.core.db.HasilProgramEntity
 import com.example.codefishing.core.db.HasilRingkasRow
 import com.example.codefishing.core.db.HasilTangkapanEntity
+import com.example.codefishing.core.db.IkanAkuariumEntity
 import com.example.codefishing.core.db.IkanEntity
 import com.example.codefishing.core.db.KoleksiIkanEntity
 import com.example.codefishing.core.db.KoleksiLengkapView
@@ -29,6 +30,8 @@ import com.example.codefishing.pemula.SoalKuis
 import com.example.codefishing.pemula.urutanSoal
 import com.example.codefishing.expert.Scoring
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import java.time.Instant
 import java.time.ZoneId
 import kotlin.random.Random
@@ -100,6 +103,7 @@ class GameRepository(
     private val contentDao = db.contentDao()
     private val baitDao = db.baitDao()
     private val collectionDao = db.collectionDao()
+    private val akuariumDao = db.akuariumDao()
     private val resultDao = db.resultDao()
     private val settingsDao = db.settingsDao()
     private val historyDao = db.historyDao()
@@ -345,7 +349,55 @@ class GameRepository(
     fun observeKoleksi(tier: String? = null): Flow<List<KoleksiLengkapView>> =
         if (tier == null) collectionDao.observeSemua() else collectionDao.observeTier(tier)
 
-    fun observeAkuarium(): Flow<List<KoleksiLengkapView>> = collectionDao.observeDimiliki()
+    fun observeAkuarium(): Flow<List<IkanAkuarium>> =
+        combine(akuariumDao.observe(), collectionDao.observeDimiliki()) { slots, dimiliki ->
+            val peta = dimiliki.associateBy { it.ikan_id }
+            slots.mapNotNull { slot ->
+                peta[slot.ikan_id]?.let { IkanAkuarium(slot.id, it, slot.nama) }
+            }
+        }
+
+    fun observeJumlahAkuarium(): Flow<Map<Int, Int>> =
+        akuariumDao.observeJumlahSpesies().map { rows ->
+            rows.associate { it.ikan_id to it.jumlah }
+        }
+
+    suspend fun tambahIkanKeAkuarium(
+        ikanId: Int,
+        now: Long = System.currentTimeMillis(),
+    ): HasilTambahAkuarium = db.withTransaction {
+        val koleksi = collectionDao.koleksi(ikanId)
+            ?: return@withTransaction HasilTambahAkuarium.TidakDimiliki
+        val total = akuariumDao.jumlah()
+        val diAkuarium = akuariumDao.jumlahSpesies(ikanId)
+        when (val cek = cekTambahAkuarium(diAkuarium, koleksi.jumlah, total)) {
+            HasilTambahAkuarium.Berhasil -> {
+                akuariumDao.tambah(
+                    IkanAkuariumEntity(
+                        ikan_id = ikanId,
+                        ditambahkan_pada = now,
+                    ),
+                )
+                HasilTambahAkuarium.Berhasil
+            }
+            else -> cek
+        }
+    }
+
+    /** Kurangi satu ekor dari akuarium; yang dihapus adalah baris terbaru spesies itu. */
+    suspend fun kurangiIkanDariAkuarium(ikanId: Int) {
+        db.withTransaction {
+            akuariumDao.slotTerbaru(ikanId)?.let { akuariumDao.hapus(it) }
+        }
+    }
+
+    suspend fun keluarkanDariAkuarium(slotId: Long) {
+        akuariumDao.hapus(slotId)
+    }
+
+    suspend fun gantiNamaAkuarium(slotId: Long, teks: String) {
+        akuariumDao.gantiNama(slotId, normalisasiNamaAkuarium(teks))
+    }
 
     suspend fun ikan(id: Int): IkanEntity? = contentDao.ikan(id)
     suspend fun semuaIkan(): List<IkanEntity> = contentDao.semuaIkan()
@@ -537,6 +589,7 @@ class GameRepository(
         db.withTransaction {
             stageDao.resetProgres()
             collectionDao.reset()
+            akuariumDao.reset()
             resultDao.reset()
             dailyDao.reset()
             historyDao.reset()

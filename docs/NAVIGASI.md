@@ -24,11 +24,11 @@ Navigasi di kode: `core/nav/` (`Screen`, `AppNavigator`, `DrawerItem`, `BottomIt
 | 6 | Hasil Stage | `HasilStageScreen` | Ikon lulus/gagal, skor, benar/total, XP, ikan target + tier/bobot, bonus combo, rekor baru | Stage berikutnya → 04 / 12 · Peta → 03 · bottom nav |
 | 7 | Sandbox | `SandboxScreen` | Daftar 7 misi + bintang; papan petak laut di atas editor yang menampilkan posisi awal dan posisi akhir kapal, editor kode Python, tombol Jalankan/Contoh, hasil inline berisi tick/ikan/sampah/XP, output, dan jejak gerak; tombol **Misi Berikutnya** muncul setelah misi berhasil; draf kode per misi | Tetap di editor · Misi Berikutnya → 07 · Daftar → 07 · bottom nav |
 | 8 | Hasil Program | `HasilProgramScreen` | Layar hasil tersimpan: ikon berhasil/gagal, bintang, tick/ikan/XP, error bila ada, hasil tangkapan, output, kode terakhir (tidak dibuka otomatis dari Sandbox) | Ubah Kode → 07 · Misi berikutnya → 07 · Akuarium → 13 · bottom nav |
-| 9 | Koleksi | `KoleksiScreen` | Grid 48 ikan, filter tier, status dimiliki/terkunci, detail + konsep Python, beri makan | Akuarium → 13 · bottom nav |
+| 9 | Koleksi | `KoleksiScreen` | Grid 48 ikan, filter tier, status dimiliki/terkunci, detail + konsep Python, beri makan, kontrol tambah/kurangi ikan di akuarium | Akuarium → 13 · bottom nav |
 | 10 | Pengaturan | `PengaturanScreen` | Statistik pemain, saklar efek suara/musik/haptik/pewarnaan, Lihat Pengenalan, reset progres, galeri aset (debug) | Pengenalan → 14 · bottom nav |
 | 11 | Umpan Habis | `UmpanHabisScreen` | Hitung mundur besar, jumlah umpan, emas, tombol Lanjutkan aktif saat umpan ≥ 1, tukar umpan emas; muncul saat mencoba memulai stage dengan umpan 0 | Lanjutkan Kuis → 05 · Baca Materi → 04 · Peta → 03 |
 | 12 | Stage Boss | `BossScreen` | Kuis boss 5 soal dengan ambang lulus 4/5 (80%), tanpa materi | Selesai → 06 · Peta → 03 |
-| 13 | Akuarium | `AkuariumScreen` | Tangki berlapis kertas, ikan yang dimiliki berenang, ketuk untuk info, ganti nama panggilan, beri makan satu/semua | Koleksi → 09 · Peta → 03 · bottom nav |
+| 13 | Akuarium | `AkuariumScreen` | Tangki berlapis kertas, maksimal 10 ekor hasil pilihan pemain, nama custom (heading) + spesies selalu terlihat, empty state ke Koleksi, ketuk untuk info, ganti nama per ekor, keluarkan dari akuarium, beri makan satu/semua | Koleksi → 09 · Peta → 03 · bottom nav |
 | 14 | Pengenalan | `PengenalanScreen` | Empat halaman bergambar tanpa toolbar: Python sambil memancing, pilih umpan kode, tulis program, akuarium dan offline | Lanjut → halaman berikutnya · Lewati/Mulai → 01 |
 
 Layar 99 `GaleriAset` hanya untuk debug (Pengaturan > Galeri Aset).

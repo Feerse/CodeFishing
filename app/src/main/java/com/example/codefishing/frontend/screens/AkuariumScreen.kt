@@ -64,8 +64,10 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.core.audio.Sfx
+import com.example.codefishing.core.data.IkanAkuarium
+import com.example.codefishing.core.data.KAPASITAS_AKUARIUM
 import com.example.codefishing.core.data.MAKS_NAMA_AKUARIUM
-import com.example.codefishing.core.db.KoleksiLengkapView
+import com.example.codefishing.core.data.jumlahPerBaris
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.Gambar
@@ -80,7 +82,8 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- * 13 Akuarium: ikan yang sudah dimiliki berenang di atas latar kertas.
+ * 13 Akuarium: maksimal 10 ekor ikan berenang di atas latar kertas.
+ * Nama custom tampil sebagai heading di atas ikan dan spesies selalu di bawahnya.
  * Ikan yang belum dimiliki tidak ditampilkan di sini.
  */
 @Composable
@@ -88,12 +91,12 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
     val c = LocalContainer.current
     val warna = LocalWarna.current
     val ikan by c.game.observeAkuarium().collectAsState(emptyList())
-    val namaPanggilan by c.namaAkuarium.nama.collectAsState()
     val scope = rememberCoroutineScope()
-    var dipilih by remember { mutableStateOf<KoleksiLengkapView?>(null) }
+    var dipilih by remember { mutableStateOf<IkanAkuarium?>(null) }
     var dialogNama by remember { mutableStateOf(false) }
+    var dialogKeluarkan by remember { mutableStateOf(false) }
     var namaBaru by remember { mutableStateOf("") }
-    val pilihan = dipilih?.let { lama -> ikan.firstOrNull { it.ikan_id == lama.ikan_id } }
+    val pilihan = dipilih?.let { item -> ikan.firstOrNull { it.slotId == item.slotId } }
     // Animasi serpihan makanan: naik 1 tiap "Beri Makan"; progres 0..1 saat serpihan jatuh.
     var makanKe by remember { mutableIntStateOf(0) }
     val jatuh = remember { Animatable(0f) }
@@ -121,6 +124,20 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
         BoxWithConstraints(Modifier.fillMaxSize()) {
             val lebar = maxWidth
             val tinggi = maxHeight
+            val lebarLabel = if (lebar < 360.dp) 100.dp else 112.dp
+            // 10 ikan dibagi rata ke beberapa baris (maks. 3 per baris) agar label tidak bertumpuk.
+            val perBaris = remember(ikan.size) { jumlahPerBaris(ikan.size) }
+            val tataLetak = remember(ikan.size) {
+                buildList {
+                    perBaris.forEachIndexed { r, n ->
+                        repeat(n) { c -> add(Triple(r, c, n)) }
+                    }
+                }
+            }
+            val areaAtas = 96.dp
+            val areaBawah = 100.dp
+            val areaIkan = (tinggi - areaAtas - areaBawah).coerceAtLeast(1.dp)
+            val tinggiBaris = areaIkan / perBaris.size.coerceAtLeast(1)
             val transisi = rememberInfiniteTransition(label = "akuarium")
 
             // Dasar akuarium: pasir, rumput laut, batu, karang, bintang laut, kerang.
@@ -166,18 +183,19 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                 )
             }
 
-            ikan.forEachIndexed { i, k ->
+            ikan.forEachIndexed { i, item ->
+                val k = item.ikan
                 val durasi = 2600 + (i % 5) * 350
                 val naikTurun by transisi.animateFloat(
-                    initialValue = -7f,
-                    targetValue = 7f,
+                    initialValue = -4f,
+                    targetValue = 4f,
                     animationSpec = infiniteRepeatable(
                         animation = tween(durasi, easing = LinearEasing),
                         repeatMode = RepeatMode.Reverse,
                     ),
                     label = "ikan-$i",
                 )
-                // Gerak menyusuri akuarium kiri-kanan; ikan menghadap arah geraknya.
+                // Goyang kecil di dalam selnya; ikan menghadap arah geraknya.
                 val keliling by transisi.animateFloat(
                     initialValue = 0f,
                     targetValue = 1f,
@@ -186,29 +204,49 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                     ),
                     label = "keliling-$i",
                 )
-                val kiri = if (i % 2 == 0) 12f + (i * 13) % 55 else 45f + (i * 17) % 45
-                val atas = 18f + ((i * 19) % 58)
-                val ukuran = if (k.tier == "mitos" || k.tier == "legenda") 92.dp else 68.dp
-                val namaTampil = namaPanggilan[k.ikan_id] ?: k.nama
-                Gambar(
-                    gambarIkan(k.gambar),
-                    namaTampil,
-                    Modifier
+                val (barisKe, kolom, jumlahKolom) = tataLetak[i]
+                val ukuran = if (k.tier == "mitos" || k.tier == "legenda") 84.dp else 68.dp
+                val namaCustom = item.nama
+                val namaTampil = namaCustom ?: k.nama
+                val deskripsi = if (namaCustom != null) "$namaCustom, ${k.nama}" else k.nama
+                // Perkiraan tinggi kolom: heading (bila ada) + ikan + label spesies.
+                val tinggiKonten = ukuran + 16.dp + if (namaCustom != null) 26.dp else 0.dp
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(1.dp),
+                    modifier = Modifier
                         .offset {
-                            val maks = (lebar - ukuran).roundToPx()
-                            val geser = (sin(2.0 * PI * keliling) * 38.dp.toPx()).toInt()
+                            val maks = (lebar - lebarLabel).roundToPx().coerceAtLeast(0)
+                            val geser = (sin(2.0 * PI * keliling) * 3.dp.toPx()).toInt()
+                            val xDasar = (lebar * ((kolom + 0.5f) / jumlahKolom)).toPx() - lebarLabel.toPx() / 2f
+                            val yDasar = areaAtas + tinggiBaris * barisKe +
+                                ((tinggiBaris - tinggiKonten) / 2).coerceAtLeast(0.dp)
                             IntOffset(
-                                (((lebar - ukuran) * (kiri / 100f)).roundToPx() + geser).coerceIn(0, maks),
-                                ((tinggi - ukuran) * (atas / 100f) + naikTurun.dp).roundToPx(),
+                                (xDasar.toInt() + geser).coerceIn(0, maks),
+                                (yDasar + naikTurun.dp).roundToPx().coerceAtLeast(0),
                             )
                         }
-                        .size(ukuran)
-                        .graphicsLayer {
-                            // Aset ikan menghadap kanan; balik saat berenang ke kiri.
-                            scaleX = if (cos(2.0 * PI * keliling) >= 0.0) 1f else -1f
-                        }
-                        .clickable { dipilih = k },
-                )
+                        .width(lebarLabel)
+                        .clickable(onClickLabel = "Lihat ikan $namaTampil") { dipilih = item },
+                ) {
+                    // Nama custom selalu jadi heading di atas ikan.
+                    if (namaCustom != null) {
+                        LabelIkan(namaCustom, heading = true)
+                    }
+                    Gambar(
+                        gambarIkan(k.gambar),
+                        deskripsi,
+                        Modifier
+                            .size(ukuran)
+                            .graphicsLayer {
+                                // Aset ikan menghadap kanan; balik saat berenang ke kiri.
+                                // Hanya gambar yang dibalik, label tetap terbaca.
+                                scaleX = if (cos(2.0 * PI * keliling) >= 0.0) 1f else -1f
+                            },
+                    )
+                    // Spesies selalu tampil di bawah ikan.
+                    LabelIkan(k.nama, heading = false)
+                }
             }
 
             // Serpihan makanan jatuh saat "Beri Makan".
@@ -243,7 +281,13 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    "${ikan.size} jenis ikan berenang di sini",
+                    if (ikan.isEmpty()) {
+                        "0/$KAPASITAS_AKUARIUM ikan · tambah dari Koleksi"
+                    } else if (ikan.size >= KAPASITAS_AKUARIUM) {
+                        "${ikan.size}/$KAPASITAS_AKUARIUM ikan · akuarium penuh"
+                    } else {
+                        "${ikan.size}/$KAPASITAS_AKUARIUM ikan berenang di sini"
+                    },
                     style = MaterialTheme.typography.bodySmall,
                     color = warna.teksDiAdeganRedup,
                 )
@@ -260,12 +304,12 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                     Kartu(Modifier.fillMaxWidth(), warna = warna.kartu.copy(alpha = 0.95f)) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             Text("Akuarium masih kosong", color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.titleMedium)
-                            Text("Tangkap ikan pertamamu di Mode Belajar atau Sandbox.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+                            Text("Tambahkan ikan dari koleksimu, maksimal $KAPASITAS_AKUARIUM ekor.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
                             TombolUtama(
-                                teks = "Buka Peta",
+                                teks = "Pilih dari Koleksi",
                                 onClick = {
                                     c.audio.play(Sfx.Klik)
-                                    nav.resetTo(Screen.Peta)
+                                    nav.resetTo(Screen.Koleksi)
                                 },
                             )
                         }
@@ -278,7 +322,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                             c.audio.play(Sfx.Benar)
                             makanKe++
                             scope.launch {
-                                ikan.forEach { c.game.beriMakan(it.ikan_id) }
+                                ikan.map { it.ikan.ikan_id }.distinct().forEach { c.game.beriMakan(it) }
                             }
                         },
                         onKoleksi = {
@@ -296,6 +340,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
             onDismissRequest = {
                 dipilih = null
                 dialogNama = false
+                dialogKeluarkan = false
             },
             properties = DialogProperties(
                 usePlatformDefaultWidth = false,
@@ -303,8 +348,8 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                 dismissOnClickOutside = true,
             ),
         ) {
-            val panggilan = namaPanggilan[pilihan.ikan_id]
-            val namaTampil = panggilan ?: pilihan.nama
+            val panggilan = pilihan.nama
+            val namaTampil = panggilan ?: pilihan.ikan.nama
             val interaksiKartu = remember { MutableInteractionSource() }
             Box(
                 Modifier
@@ -313,6 +358,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                     .clickable(onClickLabel = "Tutup informasi ikan") {
                         dipilih = null
                         dialogNama = false
+                        dialogKeluarkan = false
                     },
             ) {
                 Kartu(
@@ -336,7 +382,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(14.dp),
                         ) {
-                            Gambar(gambarIkan(pilihan.gambar), namaTampil, Modifier.size(64.dp))
+                            Gambar(gambarIkan(pilihan.ikan.gambar), namaTampil, Modifier.size(64.dp))
                             Column(
                                 Modifier.weight(1f),
                                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -349,13 +395,13 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                                 )
                                 if (panggilan != null) {
                                     Text(
-                                        "Spesies: ${pilihan.nama}",
+                                        "Spesies: ${pilihan.ikan.nama}",
                                         style = MaterialTheme.typography.labelMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 }
                                 Text(
-                                    "Jumlah ×${pilihan.jumlah} · ${"%.1f".format(pilihan.bobot_terbesar)} kg · kenyang ${pilihan.kenyang}%",
+                                    "Jumlah ×${pilihan.ikan.jumlah} · ${"%.1f".format(pilihan.ikan.bobot_terbesar)} kg · kenyang ${pilihan.ikan.kenyang}%",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -374,8 +420,20 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                             onClick = {
                                 c.audio.play(Sfx.Benar)
                                 makanKe++
-                                scope.launch { c.game.beriMakan(pilihan.ikan_id) }
+                                scope.launch { c.game.beriMakan(pilihan.ikan.ikan_id) }
                             },
+                            modifier = Modifier.height(48.dp),
+                        )
+                        if (pilihan.ikan.jumlah > 1) {
+                            Text(
+                                "Kenyang berlaku untuk seluruh ${pilihan.ikan.jumlah} ekor ${pilihan.ikan.nama}.",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        TombolSekunder(
+                            teks = "Keluarkan dari Akuarium",
+                            onClick = { dialogKeluarkan = true },
                             modifier = Modifier.height(48.dp),
                         )
                     }
@@ -385,7 +443,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
     }
 
     if (dialogNama && pilihan != null) {
-        val ikanId = pilihan.ikan_id
+        val slotId = pilihan.slotId
         AlertDialog(
             onDismissRequest = { dialogNama = false },
             title = { Text("Ganti nama ikan") },
@@ -396,25 +454,25 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                         onValueChange = { namaBaru = it.take(MAKS_NAMA_AKUARIUM) },
                         singleLine = true,
                         label = { Text("Nama di akuarium") },
-                        placeholder = { Text(pilihan.nama) },
+                        placeholder = { Text(pilihan.ikan.nama) },
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(
                             onDone = {
-                                c.namaAkuarium.simpan(ikanId, namaBaru)
+                                scope.launch { c.game.gantiNamaAkuarium(slotId, namaBaru) }
                                 dialogNama = false
                             },
                         ),
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Text(
-                        "Nama asli: ${pilihan.nama}. Nama di Koleksi tidak berubah.",
+                        "Nama ini hanya untuk ikan ini. Nama asli: ${pilihan.ikan.nama}.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
-                    if (namaPanggilan[ikanId] != null) {
+                    if (pilihan.nama != null) {
                         TextButton(
                             onClick = {
-                                c.namaAkuarium.simpan(ikanId, "")
+                                scope.launch { c.game.gantiNamaAkuarium(slotId, "") }
                                 dialogNama = false
                             },
                             contentPadding = PaddingValues(0.dp),
@@ -427,7 +485,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        c.namaAkuarium.simpan(ikanId, namaBaru)
+                        scope.launch { c.game.gantiNamaAkuarium(slotId, namaBaru) }
                         dialogNama = false
                     },
                 ) { Text("Simpan") }
@@ -437,6 +495,57 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
             },
         )
     }
+
+    if (dialogKeluarkan && pilihan != null) {
+        AlertDialog(
+            onDismissRequest = { dialogKeluarkan = false },
+            title = { Text("Keluarkan ikan?") },
+            text = {
+                Text(
+                    "${pilihan.nama ?: pilihan.ikan.nama} akan dikeluarkan dari akuarium. " +
+                        "Ikan tetap tersimpan di Koleksi.",
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val slotId = pilihan.slotId
+                        dialogKeluarkan = false
+                        dipilih = null
+                        dialogNama = false
+                        scope.launch { c.game.keluarkanDariAkuarium(slotId) }
+                    },
+                ) { Text("Keluarkan") }
+            },
+            dismissButton = {
+                TextButton(onClick = { dialogKeluarkan = false }) { Text("Batal") }
+            },
+        )
+    }
+}
+
+/** Label kecil yang menempel pada ikan: nama custom di atas, spesies di bawah. */
+@Composable
+private fun LabelIkan(teks: String, heading: Boolean) {
+    val warna = LocalWarna.current
+    Text(
+        teks,
+        style = MaterialTheme.typography.labelSmall.copy(
+            fontSize = if (heading) 11.sp else 10.sp,
+            lineHeight = 12.sp,
+            fontWeight = if (heading) FontWeight.Bold else FontWeight.Medium,
+        ),
+        color = if (heading) warna.teksDiAdegan else warna.teksDiAdeganRedup,
+        textAlign = TextAlign.Center,
+        maxLines = if (heading) 2 else 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier
+            .background(
+                warna.kartu.copy(alpha = if (heading) 0.86f else 0.68f),
+                RoundedCornerShape(50),
+            )
+            .padding(horizontal = 6.dp, vertical = 1.dp),
+    )
 }
 
 /** Dua aksi utama akuarium: beri makan semua dan buka koleksi. */
