@@ -14,6 +14,7 @@ Semua permainan berjalan **offline** di perangkat; aplikasi tidak meminta izin i
 - Lulus membuka stage berikutnya. Skor terbaik, combo tertinggi, dan percobaan disimpan di `progres_stage`.
 - **Dua peta**: gerbang di ujung Samudra Pasifik membuka peta Antartika setelah stage 1-10 selesai. Chip kiri atas di peta Antartika kembali ke Pasifik, dan progres dihitung per peta (`x/10`).
 - **Sesi kuis tersimpan otomatis**: posisi soal, urutan soal, jumlah benar/salah, combo, dan XP sesi disimpan sementara. Ikon kompas di Peta menggeser peta ke stage yang terakhir dikerjakan; membuka stage tersebut lewat node/Berlayar melanjutkan tepat di soal terakhir. Sesi dihapus setelah kuis selesai, sehingga mengulang stage dimulai dari soal 1.
+- **Mengetuk node di Peta** memindahkan kapal ke node itu dan membuka lembar info. Stage yang sudah selesai menampilkan tombol **Coba Tantang Ulang** untuk mengulang kuisnya.
 - **Pengacakan soal**: percobaan pertama memakai urutan kurikulum; saat stage diulang (sudah pernah diselesaikan), urutan soal diacak agar tidak dihafal. Urutan pilihan jawaban tetap.
 - Jawaban benar memberi **+25 XP** dan menaikkan combo; jawaban salah mereset combo ke 0.
 - Setiap stage memakai studi kasus (kapal, dermaga, selam, jala, es, bubu, trawler/boss).

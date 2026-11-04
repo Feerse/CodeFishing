@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -117,6 +118,8 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
 
     // Pilihan manual pemain; null = ikut peta tempat stage terakhir dikerjakan.
     var petaPilihan by rememberSaveable { mutableStateOf<PetaAktif?>(null) }
+    // Stage yang diketuk: kapal ikut pindah ke node tersebut.
+    var kapalPilihan by remember { mutableStateOf<Int?>(null) }
     val selesaiPasifik = stages.count {
         it.nomor <= ProgresPeta.STAGE_PASIFIK_TERAKHIR && it.status == "selesai"
     }
@@ -157,10 +160,14 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
     val stageAktif = stagePeta.firstOrNull { it.status != "selesai" && it.terbuka == 1 }
         ?: stagePeta.lastOrNull()
     val nomorKapal = PetaGeometri.nomorKapal(
-        nomorTerakhir?.takeIf { diPeta(it) }?.let { nomorLokal(it) },
+        (kapalPilihan?.takeIf { diPeta(it) } ?: nomorTerakhir?.takeIf { diPeta(it) })
+            ?.let { nomorLokal(it) },
         stageAktif?.nomor?.let { nomorLokal(it) },
     )
     val titikKapal = titikLokal(nomorKapal) ?: PetaGeometri.stage.first()
+
+    // Fokus kapal hanya berlaku di peta tempat node diketuk.
+    LaunchedEffect(petaAktif) { kapalPilihan = null }
 
     val latarPeta by produceState<ImageBitmap?>(null, warna.gelap, petaAktif) {
         value = withContext(Dispatchers.IO) {
@@ -259,6 +266,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                             terpilih = terpilih == PilihanPeta.Stage(stage.nomor),
                             onClick = {
                                 c.audio.play(Sfx.Klik)
+                                if (stage.terbuka == 1) kapalPilihan = stage.nomor
                                 terpilih = PilihanPeta.Stage(stage.nomor)
                             },
                             modifier = Modifier.tempatNode(titik, lebar, tinggi, ukuran),
@@ -671,8 +679,11 @@ private fun KapalPeta(titik: TitikPeta, lebar: Dp, tinggi: Dp) {
         animationSpec = infiniteRepeatable(tween(1700, easing = LinearEasing), RepeatMode.Reverse),
         label = "ombak-kapal",
     )
-    val x = lebar * (titik.x / PetaGeometri.LEBAR_DUNIA) - 34.dp
-    val y = tinggi * (titik.y / PetaGeometri.TINGGI_DUNIA) - 82.dp
+    // Posisi dianimasikan supaya kapal terlihat berlayar saat node lain diketuk.
+    val xTarget = lebar * (titik.x / PetaGeometri.LEBAR_DUNIA) - 34.dp
+    val yTarget = tinggi * (titik.y / PetaGeometri.TINGGI_DUNIA) - 82.dp
+    val x by animateDpAsState(xTarget, tween(420), label = "kapal-x")
+    val y by animateDpAsState(yTarget, tween(420), label = "kapal-y")
     Box(
         Modifier
             .offset {
@@ -777,6 +788,7 @@ private fun LembarStage(
             TombolUtama(
                 teks = when {
                     !buka -> "Terkunci"
+                    selesai -> "Coba Tantang Ulang"
                     stage.tipe == "boss" -> "Hadapi Boss"
                     else -> "Berlayar"
                 },
