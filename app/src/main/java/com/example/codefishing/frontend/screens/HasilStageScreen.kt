@@ -82,7 +82,7 @@ fun HasilStageScreen(nav: AppNavigator, padding: PaddingValues) {
             Gambar(
                 when {
                     hasil?.lulus == true && stage.tipe == "boss" -> Art.trofi_boss
-                    hasil?.lulus == true -> Art.tameng_lulus_70
+                    hasil?.lulus == true -> Art.medali_misi_selesai
                     else -> Art.kail_putus
                 },
                 if (hasil?.lulus == true) "Lulus" else "Belum lulus",
@@ -99,6 +99,10 @@ fun HasilStageScreen(nav: AppNavigator, padding: PaddingValues) {
             Text(stage.nama, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
 
             if (hasil != null) {
+                Bintang(
+                    if (hasil.lulus) if (hasil.sempurna) 3 else 2 else 0,
+                    ukuran = 24,
+                )
                 Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
                     LabelNilai("Skor", "${hasil.skor}%")
                     LabelNilai("Benar", "${hasil.benar}/${hasil.total}")
@@ -187,7 +191,6 @@ fun HasilStageScreen(nav: AppNavigator, padding: PaddingValues) {
                 c.audio.play(Sfx.Klik)
                 nav.resetTo(Screen.Peta)
             })
-            Bintang(if (hasil?.lulus == true) if (hasil.sempurna) 3 else 2 else 0)
             Spacer(Modifier.height(8.dp))
         }
     }

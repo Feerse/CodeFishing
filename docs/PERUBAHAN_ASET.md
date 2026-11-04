@@ -20,7 +20,7 @@ Ringkasan penggantian visual dan audio. **Logika permainan, Room, repositori, da
 | Home | emoji 🎣 🪙 ⭐ | `umpan_penuh`, `lencana_plus_satu`, `bintang_penuh` |
 | Kuis: adegan | kanvas buatan kode (satu adegan untuk semua soal) | `adegan_*` per stage, `percikan_air`, `ledakan_kail_putus`, `kail_putus`, ikan target stage, hujan dan petir di Boss |
 | Kuis: tanda benar/salah | teks ✓ ✕ | `ikon_berhasil` / `ikon_error` |
-| Hasil Stage | lingkaran + teks ✓ ✕ | `tameng_lulus_70` / `trofi_boss` / `kail_putus` |
+| Hasil Stage | lingkaran + teks ✓ ✕ | `medali_misi_selesai` / `trofi_boss` / `kail_putus` |
 | Hasil Program | lingkaran + teks ✓ ✕ | `medali_misi_selesai` / `ikon_error` |
 | Umpan Habis | emoji 🪙 | `jam_hitung_mundur`, `lencana_plus_satu`, indikator umpan |
 | Peta: node | lingkaran kanvas + emoji 🔒 ★ ✓ | `node_aktif` / `node_selesai` / `node_terkunci` / `node_boss` |
