@@ -172,10 +172,10 @@ fun HasilStageScreen(nav: AppNavigator, padding: PaddingValues) {
 
             if (hasil?.lulus == true && hasil.stageBerikut != null) {
                 TombolUtama(
-                    teks = if (hasil.stageBerikut == 10) "Menuju Boss" else "Stage Berikutnya",
+                    teks = if (hasil.stageBerikutBoss) "Menuju Boss" else "Stage Berikutnya",
                     onClick = {
                         c.audio.play(Sfx.KlikUtama)
-                        nav.replace(if (hasil.stageBerikut == 10) Screen.Boss else Screen.Materi, hasil.stageBerikut)
+                        nav.replace(if (hasil.stageBerikutBoss) Screen.Boss else Screen.Materi, hasil.stageBerikut)
                     },
                 )
             } else if (hasil != null && !hasil.lulus) {

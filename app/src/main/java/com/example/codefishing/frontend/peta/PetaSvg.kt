@@ -18,14 +18,16 @@ object PetaSvg {
     private var cache: ImageBitmap? = null
 
     @Volatile
-    private var cacheTerang: Boolean? = null
+    private var cacheKunci: Pair<Boolean, Boolean>? = null
 
-    /** [terang] memilih peta versi siang; cache lama diganti agar tidak menyimpan dua bitmap besar. */
-    fun ambil(context: Context, terang: Boolean): ImageBitmap? {
-        cache?.takeIf { cacheTerang == terang }?.let { return it }
+    /** [terang] memilih peta versi siang; [antartika] memilih peta kedua (stage 11-20). */
+    fun ambil(context: Context, terang: Boolean, antartika: Boolean = false): ImageBitmap? {
+        val kunci = terang to antartika
+        cache?.takeIf { cacheKunci == kunci }?.let { return it }
         return synchronized(this) {
-            cache?.takeIf { cacheTerang == terang } ?: runCatching {
-                val nama = if (terang) "peta/peta_perairan_terang.svg" else "peta/peta_perairan.svg"
+            cache?.takeIf { cacheKunci == kunci } ?: runCatching {
+                val dasar = if (antartika) "peta/peta_antartika" else "peta/peta_perairan"
+                val nama = if (terang) "${dasar}_terang.svg" else "$dasar.svg"
                 val svg = context.assets.open(nama).use { input ->
                     SVG.getFromInputStream(input)
                 }
@@ -35,10 +37,10 @@ object PetaSvg {
                 svg.renderToCanvas(Canvas(bitmap))
                 bitmap.asImageBitmap()
             }.onFailure {
-                Log.e("PetaSvg", "Gagal merender peta (terang=$terang)", it)
+                Log.e("PetaSvg", "Gagal merender peta (terang=$terang, antartika=$antartika)", it)
             }.getOrNull()?.also {
                 cache = it
-                cacheTerang = terang
+                cacheKunci = kunci
             }
         }
     }

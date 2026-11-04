@@ -10,8 +10,9 @@ Semua permainan berjalan **offline** di perangkat; aplikasi tidak meminta izin i
 - **Konfirmasi jawaban**: mengetuk opsi hanya menandai pilihan (kail dilempar), jawaban belum tersubmit. Pemain harus menekan **Ya, kunci jawaban** pada lembar konfirmasi; **Periksa lagi** membatalkan tanpa mengunci jawaban atau mengubah umpan.
 - **Animasi memancing**: di atas soal ada adegan vector (perahu, nelayan, kail, ikan). Kail terlempar saat opsi dipilih, ikan terangkat saat jawaban benar, dan tali putus saat jawaban salah.
 - **Umpan (nyawa)**: maksimum 5 dan pulih 1 umpan tiap 15 menit. Jawaban salah tidak langsung mengurangi umpan; umpan berkurang **1 sekali** saat stage selesai jika terdapat **minimal 3 jawaban salah**. Umpan 0 membuka layar 11 (hitung mundur) saat mencoba memulai stage berikutnya.
-- **Lulus stage**: skor benar/5 × 100 ≥ 70 untuk stage biasa. **Boss Stage 10 lulus di 4 dari 5 (80%)**.
+- **Lulus stage**: skor benar/5 × 100 ≥ 70 untuk stage biasa. **Boss Stage 10 dan Stage 20 lulus di 4 dari 5 (80%)**.
 - Lulus membuka stage berikutnya. Skor terbaik, combo tertinggi, dan percobaan disimpan di `progres_stage`.
+- **Dua peta**: gerbang di ujung Samudra Pasifik membuka peta Antartika setelah stage 1-10 selesai. Chip kiri atas di peta Antartika kembali ke Pasifik, dan progres dihitung per peta (`x/10`).
 - **Sesi kuis tersimpan otomatis**: posisi soal, urutan soal, jumlah benar/salah, combo, dan XP sesi disimpan sementara. Ikon kompas di Peta menggeser peta ke stage yang terakhir dikerjakan; membuka stage tersebut lewat node/Berlayar melanjutkan tepat di soal terakhir. Sesi dihapus setelah kuis selesai, sehingga mengulang stage dimulai dari soal 1.
 - **Pengacakan soal**: percobaan pertama memakai urutan kurikulum; saat stage diulang (sudah pernah diselesaikan), urutan soal diacak agar tidak dihafal. Urutan pilihan jawaban tetap.
 - Jawaban benar memberi **+25 XP** dan menaikkan combo; jawaban salah mereset combo ke 0.

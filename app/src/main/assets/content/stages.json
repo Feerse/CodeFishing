@@ -695,6 +695,1666 @@
      "sc": "count",
      "v": "",
      "vn": "trawler"
+    },
+    {
+     "q": "Kapten menghitung tangkapan, lalu menambah 3.\nBerapa hasil akhir x?",
+     "code": "x = 2\nx = x * 3\nx = x + 3\nprint(x)",
+     "o": [
+      {
+       "t": "5",
+       "out": "5"
+      },
+      {
+       "t": "8",
+       "out": "8"
+      },
+      {
+       "t": "9",
+       "out": "9"
+      },
+      {
+       "t": "11",
+       "out": "11"
+      }
+     ],
+     "ok": 2,
+     "sc": "box",
+     "v": "x",
+     "vn": "kapal"
+    },
+    {
+     "q": "Penjaga dermaga menggabungkan dua teks.\nOperator untuk menyambung string!",
+     "code": "a = \"Ikan\"\nb = \"Hiu\"\nprint(a ___ b)",
+     "o": [
+      {
+       "t": "*",
+       "out": "Error"
+      },
+      {
+       "t": "+",
+       "out": "IkanHiu"
+      },
+      {
+       "t": "&",
+       "out": "Error"
+      },
+      {
+       "t": "and",
+       "out": "Hiu"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "dermaga"
+    },
+    {
+     "q": "Loop berhenti saat n mencapai 5. Berapa kali loop berjalan?",
+     "code": "n = 1\nwhile n < 5:\n    n = n + 1",
+     "o": [
+      {
+       "t": "3",
+       "out": "3x"
+      },
+      {
+       "t": "4",
+       "out": "4x"
+      },
+      {
+       "t": "5",
+       "out": "5x"
+      },
+      {
+       "t": "6",
+       "out": "6x"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "jaring"
+    },
+    {
+     "q": "Hanya ikan ganjil yang dihitung total.\nBerapa nilai total setelah loop?",
+     "code": "n = 0\ntotal = 0\nwhile n < 5:\n    n = n + 1\n    if n % 2 == 1:\n        total = total + n\nprint(total)",
+     "o": [
+      {
+       "t": "6",
+       "out": "6"
+      },
+      {
+       "t": "9",
+       "out": "9"
+      },
+      {
+       "t": "10",
+       "out": "10"
+      },
+      {
+       "t": "15",
+       "out": "15"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "pukat"
+    },
+    {
+     "q": "Perbandingan suhu air laut.\nKondisi True jika air lebih dingin dari 10!",
+     "code": "suhu = 8\nprint(suhu ___ 10)",
+     "o": [
+      {
+       "t": ">",
+       "out": "False"
+      },
+      {
+       "t": "==",
+       "out": "False"
+      },
+      {
+       "t": "<=",
+       "out": "True"
+      },
+      {
+       "t": "<",
+       "out": "True"
+      }
+     ],
+     "ok": 3,
+     "sc": "board",
+     "v": "",
+     "vn": "es"
+    }
+   ]
+  },
+  {
+   "topic": "Perulangan for dan range",
+   "fish": "Krill",
+   "text": "for digunakan untuk mengulang sejumlah kali tertentu. range(n) menghasilkan angka 0 sampai n-1.",
+   "code": "for i in range(3):\n    print(i)",
+   "out": "0\n1\n2",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Kapal menghitung tangkapan ikan.\nBerapa kali print berjalan?",
+     "code": "for i in range(5):\n    print(i)",
+     "o": [
+      {
+       "t": "4",
+       "out": "4x"
+      },
+      {
+       "t": "5",
+       "out": "5x"
+      },
+      {
+       "t": "6",
+       "out": "6x"
+      },
+      {
+       "t": "3",
+       "out": "3x"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "tangkapan"
+    },
+    {
+     "q": "Loop dimulai dari 2 sampai 6.\nApa output baris terakhir?",
+     "code": "for i in range(2, 7):\n    print(i)",
+     "o": [
+      {
+       "t": "5",
+       "out": "5"
+      },
+      {
+       "t": "6",
+       "out": "6"
+      },
+      {
+       "t": "7",
+       "out": "7"
+      },
+      {
+       "t": "4",
+       "out": "4"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "nomor"
+    },
+    {
+     "q": "Hitung mundur dari 10 ke 6 dengan step -1.\nLengkapi range!",
+     "code": "for i in range(10, ___, -1):\n    print(i)",
+     "o": [
+      {
+       "t": "6",
+       "out": "10 9 8 7 6"
+      },
+      {
+       "t": "5",
+       "out": "10 9 8 7 6 5"
+      },
+      {
+       "t": "7",
+       "out": "10 9 8 7"
+      },
+      {
+       "t": "11",
+       "out": "error"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "countdown"
+    },
+    {
+     "q": "Total ikan dalam 4 jaring.\nBerapa nilai total?",
+     "code": "total = 0\nfor i in range(4):\n    total = total + 3\nprint(total)",
+     "o": [
+      {
+       "t": "9",
+       "out": "9"
+      },
+      {
+       "t": "12",
+       "out": "12"
+      },
+      {
+       "t": "15",
+       "out": "15"
+      },
+      {
+       "t": "3",
+       "out": "3"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "jaring"
+    },
+    {
+     "q": "Loop hanya bilangan genap dari 0 sampai 8.\nApa step yang tepat?",
+     "code": "for i in range(0, 10, ___):\n    print(i)",
+     "o": [
+      {
+       "t": "1",
+       "out": "0 1 2 3 4 5 6 7 8 9"
+      },
+      {
+       "t": "2",
+       "out": "0 2 4 6 8"
+      },
+      {
+       "t": "3",
+       "out": "0 3 6 9"
+      },
+      {
+       "t": "4",
+       "out": "0 4 8"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "genap"
+    }
+   ]
+  },
+  {
+   "topic": "List dasar (indeks, append)",
+   "fish": "Penguin",
+   "text": "List menyimpan banyak nilai dalam satu variabel. Akses dengan indeks mulai dari 0.",
+   "code": "ikan = [\"tuna\", \"salmon\"]\nprint(ikan[0])",
+   "out": "tuna",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Kapal punya 3 jenis ikan.\nApa elemen pertama?",
+     "code": "ikan = [\"kakap\", \"tongkol\", \"kerapu\"]\nprint(ikan[___])",
+     "o": [
+      {
+       "t": "1",
+       "out": "tongkol"
+      },
+      {
+       "t": "0",
+       "out": "kakap"
+      },
+      {
+       "t": "2",
+       "out": "kerapu"
+      },
+      {
+       "t": "-1",
+       "out": "kerapu"
+      }
+     ],
+     "ok": 1,
+     "sc": "box",
+     "v": "",
+     "vn": "ikan"
+    },
+    {
+     "q": "Akses elemen terakhir dengan indeks negatif.\nPilih yang benar!",
+     "code": "daftar = [5, 10, 15, 20]\nprint(daftar[___])",
+     "o": [
+      {
+       "t": "3",
+       "out": "20"
+      },
+      {
+       "t": "-1",
+       "out": "20"
+      },
+      {
+       "t": "4",
+       "out": "IndexError"
+      },
+      {
+       "t": "0",
+       "out": "5"
+      }
+     ],
+     "ok": 1,
+     "sc": "box",
+     "v": "",
+     "vn": "daftar"
+    },
+    {
+     "q": "Tambah ikan baru ke list.\nMethod apa yang dipakai?",
+     "code": "tangkapan = [\"teri\"]\ntangkapan.___(\"bandeng\")\nprint(len(tangkapan))",
+     "o": [
+      {
+       "t": "add",
+       "out": "AttributeError"
+      },
+      {
+       "t": "append",
+       "out": "2"
+      },
+      {
+       "t": "insert",
+       "out": "2"
+      },
+      {
+       "t": "push",
+       "out": "AttributeError"
+      }
+     ],
+     "ok": 1,
+     "sc": "box",
+     "v": "",
+     "vn": "tangkapan"
+    },
+    {
+     "q": "Berapa panjang list ini?",
+     "code": "buah = [\"apel\", \"jeruk\", \"mangga\"]\nprint(len(buah))",
+     "o": [
+      {
+       "t": "2",
+       "out": "2"
+      },
+      {
+       "t": "3",
+       "out": "3"
+      },
+      {
+       "t": "4",
+       "out": "4"
+      },
+      {
+       "t": "5",
+       "out": "5"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "buah"
+    },
+    {
+     "q": "Update elemen list.\nApa nilai angka[1] setelah diubah?",
+     "code": "angka = [10, 20, 30]\nangka[1] = 99\nprint(angka[1])",
+     "o": [
+      {
+       "t": "20",
+       "out": "20"
+      },
+      {
+       "t": "99",
+       "out": "99"
+      },
+      {
+       "t": "30",
+       "out": "30"
+      },
+      {
+       "t": "10",
+       "out": "10"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "angka"
+    }
+   ]
+  },
+  {
+   "topic": "Loop di atas list",
+   "fish": "Seal",
+   "text": "for dapat mengiterasi setiap elemen dalam list. Gunakan for item in list atau for i in range(len(list)).",
+   "code": "ikan = [\"tuna\", \"salmon\"]\nfor i in ikan:\n    print(i)",
+   "out": "tuna\nsalmon",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Cetak semua jenis ikan.\nLengkapi loop!",
+     "code": "tangkapan = [\"kakap\", \"bandeng\"]\nfor ikan in ___:\n    print(ikan)",
+     "o": [
+      {
+       "t": "ikan",
+       "out": "NameError"
+      },
+      {
+       "t": "tangkapan",
+       "out": "kakap bandeng"
+      },
+      {
+       "t": "range(2)",
+       "out": "0 1"
+      },
+      {
+       "t": "2",
+       "out": "TypeError"
+      }
+     ],
+     "ok": 1,
+     "sc": "box",
+     "v": "",
+     "vn": "tangkapan"
+    },
+    {
+     "q": "Hitung jumlah ikan lebih dari 5 kg.\nBerapa ikan?",
+     "code": "berat = [3, 7, 4, 9, 6]\nhitung = 0\nfor b in berat:\n    if b > 5:\n        hitung = hitung + 1\nprint(hitung)",
+     "o": [
+      {
+       "t": "2",
+       "out": "2"
+      },
+      {
+       "t": "3",
+       "out": "3"
+      },
+      {
+       "t": "4",
+       "out": "4"
+      },
+      {
+       "t": "5",
+       "out": "5"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "berat"
+    },
+    {
+     "q": "Kali dua setiap elemen list.\nApa nilai angka[0] setelah loop?",
+     "code": "angka = [2, 3, 4]\nfor i in range(len(angka)):\n    angka[i] = angka[i] * 2\nprint(angka[0])",
+     "o": [
+      {
+       "t": "2",
+       "out": "2"
+      },
+      {
+       "t": "4",
+       "out": "4"
+      },
+      {
+       "t": "6",
+       "out": "6"
+      },
+      {
+       "t": "8",
+       "out": "8"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "angka"
+    },
+    {
+     "q": "Total semua tangkapan.\nBerapa total?",
+     "code": "hasil = [10, 15, 20]\ntotal = 0\nfor h in hasil:\n    total = total + h\nprint(total)",
+     "o": [
+      {
+       "t": "20",
+       "out": "20"
+      },
+      {
+       "t": "35",
+       "out": "35"
+      },
+      {
+       "t": "45",
+       "out": "45"
+      },
+      {
+       "t": "50",
+       "out": "50"
+      }
+     ],
+     "ok": 2,
+     "sc": "count",
+     "v": "",
+     "vn": "hasil"
+    },
+    {
+     "q": "Filter hanya nama lebih dari 5 huruf.\nBerapa nama yang lolos?",
+     "code": "nama = [\"Ali\", \"Budi\", \"Siti\", \"Joko\", \"Ahmad\"]\nhitung = 0\nfor n in nama:\n    if len(n) > 5:\n        hitung = hitung + 1\nprint(hitung)",
+     "o": [
+      {
+       "t": "0",
+       "out": "0"
+      },
+      {
+       "t": "1",
+       "out": "1"
+      },
+      {
+       "t": "2",
+       "out": "2"
+      },
+      {
+       "t": "3",
+       "out": "3"
+      }
+     ],
+     "ok": 0,
+     "sc": "count",
+     "v": "",
+     "vn": "nama"
+    }
+   ]
+  },
+  {
+   "topic": "Dictionary",
+   "fish": "Orca",
+   "text": "Dictionary menyimpan pasangan key-value. Akses value dengan key.",
+   "code": "kapal = {\"nama\": \"Titanic\", \"panjang\": 269}\nprint(kapal[\"nama\"])",
+   "out": "Titanic",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Data kapal nelayan.\nAkses kapasitas!",
+     "code": "info = {\"nama\": \"Bintang\", \"kapasitas\": 50}\nprint(info[___])",
+     "o": [
+      {
+       "t": "nama",
+       "out": "NameError"
+      },
+      {
+       "t": "\"kapasitas\"",
+       "out": "50"
+      },
+      {
+       "t": "kapasitas",
+       "out": "NameError"
+      },
+      {
+       "t": "0",
+       "out": "KeyError"
+      }
+     ],
+     "ok": 1,
+     "sc": "box",
+     "v": "",
+     "vn": "info"
+    },
+    {
+     "q": "Tambah key baru ke dictionary.\nApa nilai setelah update?",
+     "code": "ikan = {\"jenis\": \"tuna\"}\nikan[\"berat\"] = 12\nprint(ikan[\"berat\"])",
+     "o": [
+      {
+       "t": "KeyError",
+       "out": "KeyError"
+      },
+      {
+       "t": "12",
+       "out": "12"
+      },
+      {
+       "t": "None",
+       "out": "None"
+      },
+      {
+       "t": "tuna",
+       "out": "tuna"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "ikan"
+    },
+    {
+     "q": "Berapa banyak key dalam dict ini?",
+     "code": "data = {\"a\": 1, \"b\": 2, \"c\": 3}\nprint(len(data))",
+     "o": [
+      {
+       "t": "2",
+       "out": "2"
+      },
+      {
+       "t": "3",
+       "out": "3"
+      },
+      {
+       "t": "6",
+       "out": "6"
+      },
+      {
+       "t": "1",
+       "out": "1"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "data"
+    },
+    {
+     "q": "Cek apakah key ada dalam dict.\nApa hasilnya?",
+     "code": "kapal = {\"warna\": \"biru\", \"tipe\": \"motor\"}\nprint(\"warna\" in kapal)",
+     "o": [
+      {
+       "t": "False",
+       "out": "False"
+      },
+      {
+       "t": "True",
+       "out": "True"
+      },
+      {
+       "t": "None",
+       "out": "None"
+      },
+      {
+       "t": "KeyError",
+       "out": "KeyError"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "kapal"
+    },
+    {
+     "q": "Update value existing key.\nApa nilai umur setelah diubah?",
+     "code": "nelayan = {\"nama\": \"Pak Budi\", \"umur\": 40}\nnelayan[\"umur\"] = 41\nprint(nelayan[\"umur\"])",
+     "o": [
+      {
+       "t": "40",
+       "out": "40"
+      },
+      {
+       "t": "41",
+       "out": "41"
+      },
+      {
+       "t": "42",
+       "out": "42"
+      },
+      {
+       "t": "None",
+       "out": "None"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "nelayan"
+    }
+   ]
+  },
+  {
+   "topic": "String method dan f-string",
+   "fish": "Albatros",
+   "text": "String punya banyak method seperti upper(), lower(), split(). F-string format output dengan {}.",
+   "code": "nama = \"kapal\"\nprint(f\"Nama: {nama.upper()}\")",
+   "out": "Nama: KAPAL",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Ubah teks jadi huruf besar.\nMethod apa yang dipakai?",
+     "code": "teks = \"hello\"\nprint(teks.___())",
+     "o": [
+      {
+       "t": "lower",
+       "out": "hello"
+      },
+      {
+       "t": "upper",
+       "out": "HELLO"
+      },
+      {
+       "t": "capitalize",
+       "out": "Hello"
+      },
+      {
+       "t": "title",
+       "out": "Hello"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "teks"
+    },
+    {
+     "q": "Pisahkan string dengan spasi.\nBerapa elemen hasil split?",
+     "code": "kalimat = \"ikan laut dalam\"\nhasil = kalimat.split()\nprint(len(hasil))",
+     "o": [
+      {
+       "t": "1",
+       "out": "1"
+      },
+      {
+       "t": "3",
+       "out": "3"
+      },
+      {
+       "t": "4",
+       "out": "4"
+      },
+      {
+       "t": "15",
+       "out": "15"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "kalimat"
+    },
+    {
+     "q": "Format output dengan f-string.\nLengkapi kode!",
+     "code": "nama = \"Budi\"\numur = 25\nprint(___\"Nama: {nama}, Umur: {umur}\")",
+     "o": [
+      {
+       "t": "f",
+       "out": "Nama: Budi, Umur: 25"
+      },
+      {
+       "t": "s",
+       "out": "SyntaxError"
+      },
+      {
+       "t": "r",
+       "out": "Nama: {nama}, Umur: {umur}"
+      },
+      {
+       "t": "",
+       "out": "Nama: {nama}, Umur: {umur}"
+      }
+     ],
+     "ok": 0,
+     "sc": "board",
+     "v": "",
+     "vn": "format"
+    },
+    {
+     "q": "Ganti kata dalam string.\nApa hasilnya?",
+     "code": "teks = \"laut biru\"\nbaru = teks.replace(\"biru\", \"hijau\")\nprint(baru)",
+     "o": [
+      {
+       "t": "laut biru",
+       "out": "laut biru"
+      },
+      {
+       "t": "laut hijau",
+       "out": "laut hijau"
+      },
+      {
+       "t": "hijau biru",
+       "out": "hijau biru"
+      },
+      {
+       "t": "None",
+       "out": "None"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "teks"
+    },
+    {
+     "q": "Hapus spasi di awal dan akhir.\nMethod apa?",
+     "code": "teks = \"  kapal  \"\nprint(teks.___())",
+     "o": [
+      {
+       "t": "trim",
+       "out": "AttributeError"
+      },
+      {
+       "t": "strip",
+       "out": "kapal"
+      },
+      {
+       "t": "remove",
+       "out": "AttributeError"
+      },
+      {
+       "t": "clean",
+       "out": "AttributeError"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "teks"
+    }
+   ]
+  },
+  {
+   "topic": "Fungsi (def, return)",
+   "fish": "Hiu Paus",
+   "text": "Fungsi adalah blok kode yang bisa dipanggil berulang. Gunakan def untuk membuat fungsi dan return untuk mengembalikan nilai.",
+   "code": "def hitung_luas(p, l):\n    return p * l\nprint(hitung_luas(5, 3))",
+   "out": "15",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Definisikan fungsi sapa.\nKeyword apa yang dipakai?",
+     "code": "___ sapa():\n    print(\"Halo\")",
+     "o": [
+      {
+       "t": "function",
+       "out": "SyntaxError"
+      },
+      {
+       "t": "def",
+       "out": "valid"
+      },
+      {
+       "t": "func",
+       "out": "SyntaxError"
+      },
+      {
+       "t": "define",
+       "out": "SyntaxError"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "fungsi"
+    },
+    {
+     "q": "Fungsi kali_dua mengembalikan nilai.\nApa hasilnya?",
+     "code": "def kali_dua(x):\n    return x * 2\nprint(kali_dua(7))",
+     "o": [
+      {
+       "t": "7",
+       "out": "7"
+      },
+      {
+       "t": "14",
+       "out": "14"
+      },
+      {
+       "t": "2",
+       "out": "2"
+      },
+      {
+       "t": "None",
+       "out": "None"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "hasil"
+    },
+    {
+     "q": "Fungsi tanpa return.\nApa nilai kembaliannya?",
+     "code": "def cetak():\n    print(\"tes\")\nhasil = cetak()\nprint(hasil)",
+     "o": [
+      {
+       "t": "tes",
+       "out": "tes"
+      },
+      {
+       "t": "None",
+       "out": "None"
+      },
+      {
+       "t": "0",
+       "out": "0"
+      },
+      {
+       "t": "False",
+       "out": "False"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "hasil"
+    },
+    {
+     "q": "Fungsi dengan 2 parameter.\nBerapa hasilnya?",
+     "code": "def tambah(a, b):\n    return a + b\nprint(tambah(10, 5))",
+     "o": [
+      {
+       "t": "10",
+       "out": "10"
+      },
+      {
+       "t": "15",
+       "out": "15"
+      },
+      {
+       "t": "5",
+       "out": "5"
+      },
+      {
+       "t": "105",
+       "out": "105"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "tambah"
+    },
+    {
+     "q": "Variabel lokal dalam fungsi.\nApa output?",
+     "code": "def tes():\n    x = 10\n    return x\nprint(tes())",
+     "o": [
+      {
+       "t": "NameError",
+       "out": "NameError"
+      },
+      {
+       "t": "10",
+       "out": "10"
+      },
+      {
+       "t": "None",
+       "out": "None"
+      },
+      {
+       "t": "x",
+       "out": "x"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "x"
+    }
+   ]
+  },
+  {
+   "topic": "Parameter dan nilai default",
+   "fish": "Lumba-lumba",
+   "text": "Fungsi bisa punya nilai default untuk parameter. Parameter bisa dipanggil dengan keyword.",
+   "code": "def sapa(nama, formal=True):\n    if formal:\n        return f\"Selamat pagi, {nama}\"\n    return f\"Hai {nama}\"",
+   "out": "",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Fungsi dengan default parameter.\nApa output tanpa argumen kedua?",
+     "code": "def hitung(a, b=5):\n    return a + b\nprint(hitung(3))",
+     "o": [
+      {
+       "t": "3",
+       "out": "3"
+      },
+      {
+       "t": "8",
+       "out": "8"
+      },
+      {
+       "t": "5",
+       "out": "5"
+      },
+      {
+       "t": "TypeError",
+       "out": "TypeError"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "hitung"
+    },
+    {
+     "q": "Override nilai default.\nBerapa hasilnya?",
+     "code": "def kali(x, y=2):\n    return x * y\nprint(kali(4, 3))",
+     "o": [
+      {
+       "t": "8",
+       "out": "8"
+      },
+      {
+       "t": "12",
+       "out": "12"
+      },
+      {
+       "t": "6",
+       "out": "6"
+      },
+      {
+       "t": "7",
+       "out": "7"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "kali"
+    },
+    {
+     "q": "Panggil fungsi dengan keyword argument.\nApa hasilnya?",
+     "code": "def info(nama, umur):\n    return f\"{nama} {umur}\"\nprint(info(umur=25, nama=\"Ali\"))",
+     "o": [
+      {
+       "t": "TypeError",
+       "out": "TypeError"
+      },
+      {
+       "t": "Ali 25",
+       "out": "Ali 25"
+      },
+      {
+       "t": "25 Ali",
+       "out": "25 Ali"
+      },
+      {
+       "t": "None",
+       "out": "None"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "info"
+    },
+    {
+     "q": "Default parameter harus di akhir.\nMana yang valid?",
+     "code": "# Pilih definisi yang benar",
+     "o": [
+      {
+       "t": "def f(a=1, b):",
+       "out": "SyntaxError"
+      },
+      {
+       "t": "def f(a, b=1):",
+       "out": "valid"
+      },
+      {
+       "t": "def f(a=1, b=2, c):",
+       "out": "SyntaxError"
+      },
+      {
+       "t": "def f(a, b, c=1, d):",
+       "out": "SyntaxError"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "syntax"
+    },
+    {
+     "q": "Fungsi dengan beberapa default.\nBerapa hasil?",
+     "code": "def hitung(a, b=2, c=3):\n    return a + b + c\nprint(hitung(1))",
+     "o": [
+      {
+       "t": "1",
+       "out": "1"
+      },
+      {
+       "t": "6",
+       "out": "6"
+      },
+      {
+       "t": "5",
+       "out": "5"
+      },
+      {
+       "t": "TypeError",
+       "out": "TypeError"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "hitung"
+    }
+   ]
+  },
+  {
+   "topic": "Error dan try/except",
+   "fish": "Gurita",
+   "text": "Error bisa ditangani dengan try/except agar program tidak crash. Python punya berbagai jenis error.",
+   "code": "try:\n    x = 10 / 0\nexcept ZeroDivisionError:\n    print(\"Tidak bisa bagi nol\")",
+   "out": "Tidak bisa bagi nol",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Tangani error pembagian nol.\nBlock mana yang jalan?",
+     "code": "try:\n    hasil = 5 / 0\nexcept ZeroDivisionError:\n    print(\"Error\")",
+     "o": [
+      {
+       "t": "try",
+       "out": "try"
+      },
+      {
+       "t": "except",
+       "out": "Error"
+      },
+      {
+       "t": "both",
+       "out": "both"
+      },
+      {
+       "t": "none",
+       "out": "crash"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "error"
+    },
+    {
+     "q": "Akses indeks di luar batas.\nJenis error apa?",
+     "code": "try:\n    data = [1, 2]\n    print(data[5])\nexcept ___:\n    print(\"Error\")",
+     "o": [
+      {
+       "t": "ValueError",
+       "out": "crash"
+      },
+      {
+       "t": "IndexError",
+       "out": "Error"
+      },
+      {
+       "t": "KeyError",
+       "out": "crash"
+      },
+      {
+       "t": "TypeError",
+       "out": "crash"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "data"
+    },
+    {
+     "q": "Konversi string ke int gagal.\nError apa?",
+     "code": "try:\n    angka = int(\"abc\")\nexcept ___:\n    print(\"Gagal\")",
+     "o": [
+      {
+       "t": "TypeError",
+       "out": "crash"
+      },
+      {
+       "t": "ValueError",
+       "out": "Gagal"
+      },
+      {
+       "t": "KeyError",
+       "out": "crash"
+      },
+      {
+       "t": "IndexError",
+       "out": "crash"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "angka"
+    },
+    {
+     "q": "Block else dijalankan jika tidak ada error.\nApa output?",
+     "code": "try:\n    x = 10\nexcept:\n    print(\"Error\")\nelse:\n    print(\"Sukses\")",
+     "o": [
+      {
+       "t": "Error",
+       "out": "Error"
+      },
+      {
+       "t": "Sukses",
+       "out": "Sukses"
+      },
+      {
+       "t": "Error Sukses",
+       "out": "both"
+      },
+      {
+       "t": "nothing",
+       "out": "nothing"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "x"
+    },
+    {
+     "q": "Finally selalu jalan.\nBerapa banyak print?",
+     "code": "try:\n    print(\"A\")\nexcept:\n    print(\"B\")\nfinally:\n    print(\"C\")",
+     "o": [
+      {
+       "t": "1",
+       "out": "1"
+      },
+      {
+       "t": "2",
+       "out": "2"
+      },
+      {
+       "t": "3",
+       "out": "3"
+      },
+      {
+       "t": "0",
+       "out": "0"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "print"
+    }
+   ]
+  },
+  {
+   "topic": "Gabungan list + fungsi",
+   "fish": "Naga Laut",
+   "text": "Fungsi dapat menerima dan mengembalikan list. List comprehension membuat list baru dengan sintaks ringkas.",
+   "code": "def kali_dua(nums):\n    return [x * 2 for x in nums]\nprint(kali_dua([1, 2, 3]))",
+   "out": "[2, 4, 6]",
+   "boss": false,
+   "qs": [
+    {
+     "q": "Fungsi filter bilangan genap.\nBerapa panjang hasil?",
+     "code": "def filter_genap(nums):\n    hasil = []\n    for n in nums:\n        if n % 2 == 0:\n            hasil.append(n)\n    return hasil\nprint(len(filter_genap([1,2,3,4,5,6])))",
+     "o": [
+      {
+       "t": "2",
+       "out": "2"
+      },
+      {
+       "t": "3",
+       "out": "3"
+      },
+      {
+       "t": "4",
+       "out": "4"
+      },
+      {
+       "t": "6",
+       "out": "6"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "filter"
+    },
+    {
+     "q": "List comprehension kuadrat.\nApa elemen pertama?",
+     "code": "angka = [1, 2, 3]\nkuadrat = [x**2 for x in angka]\nprint(kuadrat[0])",
+     "o": [
+      {
+       "t": "1",
+       "out": "1"
+      },
+      {
+       "t": "2",
+       "out": "2"
+      },
+      {
+       "t": "4",
+       "out": "4"
+      },
+      {
+       "t": "9",
+       "out": "9"
+      }
+     ],
+     "ok": 0,
+     "sc": "count",
+     "v": "",
+     "vn": "kuadrat"
+    },
+    {
+     "q": "Fungsi hitung total list.\nBerapa hasilnya?",
+     "code": "def total(nums):\n    t = 0\n    for n in nums:\n        t = t + n\n    return t\nprint(total([5, 10, 15]))",
+     "o": [
+      {
+       "t": "15",
+       "out": "15"
+      },
+      {
+       "t": "30",
+       "out": "30"
+      },
+      {
+       "t": "20",
+       "out": "20"
+      },
+      {
+       "t": "10",
+       "out": "10"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "total"
+    },
+    {
+     "q": "Fungsi kembalikan list terbalik.\nApa elemen terakhir hasil?",
+     "code": "def balik(lst):\n    return lst[::-1]\nhasil = balik([10, 20, 30])\nprint(hasil[-1])",
+     "o": [
+      {
+       "t": "30",
+       "out": "30"
+      },
+      {
+       "t": "10",
+       "out": "10"
+      },
+      {
+       "t": "20",
+       "out": "20"
+      },
+      {
+       "t": "None",
+       "out": "None"
+      }
+     ],
+     "ok": 1,
+     "sc": "box",
+     "v": "",
+     "vn": "hasil"
+    },
+    {
+     "q": "List comprehension dengan kondisi.\nBerapa panjang hasil?",
+     "code": "nums = [1, 2, 3, 4, 5, 6, 7, 8]\nhasil = [x for x in nums if x > 5]\nprint(len(hasil))",
+     "o": [
+      {
+       "t": "2",
+       "out": "2"
+      },
+      {
+       "t": "3",
+       "out": "3"
+      },
+      {
+       "t": "4",
+       "out": "4"
+      },
+      {
+       "t": "5",
+       "out": "5"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "hasil"
+    }
+   ]
+  },
+  {
+   "topic": "Boss: Ujian Antartika",
+   "fish": "Paus Biru",
+   "text": "Ujian akhir Antartika menguji semua konsep dari stage 11-19: for, list, dict, string, fungsi, error handling.",
+   "code": "",
+   "out": "",
+   "boss": true,
+   "qs": [
+    {
+     "q": "Nested loop hitung kombinasi.\nBerapa total print?",
+     "code": "for i in range(2):\n    for j in range(3):\n        print(i, j)",
+     "o": [
+      {
+       "t": "2",
+       "out": "2x"
+      },
+      {
+       "t": "3",
+       "out": "3x"
+      },
+      {
+       "t": "5",
+       "out": "5x"
+      },
+      {
+       "t": "6",
+       "out": "6x"
+      }
+     ],
+     "ok": 3,
+     "sc": "count",
+     "v": "",
+     "vn": "loop"
+    },
+    {
+     "q": "Fungsi dengan list dan dict.\nApa nilai total?",
+     "code": "def hitung(data):\n    total = 0\n    for item in data:\n        total = total + item[\"nilai\"]\n    return total\nhasil = hitung([{\"nilai\": 10}, {\"nilai\": 20}])\nprint(hasil)",
+     "o": [
+      {
+       "t": "10",
+       "out": "10"
+      },
+      {
+       "t": "20",
+       "out": "20"
+      },
+      {
+       "t": "30",
+       "out": "30"
+      },
+      {
+       "t": "KeyError",
+       "out": "KeyError"
+      }
+     ],
+     "ok": 2,
+     "sc": "box",
+     "v": "",
+     "vn": "data"
+    },
+    {
+     "q": "List comprehension dengan fungsi.\nApa elemen ke-2?",
+     "code": "def tambah_10(x):\n    return x + 10\nhasil = [tambah_10(n) for n in [1, 2, 3]]\nprint(hasil[1])",
+     "o": [
+      {
+       "t": "11",
+       "out": "11"
+      },
+      {
+       "t": "12",
+       "out": "12"
+      },
+      {
+       "t": "2",
+       "out": "2"
+      },
+      {
+       "t": "10",
+       "out": "10"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "hasil"
+    },
+    {
+     "q": "String split + loop + dict.\nBerapa panjang result?",
+     "code": "teks = \"a b c d\"\nkata = teks.split()\nresult = {k: len(k) for k in kata}\nprint(len(result))",
+     "o": [
+      {
+       "t": "1",
+       "out": "1"
+      },
+      {
+       "t": "4",
+       "out": "4"
+      },
+      {
+       "t": "7",
+       "out": "7"
+      },
+      {
+       "t": "3",
+       "out": "3"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "result"
+    },
+    {
+     "q": "Try/except dengan fungsi.\nApa output?",
+     "code": "def bagi(a, b):\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return \"Error\"\nprint(bagi(10, 0))",
+     "o": [
+      {
+       "t": "10",
+       "out": "10"
+      },
+      {
+       "t": "0",
+       "out": "0"
+      },
+      {
+       "t": "Error",
+       "out": "Error"
+      },
+      {
+       "t": "None",
+       "out": "None"
+      }
+     ],
+     "ok": 2,
+     "sc": "board",
+     "v": "",
+     "vn": "bagi"
+    },
+    {
+     "q": "Loop update dict values.\nApa nilai x setelah loop?",
+     "code": "data = {\"x\": 5, \"y\": 10}\nfor k in data:\n    data[k] = data[k] * 2\nprint(data[\"x\"])",
+     "o": [
+      {
+       "t": "5",
+       "out": "5"
+      },
+      {
+       "t": "10",
+       "out": "10"
+      },
+      {
+       "t": "15",
+       "out": "15"
+      },
+      {
+       "t": "20",
+       "out": "20"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "data"
+    },
+    {
+     "q": "Fungsi return list dengan default param.\nBerapa panjang?",
+     "code": "def buat_list(n=3):\n    return [i for i in range(n)]\nprint(len(buat_list()))",
+     "o": [
+      {
+       "t": "0",
+       "out": "0"
+      },
+      {
+       "t": "3",
+       "out": "3"
+      },
+      {
+       "t": "2",
+       "out": "2"
+      },
+      {
+       "t": "None",
+       "out": "None"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "buat_list"
+    },
+    {
+     "q": "Filter list dengan fungsi.\nApa elemen pertama hasil?",
+     "code": "def lebih_dari_5(nums):\n    return [x for x in nums if x > 5]\nhasil = lebih_dari_5([3, 7, 4, 9, 2])\nprint(hasil[0])",
+     "o": [
+      {
+       "t": "3",
+       "out": "3"
+      },
+      {
+       "t": "7",
+       "out": "7"
+      },
+      {
+       "t": "9",
+       "out": "9"
+      },
+      {
+       "t": "4",
+       "out": "4"
+      }
+     ],
+     "ok": 1,
+     "sc": "box",
+     "v": "",
+     "vn": "hasil"
+    },
+    {
+     "q": "Nested dict dan list.\nApa nilai kedua array?",
+     "code": "data = {\"items\": [10, 20, 30]}\nprint(data[\"items\"][1])",
+     "o": [
+      {
+       "t": "10",
+       "out": "10"
+      },
+      {
+       "t": "20",
+       "out": "20"
+      },
+      {
+       "t": "30",
+       "out": "30"
+      },
+      {
+       "t": "KeyError",
+       "out": "KeyError"
+      }
+     ],
+     "ok": 1,
+     "sc": "box",
+     "v": "",
+     "vn": "data"
+    },
+    {
+     "q": "Loop dalam fungsi dengan kondisi.\nBerapa nilai kembalian?",
+     "code": "def hitung_ganjil(nums):\n    total = 0\n    for n in nums:\n        if n % 2 == 1:\n            total = total + 1\n    return total\nprint(hitung_ganjil([1,2,3,4,5,6,7]))",
+     "o": [
+      {
+       "t": "3",
+       "out": "3"
+      },
+      {
+       "t": "4",
+       "out": "4"
+      },
+      {
+       "t": "7",
+       "out": "7"
+      },
+      {
+       "t": "10",
+       "out": "10"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "hitung"
     }
    ]
   }

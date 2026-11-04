@@ -80,7 +80,7 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         LabelNilai("Level", "${s.level}")
                         LabelNilai("XP", "${s.xp}")
-                        LabelNilai("Stage", "${s.stage_selesai}/10")
+                        LabelNilai("Stage", "${s.stage_selesai}/20")
                         LabelNilai("Ikan", "${s.ikan_terkumpul}/48")
                     }
                 } ?: Text("Memuat statistik...", style = MaterialTheme.typography.bodySmall)

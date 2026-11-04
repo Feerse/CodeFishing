@@ -3,7 +3,7 @@
 
   - Ikon UI bertile navy  -> tile terang + glyph gelap
   - Adegan/latar gelap    -> versi pastel yang lebih terang
-  - Peta SVG gelap        -> peta_perairan_terang.svg
+  - Peta SVG gelap        -> peta_*_terang.svg (perairan dan antartika)
 
 Jalankan dari mana saja:
   python 2_Aset_dan_Konten/tools/generate_tema_terang.py
@@ -142,16 +142,20 @@ def brighten_scene(path: str, tujuan: str, gamma: float, blend: float) -> None:
 
 
 def buat_peta() -> None:
-    asal = os.path.join(SRC, "01_Peta_Perairan", "peta_perairan.svg")
-    tujuan = os.path.join(SRC, "01_Peta_Perairan", "peta_perairan_terang.svg")
-    svg = open(asal, encoding="utf-8").read()
-    hasil = re.sub(
-        r"#[0-9A-Fa-f]{6}",
-        lambda m: PETA_MAP.get(m.group(0).upper(), m.group(0)),
-        svg,
-    )
-    open(tujuan, "w", encoding="utf-8").write(hasil)
-    print(f"peta  {os.path.relpath(tujuan, ROOT)}")
+    for nama in ("peta_perairan", "peta_antartika"):
+        asal = os.path.join(SRC, "01_Peta_Perairan", nama + ".svg")
+        if not os.path.exists(asal):
+            print(f"peta  (lewati, tidak ada {nama}.svg)")
+            continue
+        tujuan = os.path.join(SRC, "01_Peta_Perairan", nama + "_terang.svg")
+        svg = open(asal, encoding="utf-8").read()
+        hasil = re.sub(
+            r"#[0-9A-Fa-f]{6}",
+            lambda m: PETA_MAP.get(m.group(0).upper(), m.group(0)),
+            svg,
+        )
+        open(tujuan, "w", encoding="utf-8").write(hasil)
+        print(f"peta  {os.path.relpath(tujuan, ROOT)}")
 
 
 def main() -> None:

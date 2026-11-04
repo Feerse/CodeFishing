@@ -49,13 +49,13 @@ def sync_dir(files, dst, keep_ext):
 
 def sync_svg():
     """Peta perairan memakai SVG asli, dirender AndroidSVG saat layar dibuka."""
-    for nama in ("peta_perairan.svg", "peta_perairan_terang.svg"):
-        src = os.path.join(SRC, "01_Peta_Perairan", nama)
+    asal = os.path.join(SRC, "01_Peta_Perairan")
+    if not os.path.isdir(asal):
+        return
+    for nama in sorted(f for f in os.listdir(asal) if f.startswith("peta_") and f.endswith(".svg")):
         dst = os.path.join(REPO, "app/src/main/assets/peta", nama)
-        if not os.path.exists(src):
-            continue
         os.makedirs(os.path.dirname(dst), exist_ok=True)
-        shutil.copyfile(src, dst)
+        shutil.copyfile(os.path.join(asal, nama), dst)
 
 
 def sync_logo_fg():

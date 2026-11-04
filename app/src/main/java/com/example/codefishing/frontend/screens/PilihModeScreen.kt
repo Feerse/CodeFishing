@@ -127,7 +127,7 @@ fun PilihModeScreen(nav: AppNavigator, padding: PaddingValues) {
                     KartuMode(
                         judul = "Belajar",
                         tag = "Pemula",
-                        fakta = "10 stage · kuis pilihan ganda",
+                        fakta = "2 peta · 20 stage · kuis pilihan ganda",
                         ikon = if (warna.gelap) Art.ikon_mode_belajar else Art.ikon_mode_belajar_terang,
                         aksen = MaterialTheme.colorScheme.primary,
                         onAksen = MaterialTheme.colorScheme.onPrimary,

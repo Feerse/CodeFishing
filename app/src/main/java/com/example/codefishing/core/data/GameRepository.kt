@@ -67,6 +67,8 @@ data class HasilStageData(
     val rekorBaru: Boolean,
     val naikTier: Boolean,
     val stageBerikut: Int?,
+    /** Stage berikutnya adalah boss, sehingga layar hasil membuka layar Boss. */
+    val stageBerikutBoss: Boolean,
     val umpanBerkurang: Boolean,
 )
 
@@ -331,8 +333,9 @@ class GameRepository(
         }
 
         val jumlahStage = contentDao.jumlahStage()
-        val stageBerikut = if (lulus) ProgresPeta.nomorLanjut(stage.nomor, jumlahStage) else null
-        val stageLanjut = stageBerikut?.let { stageDao.berdasarkanNomor(it)?.id }
+        val nomorBerikut = if (lulus) ProgresPeta.nomorLanjut(stage.nomor, jumlahStage) else null
+        val stageBerikut = nomorBerikut?.let { stageDao.berdasarkanNomor(it) }
+        val stageLanjut = stageBerikut?.id
         simpanPosisi(stageLanjut ?: stageId, "belajar")
         // Penalti umpan baru berlaku sekali saat stage selesai, bukan per jawaban salah.
         val umpanBerkurang = salah >= 3
@@ -349,7 +352,8 @@ class GameRepository(
             bonus = bonus,
             rekorBaru = rekorBaru,
             naikTier = naikTier,
-            stageBerikut = stageBerikut,
+            stageBerikut = stageBerikut?.nomor,
+            stageBerikutBoss = stageBerikut?.tipe == "boss",
             umpanBerkurang = umpanBerkurang,
         )
         hasilStageTerakhir = data

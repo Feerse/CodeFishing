@@ -1,6 +1,7 @@
 package com.example.codefishing.frontend.peta
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
@@ -44,6 +45,37 @@ class PetaGeometriTest {
     }
 
     @Test
+    fun sepuluhStageAntartikaTersusunDariUtaraKeSelatan() {
+        assertEquals(10, PetaGeometri.stageAntartika.size)
+        assertTrue(PetaGeometri.stageAntartika.all { it.y in 0f..PetaGeometri.TINGGI_DUNIA })
+        for (i in 1 until PetaGeometri.stageAntartika.size) {
+            assertTrue(
+                "Stage Antartika ${i + 1} harus lebih ke selatan dari stage $i",
+                PetaGeometri.stageAntartika[i].y > PetaGeometri.stageAntartika[i - 1].y,
+            )
+        }
+        assertTrue(PetaGeometri.mulaiAntartika.y < PetaGeometri.stageAntartika.first().y)
+        assertTrue(PetaGeometri.ujungAntartika.y > PetaGeometri.stageAntartika.last().y)
+    }
+
+    @Test
+    fun ruteAntartikaMengikutiJumlahStage() {
+        assertEquals(1, PetaGeometri.ruteSelesaiAntartika(0).size)
+        assertEquals(4, PetaGeometri.ruteSelesaiAntartika(3).size)
+        assertEquals(11, PetaGeometri.ruteSelesaiAntartika(10).size)
+        assertEquals(11, PetaGeometri.ruteSelesaiAntartika(99).size)
+        assertEquals(12, PetaGeometri.ruteLengkapAntartika().size)
+    }
+
+    @Test
+    fun titikStageAntartikaMemakaiNomorLokal() {
+        assertEquals(PetaGeometri.stageAntartika.first(), PetaGeometri.titikStageAntartika(1))
+        assertEquals(PetaGeometri.stageAntartika.last(), PetaGeometri.titikStageAntartika(10))
+        assertNull(PetaGeometri.titikStageAntartika(0))
+        assertNull(PetaGeometri.titikStageAntartika(11))
+    }
+
+    @Test
     fun asetSvgPetaTersediaDanBerdimensiBenar() {
         val svg = listOf(
             File("src/main/assets/peta/peta_perairan.svg"),
@@ -55,5 +87,21 @@ class PetaGeometriTest {
         assertTrue(teks.contains("viewBox=\"0 0 1000 2800\""))
         assertTrue(teks.contains("width=\"1000\""))
         assertTrue(teks.contains("height=\"2800\""))
+    }
+
+    @Test
+    fun asetSvgPetaAntartikaTersediaDanBerdimensiBenar() {
+        listOf("peta_antartika.svg", "peta_antartika_terang.svg").forEach { nama ->
+            val svg = listOf(
+                File("src/main/assets/peta/$nama"),
+                File("app/src/main/assets/peta/$nama"),
+                File("../app/src/main/assets/peta/$nama"),
+            ).firstOrNull { it.exists() }
+            assertTrue("$nama harus ada di assets", svg != null)
+            val teks = svg!!.readText()
+            assertTrue(teks.contains("viewBox=\"0 0 1000 2800\""))
+            assertTrue(teks.contains("width=\"1000\""))
+            assertTrue(teks.contains("height=\"2800\""))
+        }
     }
 }

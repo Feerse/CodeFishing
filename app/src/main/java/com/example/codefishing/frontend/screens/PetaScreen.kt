@@ -45,6 +45,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -86,6 +87,7 @@ import com.example.codefishing.frontend.components.gambarIkan
 import com.example.codefishing.frontend.peta.PetaGeometri
 import com.example.codefishing.frontend.peta.PetaSvg
 import com.example.codefishing.frontend.peta.TitikPeta
+import com.example.codefishing.pemula.ProgresPeta
 import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -95,6 +97,9 @@ private sealed interface PilihanPeta {
     data class Stage(val nomor: Int) : PilihanPeta
     data object Gerbang : PilihanPeta
 }
+
+/** Peta yang sedang ditampilkan. Antartika terbuka setelah stage 1-10 selesai. */
+private enum class PetaAktif { PASIFIK, ANTARTIKA }
 
 /**
  * 03 Peta Perairan: peta nautical vertikal yang digeser ke atas-bawah.
@@ -109,8 +114,58 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
     val ikan by produceState<List<IkanEntity>>(emptyList()) { value = c.game.semuaIkan() }
     val petaIkan = remember(ikan) { ikan.associateBy { it.id } }
     val context = LocalContext.current
-    val latarPeta by produceState<ImageBitmap?>(null, warna.gelap) {
-        value = withContext(Dispatchers.IO) { PetaSvg.ambil(context, !warna.gelap) }
+
+    // Pilihan manual pemain; null = ikut peta tempat stage terakhir dikerjakan.
+    var petaPilihan by rememberSaveable { mutableStateOf<PetaAktif?>(null) }
+    val selesaiPasifik = stages.count {
+        it.nomor <= ProgresPeta.STAGE_PASIFIK_TERAKHIR && it.status == "selesai"
+    }
+    val antartikaTerbuka = ProgresPeta.antartikaTerbuka(selesaiPasifik)
+    val stageAktifGlobal = stages.firstOrNull { it.status != "selesai" && it.terbuka == 1 }
+        ?: stages.lastOrNull()
+    val nomorTerakhir = player?.stage_terakhir_id?.let { id ->
+        stages.firstOrNull { it.id == id }?.nomor
+    }
+    val petaAktif = petaPilihan ?: if (
+        antartikaTerbuka &&
+        (nomorTerakhir ?: 0) > ProgresPeta.STAGE_PASIFIK_TERAKHIR
+    ) {
+        PetaAktif.ANTARTIKA
+    } else {
+        PetaAktif.PASIFIK
+    }
+
+    fun nomorLokal(nomor: Int): Int =
+        if (petaAktif == PetaAktif.ANTARTIKA) nomor - ProgresPeta.STAGE_PASIFIK_TERAKHIR else nomor
+
+    fun diPeta(nomor: Int): Boolean =
+        if (petaAktif == PetaAktif.ANTARTIKA) {
+            ProgresPeta.diAntartika(nomor)
+        } else {
+            !ProgresPeta.diAntartika(nomor)
+        }
+
+    fun titikLokal(lokal: Int): TitikPeta? =
+        if (petaAktif == PetaAktif.ANTARTIKA) {
+            PetaGeometri.titikStageAntartika(lokal)
+        } else {
+            PetaGeometri.titikStage(lokal)
+        }
+
+    val stagePeta = stages.filter { diPeta(it.nomor) }
+    val jumlahSelesaiPeta = stagePeta.count { it.status == "selesai" }
+    val stageAktif = stagePeta.firstOrNull { it.status != "selesai" && it.terbuka == 1 }
+        ?: stagePeta.lastOrNull()
+    val nomorKapal = PetaGeometri.nomorKapal(
+        nomorTerakhir?.takeIf { diPeta(it) }?.let { nomorLokal(it) },
+        stageAktif?.nomor?.let { nomorLokal(it) },
+    )
+    val titikKapal = titikLokal(nomorKapal) ?: PetaGeometri.stage.first()
+
+    val latarPeta by produceState<ImageBitmap?>(null, warna.gelap, petaAktif) {
+        value = withContext(Dispatchers.IO) {
+            PetaSvg.ambil(context, !warna.gelap, petaAktif == PetaAktif.ANTARTIKA)
+        }
     }
     var terpilih by remember { mutableStateOf<PilihanPeta?>(null) }
     var pilihanTampil by remember { mutableStateOf<PilihanPeta?>(null) }
@@ -122,15 +177,6 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
         if (terpilih != null) pilihanTampil = terpilih
     }
     BackHandler(enabled = terpilih != null) { terpilih = null }
-
-    val jumlahSelesai = stages.count { it.status == "selesai" }
-    val stageAktif = stages.firstOrNull { it.status != "selesai" && it.terbuka == 1 }
-        ?: stages.lastOrNull()
-    val nomorTerakhir = player?.stage_terakhir_id?.let { id ->
-        stages.firstOrNull { it.id == id }?.nomor
-    }
-    val nomorKapal = PetaGeometri.nomorKapal(nomorTerakhir, stageAktif?.nomor)
-    val titikKapal = PetaGeometri.titikStage(nomorKapal) ?: PetaGeometri.stage.first()
 
     Box(
         Modifier
@@ -150,7 +196,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                 scroll.animateScrollTo(target.toInt().coerceIn(0, scroll.maxValue))
             }
 
-            LaunchedEffect(stages.size, player?.stage_terakhir_id, tinggi) {
+            LaunchedEffect(stages.size, player?.stage_terakhir_id, tinggi, petaAktif) {
                 if (stages.isNotEmpty()) {
                     delay(120)
                     geserKe(titikKapal)
@@ -160,10 +206,11 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
             // Kompas: geser peta ke node stage yang terakhir dikerjakan.
             LaunchedEffect(mintaGeser) {
                 if (mintaGeser == 0) return@LaunchedEffect
-                val nomor = stages.firstOrNull { it.id == c.progress.kuisTerakhirStage }?.nomor
-                    ?: stageAktif?.nomor
+                val global = stages.firstOrNull { it.id == c.progress.kuisTerakhirStage }?.nomor
+                    ?: stageAktifGlobal?.nomor
                     ?: return@LaunchedEffect
-                PetaGeometri.titikStage(nomor)?.let { geserKe(it) }
+                val nomor = if (diPeta(global)) global else stageAktif?.nomor ?: return@LaunchedEffect
+                titikLokal(nomorLokal(nomor))?.let { geserKe(it) }
             }
 
             Column(
@@ -175,7 +222,13 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                     Modifier
                         .fillMaxWidth()
                         .height(tinggi)
-                        .semantics { contentDescription = "Peta perairan Samudra Pasifik, 10 stage" },
+                        .semantics {
+                            contentDescription = if (petaAktif == PetaAktif.ANTARTIKA) {
+                                "Peta perairan Antartika, stage 11 sampai 20"
+                            } else {
+                                "Peta perairan Samudra Pasifik, stage 1 sampai 10"
+                            }
+                        },
                 ) {
                     if (latarPeta != null) {
                         Image(
@@ -196,10 +249,10 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                         )
                     }
 
-                    RutePeta(jumlahSelesai, Modifier.fillMaxSize())
+                    RutePeta(petaAktif, jumlahSelesaiPeta, Modifier.fillMaxSize())
 
-                    stages.forEach { stage ->
-                        val titik = PetaGeometri.titikStage(stage.nomor) ?: return@forEach
+                    stagePeta.forEach { stage ->
+                        val titik = titikLokal(nomorLokal(stage.nomor)) ?: return@forEach
                         val ukuran = if (stage.tipe == "boss") 68.dp else 54.dp
                         NodePeta(
                             stage = stage,
@@ -253,37 +306,40 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                         }
                     }
 
-                    val g = PetaGeometri.gerbang
-                    NodeGerbang(
-                        terpilih = terpilih == PilihanPeta.Gerbang,
-                        onClick = {
-                            c.audio.play(Sfx.Klik)
-                            terpilih = PilihanPeta.Gerbang
-                        },
-                        modifier = Modifier.tempatNode(g, lebar, tinggi, 58.dp),
-                    )
-                    Box(
-                        Modifier
-                            .offset(
-                                x = lebar * (g.x / PetaGeometri.LEBAR_DUNIA) - 74.dp,
-                                y = tinggi * (g.y / PetaGeometri.TINGGI_DUNIA) + 34.dp,
-                            )
-                            .width(148.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                "ANTARTIKA",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = warna.petaTeks,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 1.4.sp,
-                            )
-                            Text(
-                                "segera hadir",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = warna.petaTeksRedup.copy(alpha = 0.75f),
-                            )
+                    if (petaAktif == PetaAktif.PASIFIK) {
+                        val g = PetaGeometri.gerbang
+                        NodeGerbang(
+                            terbuka = antartikaTerbuka,
+                            terpilih = terpilih == PilihanPeta.Gerbang,
+                            onClick = {
+                                c.audio.play(Sfx.Klik)
+                                terpilih = PilihanPeta.Gerbang
+                            },
+                            modifier = Modifier.tempatNode(g, lebar, tinggi, 58.dp),
+                        )
+                        Box(
+                            Modifier
+                                .offset(
+                                    x = lebar * (g.x / PetaGeometri.LEBAR_DUNIA) - 74.dp,
+                                    y = tinggi * (g.y / PetaGeometri.TINGGI_DUNIA) + 34.dp,
+                                )
+                                .width(148.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(
+                                    "ANTARTIKA",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = warna.petaTeks,
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 1.4.sp,
+                                )
+                                Text(
+                                    if (antartikaTerbuka) "rute terbuka" else "terkunci",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = warna.petaTeksRedup.copy(alpha = 0.75f),
+                                )
+                            }
                         }
                     }
 
@@ -297,7 +353,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            "PERAIRAN ANTARTIKA",
+                            if (petaAktif == PetaAktif.PASIFIK) "PERAIRAN ANTARTIKA" else "UJUNG SELATAN",
                             style = MaterialTheme.typography.labelSmall,
                             color = warna.petaTeks.copy(alpha = 0.55f),
                             textAlign = TextAlign.Center,
@@ -305,7 +361,9 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                         )
                     }
 
-                    PetaGeometri.mulai.let { awal ->
+                    val titikMulai =
+                        if (petaAktif == PetaAktif.PASIFIK) PetaGeometri.mulai else PetaGeometri.mulaiAntartika
+                    titikMulai.let { awal ->
                         Gambar(
                             Art.bendera_start,
                             "Titik awal pelayaran",
@@ -329,8 +387,20 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top,
         ) {
-            ChipPeta("Samudra Pasifik")
-            ChipPeta("$jumlahSelesai/10", "stage selesai", alignEnd = true)
+            if (petaAktif == PetaAktif.ANTARTIKA) {
+                ChipPeta(
+                    judul = "Samudra Pasifik",
+                    sub = "‹ Kembali",
+                    onClick = {
+                        c.audio.play(Sfx.Klik)
+                        terpilih = null
+                        petaPilihan = PetaAktif.PASIFIK
+                    },
+                )
+            } else {
+                ChipPeta("Samudra Pasifik")
+            }
+            ChipPeta("$jumlahSelesaiPeta/10", "stage selesai", alignEnd = true)
         }
         Box(
             Modifier
@@ -374,7 +444,15 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                         )
                     }
                 }
-                PilihanPeta.Gerbang -> LembarGerbang(onTutup = { terpilih = null })
+                PilihanPeta.Gerbang -> LembarGerbang(
+                    terbuka = antartikaTerbuka,
+                    onTutup = { terpilih = null },
+                    onMasuk = {
+                        c.audio.play(Sfx.KlikUtama)
+                        terpilih = null
+                        petaPilihan = PetaAktif.ANTARTIKA
+                    },
+                )
                 null -> Unit
             }
         }
@@ -382,12 +460,27 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
 }
 
 @Composable
-private fun ChipPeta(judul: String, sub: String? = null, alignEnd: Boolean = false) {
+private fun ChipPeta(
+    judul: String,
+    sub: String? = null,
+    alignEnd: Boolean = false,
+    onClick: (() -> Unit)? = null,
+) {
     val warna = LocalWarna.current
     Column(
         Modifier
-            .background(warna.petaChipLatar, RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(12.dp))
+            .background(warna.petaChipLatar)
             .border(1.dp, warna.petaTeks.copy(alpha = 0.10f), RoundedCornerShape(12.dp))
+            .then(
+                if (onClick != null) {
+                    Modifier
+                        .clickable(role = Role.Button, onClick = onClick)
+                        .semantics { contentDescription = "Kembali ke Samudra Pasifik" }
+                } else {
+                    Modifier
+                },
+            )
             .padding(horizontal = 12.dp, vertical = 7.dp),
         horizontalAlignment = if (alignEnd) Alignment.End else Alignment.Start,
     ) {
@@ -408,13 +501,18 @@ private fun ChipPeta(judul: String, sub: String? = null, alignEnd: Boolean = fal
 }
 
 @Composable
-private fun RutePeta(jumlahSelesai: Int, modifier: Modifier = Modifier) {
+private fun RutePeta(peta: PetaAktif, jumlahSelesai: Int, modifier: Modifier = Modifier) {
     val warna = LocalWarna.current
     val warnaAktif = MaterialTheme.colorScheme.primary
     Canvas(modifier) {
         val sx = size.width / PetaGeometri.LEBAR_DUNIA
         val sy = size.height / PetaGeometri.TINGGI_DUNIA
-        val semua = PetaGeometri.pathDari(PetaGeometri.ruteLengkap(), sx, sy)
+        val antartika = peta == PetaAktif.ANTARTIKA
+        val semua = PetaGeometri.pathDari(
+            if (antartika) PetaGeometri.ruteLengkapAntartika() else PetaGeometri.ruteLengkap(),
+            sx,
+            sy,
+        )
         drawPath(
             path = semua,
             color = warna.petaGaris.copy(alpha = 0.55f),
@@ -424,7 +522,11 @@ private fun RutePeta(jumlahSelesai: Int, modifier: Modifier = Modifier) {
                 pathEffect = PathEffect.dashPathEffect(floatArrayOf(3.dp.toPx(), 12.dp.toPx())),
             ),
         )
-        val sudah = PetaGeometri.ruteSelesai(jumlahSelesai)
+        val sudah = if (antartika) {
+            PetaGeometri.ruteSelesaiAntartika(jumlahSelesai)
+        } else {
+            PetaGeometri.ruteSelesai(jumlahSelesai)
+        }
         if (sudah.size > 1) {
             drawPath(
                 path = PetaGeometri.pathDari(sudah, sx, sy),
@@ -524,6 +626,7 @@ private fun NodePeta(
 
 @Composable
 private fun NodeGerbang(
+    terbuka: Boolean,
     terpilih: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -534,10 +637,16 @@ private fun NodeGerbang(
             .size(58.dp)
             .clip(CircleShape)
             .clickable(onClick = onClick)
-            .semantics { contentDescription = "Gerbang Antartika, terkunci, segera hadir" },
+            .semantics {
+                contentDescription = if (terbuka) {
+                    "Gerbang Antartika, rute terbuka"
+                } else {
+                    "Gerbang Antartika, terkunci"
+                }
+            },
         contentAlignment = Alignment.Center,
     ) {
-        Gambar(Art.node_terkunci, null, Modifier.fillMaxSize())
+        Gambar(if (terbuka) Art.node_aktif else Art.node_terkunci, null, Modifier.fillMaxSize())
         if (terpilih) {
             Canvas(Modifier.fillMaxSize()) {
                 drawCircle(
@@ -679,7 +788,7 @@ private fun LembarStage(
 }
 
 @Composable
-private fun LembarGerbang(onTutup: () -> Unit) {
+private fun LembarGerbang(terbuka: Boolean, onTutup: () -> Unit, onMasuk: () -> Unit) {
     val warna = LocalWarna.current
     Kartu(
         Modifier
@@ -707,12 +816,20 @@ private fun LembarGerbang(onTutup: () -> Unit) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Gambar(Art.gunung_es, "Gunung es", Modifier.size(62.dp))
                 Text(
-                    "Dingin, es mengapung. Terbuka setelah seluruh Samudra Pasifik selesai. Segera hadir.",
+                    if (terbuka) {
+                        "Dingin, es mengapung. Seluruh Samudra Pasifik selesai — rute ke 10 stage Antartika sudah terbuka."
+                    } else {
+                        "Dingin, es mengapung. Selesaikan seluruh stage 1-10 di Samudra Pasifik untuk membuka rute ini."
+                    },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            TombolUtama(teks = "Segera Hadir", onClick = {}, enabled = false)
+            TombolUtama(
+                teks = if (terbuka) "Berlayar ke Antartika" else "Terkunci",
+                onClick = onMasuk,
+                enabled = terbuka,
+            )
         }
     }
 }

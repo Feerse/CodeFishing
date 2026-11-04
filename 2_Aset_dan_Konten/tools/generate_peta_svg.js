@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /*
- * Membuat peta perairan vertikal (SVG) untuk layar Peta.
+ * Membuat peta perairan vertikal (SVG) untuk layar Peta:
+ *   - peta_perairan.svg  : Samudra Pasifik, stage 1-10
+ *   - peta_antartika.svg : Antartika, stage 11-20
  * Jalankan dari root repo: node 2_Aset_dan_Konten/tools/generate_peta_svg.js
  */
 const fs = require('fs');
@@ -173,13 +175,120 @@ add(`<rect x="14" y="14" width="${W - 28}" height="${H - 28}" rx="22" fill="none
 
 add('</svg>');
 
-const svg = peta.join('\n') + '\n';
-const tujuan = [
-  path.join(ROOT, '2_Aset_dan_Konten', 'assets-source', '01_Peta_Perairan', 'peta_perairan.svg'),
-  path.join(ROOT, 'app', 'src', 'main', 'assets', 'peta', 'peta_perairan.svg'),
+// ------------------------------------------------------------ Peta Antartika
+// Peta kedua untuk stage 11-20. Ukuran dunia sama (1000 x 2800) agar
+// PetaScreen bisa memakai satu perhitungan skala untuk kedua peta.
+const petaAntartika = [];
+const addA = (s) => petaAntartika.push(s);
+
+const stageTitikAntartika = [
+  [560, 320], [300, 520], [180, 760], [430, 940], [700, 1100],
+  [840, 1300], [620, 1490], [380, 1690], [560, 1900], [700, 2120],
 ];
-for (const file of tujuan) {
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, svg);
-  console.log(`Tulis ${path.relative(ROOT, file)} (${svg.length} byte)`);
+
+addA(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`);
+addA(`<defs>
+  <linearGradient id="lautEs" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#081B26"/>
+    <stop offset=".30" stop-color="#0A2433"/>
+    <stop offset=".62" stop-color="#0B2F42"/>
+    <stop offset="1" stop-color="#07171F"/>
+  </linearGradient>
+  <linearGradient id="esAtas" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#EAF7FB"/>
+    <stop offset="1" stop-color="#A9CDDB"/>
+  </linearGradient>
+  <radialGradient id="glowEs">
+    <stop offset="0" stop-color="#7FC9E0" stop-opacity=".24"/>
+    <stop offset="1" stop-color="#7FC9E0" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="vignetteEs">
+    <stop offset=".55" stop-color="#000000" stop-opacity="0"/>
+    <stop offset="1" stop-color="#000000" stop-opacity=".46"/>
+  </radialGradient>
+</defs>`);
+
+addA(`<rect width="${W}" height="${H}" fill="url(#lautEs)"/>`);
+
+// Aurora tipis di langit selatan.
+addA(`<path d="M-40 210Q240 120 520 190T1040 150" fill="none" stroke="#7FC9E0" stroke-opacity=".07" stroke-width="64" stroke-linecap="round"/>`);
+addA(`<path d="M-40 300Q260 220 560 280T1040 240" fill="none" stroke="#BFE6F2" stroke-opacity=".05" stroke-width="42" stroke-linecap="round"/>`);
+
+// Lapisan es di pintu masuk (utara).
+addA(`<path d="M0 0H1000V150Q820 108 620 146T260 132Q120 126 0 168Z" fill="url(#esAtas)"/>`);
+addA(`<path d="M0 168Q140 128 300 160T620 146T1000 150V190Q800 158 560 194T0 206Z" fill="#DCEEF5" opacity=".55"/>`);
+
+// Arus dingin.
+addA(`<path d="M0 620Q190 556 380 612T760 600T1000 650" fill="none" stroke="#7FC9E0" stroke-opacity=".06" stroke-width="34"/>`);
+addA(`<path d="M0 1420Q180 1352 360 1408T740 1396T1000 1444" fill="none" stroke="#BFE6F2" stroke-opacity=".05" stroke-width="30"/>`);
+
+// Pola ombak dua lapis.
+for (let y = 300; y < H; y += 150) addA(wave(y, 0.085, (Math.round(y / 150) % 2) * 48));
+for (let y = 380; y < H; y += 220) addA(wave(y, 0.045, (Math.round(y / 220) % 2) * 70));
+
+// Bayangan ikan di bawah permukaan.
+[
+  [120, 480, -8, .9], [860, 640, 10, .8], [200, 900, 6, .7], [820, 1180, -12, .8],
+  [160, 1520, 12, .75], [880, 1720, 8, .7], [300, 1980, -6, .7], [760, 2140, 10, .65],
+].forEach((f) => addA(fishShadow(...f)));
+
+// Gunung es besar dan bongkahan es di sisi rute.
+[
+  [90, 560, 1.15], [910, 780, 1.0], [80, 1180, .9], [930, 1420, 1.1],
+  [120, 1760, .85], [880, 1980, .95], [200, 2260, 1.0],
+].forEach((p) => addA(iceberg(...p)));
+
+[
+  [330, 660, .55], [700, 800, .5], [260, 1080, .6], [760, 1250, .5],
+  [420, 1580, .55], [800, 1660, .5], [300, 2020, .6],
+].forEach((p) => addA(rock(...p)));
+
+// Serpihan es terapung.
+[
+  [520, 420, 42, 9], [240, 700, 34, 8], [860, 980, 48, 10], [140, 1340, 38, 8],
+  [700, 1560, 52, 11], [420, 1780, 36, 8], [900, 2060, 44, 9], [280, 2200, 40, 9],
+].forEach(([x, y, rx, ry]) => {
+  addA(`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="#EAF7FB" opacity=".72"/>`);
+  addA(`<ellipse cx="${x}" cy="${y + ry * 0.6}" rx="${rx * 0.9}" ry="${ry * 0.55}" fill="#8DB7CA" opacity=".45"/>`);
+});
+
+// Retakan es tipis di perairan tengah.
+for (let i = 0; i < 8; i++) {
+  const y = 760 + i * 190;
+  const x = 60 + (i % 3) * 260;
+  addA(`<path d="M${x} ${y}L${x + 60} ${y - 18}L${x + 120} ${y + 6}L${x + 190} ${y - 14}" fill="none" stroke="#6E9BAF" stroke-opacity=".28" stroke-width="2.4" stroke-linecap="round"/>`);
 }
+
+// Cahaya lembut di tiap titik stage Antartika.
+stageTitikAntartika.forEach(([x, y]) => {
+  addA(`<circle cx="${x}" cy="${y}" r="120" fill="url(#glowEs)"/>`);
+});
+
+// Lapangan es di ujung selatan.
+addA(`<line x1="0" y1="2260" x2="1000" y2="2260" stroke="#BFE6F2" stroke-opacity=".45" stroke-width="3" stroke-dasharray="5 18" stroke-linecap="round"/>`);
+addA(`<path d="M0 2360Q140 2300 300 2344T600 2322T860 2368T1000 2330V2800H0Z" fill="url(#esAtas)"/>`);
+addA(`<path d="M0 2490Q200 2428 380 2470T720 2452T1000 2498V2800H0Z" fill="#DCEEF5"/>`);
+addA(`<path d="M0 2620Q180 2570 360 2602T740 2592T1000 2632V2800H0Z" fill="#BFE6F2"/>`);
+for (let i = 0; i < 9; i++) {
+  const x = 40 + i * 118;
+  addA(`<path d="M${x} 2800L${x + 24 + (i % 3) * 14} ${2510 + (i % 4) * 24}" stroke="#8DB7CA" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>`);
+}
+
+addA(`<rect width="${W}" height="${H}" fill="url(#vignetteEs)"/>`);
+addA(`<rect x="14" y="14" width="${W - 28}" height="${H - 28}" rx="22" fill="none" stroke="#8FB2B8" stroke-opacity=".14" stroke-width="2"/>`);
+addA('</svg>');
+
+function tulis(nama, svg) {
+  const tujuan = [
+    path.join(ROOT, '2_Aset_dan_Konten', 'assets-source', '01_Peta_Perairan', nama),
+    path.join(ROOT, 'app', 'src', 'main', 'assets', 'peta', nama),
+  ];
+  for (const file of tujuan) {
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, svg);
+    console.log(`Tulis ${path.relative(ROOT, file)} (${svg.length} byte)`);
+  }
+}
+
+tulis('peta_perairan.svg', peta.join('\n') + '\n');
+tulis('peta_antartika.svg', petaAntartika.join('\n') + '\n');
