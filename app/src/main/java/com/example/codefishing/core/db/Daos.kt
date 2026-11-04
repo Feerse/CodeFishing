@@ -112,6 +112,26 @@ interface StageDao {
     @Query("SELECT COUNT(*) FROM progres_stage WHERE pemain_id = 1 AND status = 'selesai' AND skor_terbaik = 100")
     suspend fun jumlahStageSempurna(): Int
 
+    /** Jumlah stage selesai dengan nomor ≤ [nomorMaks], dipakai untuk syarat perpindahan peta. */
+    @Query(
+        """
+        SELECT COUNT(*) FROM progres_stage p
+        JOIN stage s ON s.id = p.stage_id
+        WHERE p.pemain_id = 1 AND p.status = 'selesai' AND s.nomor <= :nomorMaks
+        """
+    )
+    suspend fun jumlahStageSelesaiSampai(nomorMaks: Int): Int
+
+    /** Sama seperti di atas, tetapi hanya stage dengan skor terbaik 100. */
+    @Query(
+        """
+        SELECT COUNT(*) FROM progres_stage p
+        JOIN stage s ON s.id = p.stage_id
+        WHERE p.pemain_id = 1 AND p.status = 'selesai' AND p.skor_terbaik = 100 AND s.nomor <= :nomorMaks
+        """
+    )
+    suspend fun jumlahStageSempurnaSampai(nomorMaks: Int): Int
+
     @Query("SELECT stage_id FROM progres_stage WHERE pemain_id = 1 AND status = 'selesai' ORDER BY stage_id")
     suspend fun stageSelesai(): List<Int>
 

@@ -5,7 +5,7 @@ Semua permainan berjalan **offline** di perangkat; aplikasi tidak meminta izin i
 
 ## Mode Belajar (tim Logika Mode Pemula)
 
-- 10 stage di Samudra Pasifik (Stage 10 = Boss). Perairan lain berstatus **Segera**.
+- 20 stage dalam dua peta: **Samudra Pasifik** (stage 1-10, stage 10 = Boss) dan **Antartika** (stage 11-20, stage 20 = Boss). Antartika terbuka setelah seluruh stage 1-10 selesai; belum ada perairan lain.
 - Tiap stage: Materi (satu kalimat, contoh kode, keluaran) lalu Kuis 5 soal pilihan ganda.
 - **Konfirmasi jawaban**: mengetuk opsi hanya menandai pilihan (kail dilempar), jawaban belum tersubmit. Pemain harus menekan **Ya, kunci jawaban** pada lembar konfirmasi; **Periksa lagi** membatalkan tanpa mengunci jawaban atau mengubah umpan.
 - **Animasi memancing**: di atas soal ada adegan vector (perahu, nelayan, kail, ikan). Kail terlempar saat opsi dipilih, ikan terangkat saat jawaban benar, dan tali putus saat jawaban salah.

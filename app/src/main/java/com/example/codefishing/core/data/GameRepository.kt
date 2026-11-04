@@ -26,6 +26,7 @@ import com.example.codefishing.pemula.BaitState
 import com.example.codefishing.pemula.FishRules
 import com.example.codefishing.pemula.LevelRules
 import com.example.codefishing.pemula.PilihanKuis
+import com.example.codefishing.pemula.ProgresPeta
 import com.example.codefishing.pemula.SoalKuis
 import com.example.codefishing.pemula.urutanSoal
 import com.example.codefishing.expert.Scoring
@@ -124,6 +125,12 @@ class GameRepository(
     suspend fun stageById(id: Int): StageEntity? = stageDao.berdasarkanId(id)
 
     suspend fun stageStatus(id: Int): StageStatusRow? = stageDao.status(id)
+
+    /** Stage Pasifik (1-10) sudah selesai semua: syarat membuka peta Antartika. */
+    suspend fun antartikaTerbuka(): Boolean =
+        ProgresPeta.antartikaTerbuka(
+            stageDao.jumlahStageSelesaiSampai(ProgresPeta.STAGE_PASIFIK_TERAKHIR),
+        )
 
     suspend fun simpanPosisi(stageId: Int?, mode: String?) {
         playerDao.simpanPosisi(stageId, mode, System.currentTimeMillis())
@@ -307,23 +314,25 @@ class GameRepository(
             }
         }
 
-        val selesai = stageDao.jumlahStageSelesai()
-        if (lulus && selesai >= 10) {
+        val selesaiPasifik = stageDao.jumlahStageSelesaiSampai(ProgresPeta.STAGE_PASIFIK_TERAKHIR)
+        if (lulus && selesaiPasifik >= ProgresPeta.STAGE_PASIFIK_TERAKHIR) {
             contentDao.ikanByNama("Arwana")?.let { b ->
                 if (collectionDao.koleksi(b.id) == null) bonus.add(beriIkan(b, b.tier, now))
             }
         }
-        if (lulus && stageDao.jumlahStageSempurna() >= 10) {
+        if (
+            lulus &&
+            stageDao.jumlahStageSempurnaSampai(ProgresPeta.STAGE_PASIFIK_TERAKHIR) >=
+            ProgresPeta.STAGE_PASIFIK_TERAKHIR
+        ) {
             contentDao.ikanByNama("Hiu Merah")?.let { b ->
                 if (collectionDao.koleksi(b.id) == null) bonus.add(beriIkan(b, b.tier, now))
             }
         }
 
-        val stageLanjut = if (lulus && stage.nomor < 10) {
-            stageDao.berdasarkanNomor(stage.nomor + 1)?.id
-        } else {
-            null
-        }
+        val jumlahStage = contentDao.jumlahStage()
+        val stageBerikut = if (lulus) ProgresPeta.nomorLanjut(stage.nomor, jumlahStage) else null
+        val stageLanjut = stageBerikut?.let { stageDao.berdasarkanNomor(it)?.id }
         simpanPosisi(stageLanjut ?: stageId, "belajar")
         // Penalti umpan baru berlaku sekali saat stage selesai, bukan per jawaban salah.
         val umpanBerkurang = salah >= 3
@@ -340,7 +349,7 @@ class GameRepository(
             bonus = bonus,
             rekorBaru = rekorBaru,
             naikTier = naikTier,
-            stageBerikut = if (lulus) (stage.nomor + 1).takeIf { it <= 10 } else null,
+            stageBerikut = stageBerikut,
             umpanBerkurang = umpanBerkurang,
         )
         hasilStageTerakhir = data
