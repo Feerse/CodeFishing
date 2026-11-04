@@ -2253,5 +2253,2260 @@
     "urutan": 4
    }
   ]
+ },
+ {
+  "id": 56,
+  "stage_asal_id": 11,
+  "tipe": "token",
+  "teks": "Kapal menghitung tangkapan ikan.\nBerapa kali print berjalan?",
+  "kode_template": "for i in range(5):\n    print(i)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 5. Hasilnya: 5x.",
+  "poin": 20,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 570,
+    "soal_id": 56,
+    "teks": "4",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 571,
+    "soal_id": 56,
+    "teks": "5",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 572,
+    "soal_id": 56,
+    "teks": "6",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 573,
+    "soal_id": 56,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 57,
+  "stage_asal_id": 11,
+  "tipe": "token",
+  "teks": "Loop dimulai dari 2 sampai 6.\nApa output baris terakhir?",
+  "kode_template": "for i in range(2, 7):\n    print(i)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 6. Hasilnya: 6.",
+  "poin": 20,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 580,
+    "soal_id": 57,
+    "teks": "5",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 581,
+    "soal_id": 57,
+    "teks": "6",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 582,
+    "soal_id": 57,
+    "teks": "7",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 583,
+    "soal_id": 57,
+    "teks": "4",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 58,
+  "stage_asal_id": 11,
+  "tipe": "token",
+  "teks": "Hitung mundur dari 10 ke 6 dengan step -1.\nLengkapi range!",
+  "kode_template": "for i in range(10, ___, -1):\n    print(i)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 5. Hasilnya: 10 9 8 7 6 5.",
+  "poin": 20,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 590,
+    "soal_id": 58,
+    "teks": "6",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 591,
+    "soal_id": 58,
+    "teks": "5",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 592,
+    "soal_id": 58,
+    "teks": "7",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 593,
+    "soal_id": 58,
+    "teks": "11",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 59,
+  "stage_asal_id": 11,
+  "tipe": "token",
+  "teks": "Total ikan dalam 4 jaring.\nBerapa nilai total?",
+  "kode_template": "total = 0\nfor i in range(4):\n    total = total + 3\nprint(total)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 12. Hasilnya: 12.",
+  "poin": 20,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 600,
+    "soal_id": 59,
+    "teks": "9",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 601,
+    "soal_id": 59,
+    "teks": "12",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 602,
+    "soal_id": 59,
+    "teks": "15",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 603,
+    "soal_id": 59,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 60,
+  "stage_asal_id": 11,
+  "tipe": "token",
+  "teks": "Loop hanya bilangan genap dari 0 sampai 8.\nApa step yang tepat?",
+  "kode_template": "for i in range(0, 10, ___):\n    print(i)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 2. Hasilnya: 0 2 4 6 8.",
+  "poin": 20,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 610,
+    "soal_id": 60,
+    "teks": "1",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 611,
+    "soal_id": 60,
+    "teks": "2",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 612,
+    "soal_id": 60,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 613,
+    "soal_id": 60,
+    "teks": "4",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 61,
+  "stage_asal_id": 12,
+  "tipe": "token",
+  "teks": "Kapal punya 3 jenis ikan.\nApa elemen pertama?",
+  "kode_template": "ikan = [\"kakap\", \"tongkol\", \"kerapu\"]\nprint(ikan[___])",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 0. Hasilnya: kakap.",
+  "poin": 20,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 620,
+    "soal_id": 61,
+    "teks": "1",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 621,
+    "soal_id": 61,
+    "teks": "0",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 622,
+    "soal_id": 61,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 623,
+    "soal_id": 61,
+    "teks": "-1",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 62,
+  "stage_asal_id": 12,
+  "tipe": "token",
+  "teks": "Akses elemen terakhir dengan indeks negatif.\nPilih yang benar!",
+  "kode_template": "daftar = [5, 10, 15, 20]\nprint(daftar[___])",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: -1. Hasilnya: 20.",
+  "poin": 20,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 630,
+    "soal_id": 62,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 631,
+    "soal_id": 62,
+    "teks": "-1",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 632,
+    "soal_id": 62,
+    "teks": "4",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 633,
+    "soal_id": 62,
+    "teks": "0",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 63,
+  "stage_asal_id": 12,
+  "tipe": "token",
+  "teks": "Tambah ikan baru ke list.\nMethod apa yang dipakai?",
+  "kode_template": "tangkapan = [\"teri\"]\ntangkapan.___(\"bandeng\")\nprint(len(tangkapan))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: append. Hasilnya: 2.",
+  "poin": 20,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 640,
+    "soal_id": 63,
+    "teks": "add",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 641,
+    "soal_id": 63,
+    "teks": "append",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 642,
+    "soal_id": 63,
+    "teks": "insert",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 643,
+    "soal_id": 63,
+    "teks": "push",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 64,
+  "stage_asal_id": 12,
+  "tipe": "token",
+  "teks": "Berapa panjang list ini?",
+  "kode_template": "buah = [\"apel\", \"jeruk\", \"mangga\"]\nprint(len(buah))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 3. Hasilnya: 3.",
+  "poin": 20,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 650,
+    "soal_id": 64,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 651,
+    "soal_id": 64,
+    "teks": "3",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 652,
+    "soal_id": 64,
+    "teks": "4",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 653,
+    "soal_id": 64,
+    "teks": "5",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 65,
+  "stage_asal_id": 12,
+  "tipe": "token",
+  "teks": "Update elemen list.\nApa nilai angka[1] setelah diubah?",
+  "kode_template": "angka = [10, 20, 30]\nangka[1] = 99\nprint(angka[1])",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 99. Hasilnya: 99.",
+  "poin": 20,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 660,
+    "soal_id": 65,
+    "teks": "20",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 661,
+    "soal_id": 65,
+    "teks": "99",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 662,
+    "soal_id": 65,
+    "teks": "30",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 663,
+    "soal_id": 65,
+    "teks": "10",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 66,
+  "stage_asal_id": 13,
+  "tipe": "token",
+  "teks": "Cetak semua jenis ikan.\nLengkapi loop!",
+  "kode_template": "tangkapan = [\"kakap\", \"bandeng\"]\nfor ikan in ___:\n    print(ikan)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: tangkapan. Hasilnya: kakap bandeng.",
+  "poin": 20,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 670,
+    "soal_id": 66,
+    "teks": "ikan",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 671,
+    "soal_id": 66,
+    "teks": "tangkapan",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 672,
+    "soal_id": 66,
+    "teks": "range(2)",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 673,
+    "soal_id": 66,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 67,
+  "stage_asal_id": 13,
+  "tipe": "token",
+  "teks": "Hitung jumlah ikan lebih dari 5 kg.\nBerapa ikan?",
+  "kode_template": "berat = [3, 7, 4, 9, 6]\nhitung = 0\nfor b in berat:\n    if b > 5:\n        hitung = hitung + 1\nprint(hitung)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 3. Hasilnya: 3.",
+  "poin": 20,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 680,
+    "soal_id": 67,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 681,
+    "soal_id": 67,
+    "teks": "3",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 682,
+    "soal_id": 67,
+    "teks": "4",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 683,
+    "soal_id": 67,
+    "teks": "5",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 68,
+  "stage_asal_id": 13,
+  "tipe": "token",
+  "teks": "Kali dua setiap elemen list.\nApa nilai angka[0] setelah loop?",
+  "kode_template": "angka = [2, 3, 4]\nfor i in range(len(angka)):\n    angka[i] = angka[i] * 2\nprint(angka[0])",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 4. Hasilnya: 4.",
+  "poin": 20,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 690,
+    "soal_id": 68,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 691,
+    "soal_id": 68,
+    "teks": "4",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 692,
+    "soal_id": 68,
+    "teks": "6",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 693,
+    "soal_id": 68,
+    "teks": "8",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 69,
+  "stage_asal_id": 13,
+  "tipe": "token",
+  "teks": "Total semua tangkapan.\nBerapa total?",
+  "kode_template": "hasil = [10, 15, 20]\ntotal = 0\nfor h in hasil:\n    total = total + h\nprint(total)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 45. Hasilnya: 45.",
+  "poin": 20,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 700,
+    "soal_id": 69,
+    "teks": "20",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 701,
+    "soal_id": 69,
+    "teks": "35",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 702,
+    "soal_id": 69,
+    "teks": "45",
+    "benar": 1,
+    "urutan": 3
+   },
+   {
+    "id": 703,
+    "soal_id": 69,
+    "teks": "50",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 70,
+  "stage_asal_id": 13,
+  "tipe": "token",
+  "teks": "Filter hanya nama lebih dari 5 huruf.\nBerapa nama yang lolos?",
+  "kode_template": "nama = [\"Ali\", \"Budi\", \"Siti\", \"Joko\", \"Ahmad\"]\nhitung = 0\nfor n in nama:\n    if len(n) > 5:\n        hitung = hitung + 1\nprint(hitung)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 0. Hasilnya: 0.",
+  "poin": 20,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 710,
+    "soal_id": 70,
+    "teks": "0",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 711,
+    "soal_id": 70,
+    "teks": "1",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 712,
+    "soal_id": 70,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 713,
+    "soal_id": 70,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 71,
+  "stage_asal_id": 14,
+  "tipe": "token",
+  "teks": "Data kapal nelayan.\nAkses kapasitas!",
+  "kode_template": "info = {\"nama\": \"Bintang\", \"kapasitas\": 50}\nprint(info[___])",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: \"kapasitas\". Hasilnya: 50.",
+  "poin": 20,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 720,
+    "soal_id": 71,
+    "teks": "nama",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 721,
+    "soal_id": 71,
+    "teks": "\"kapasitas\"",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 722,
+    "soal_id": 71,
+    "teks": "kapasitas",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 723,
+    "soal_id": 71,
+    "teks": "0",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 72,
+  "stage_asal_id": 14,
+  "tipe": "token",
+  "teks": "Tambah key baru ke dictionary.\nApa nilai setelah update?",
+  "kode_template": "ikan = {\"jenis\": \"tuna\"}\nikan[\"berat\"] = 12\nprint(ikan[\"berat\"])",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 12. Hasilnya: 12.",
+  "poin": 20,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 730,
+    "soal_id": 72,
+    "teks": "KeyError",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 731,
+    "soal_id": 72,
+    "teks": "12",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 732,
+    "soal_id": 72,
+    "teks": "None",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 733,
+    "soal_id": 72,
+    "teks": "tuna",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 73,
+  "stage_asal_id": 14,
+  "tipe": "token",
+  "teks": "Berapa banyak key dalam dict ini?",
+  "kode_template": "data = {\"a\": 1, \"b\": 2, \"c\": 3}\nprint(len(data))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 3. Hasilnya: 3.",
+  "poin": 20,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 740,
+    "soal_id": 73,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 741,
+    "soal_id": 73,
+    "teks": "3",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 742,
+    "soal_id": 73,
+    "teks": "6",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 743,
+    "soal_id": 73,
+    "teks": "1",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 74,
+  "stage_asal_id": 14,
+  "tipe": "token",
+  "teks": "Cek apakah key ada dalam dict.\nApa hasilnya?",
+  "kode_template": "kapal = {\"warna\": \"biru\", \"tipe\": \"motor\"}\nprint(\"warna\" in kapal)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: True. Hasilnya: True.",
+  "poin": 20,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 750,
+    "soal_id": 74,
+    "teks": "False",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 751,
+    "soal_id": 74,
+    "teks": "True",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 752,
+    "soal_id": 74,
+    "teks": "None",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 753,
+    "soal_id": 74,
+    "teks": "KeyError",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 75,
+  "stage_asal_id": 14,
+  "tipe": "token",
+  "teks": "Update value existing key.\nApa nilai umur setelah diubah?",
+  "kode_template": "nelayan = {\"nama\": \"Pak Budi\", \"umur\": 40}\nnelayan[\"umur\"] = 41\nprint(nelayan[\"umur\"])",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 41. Hasilnya: 41.",
+  "poin": 20,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 760,
+    "soal_id": 75,
+    "teks": "40",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 761,
+    "soal_id": 75,
+    "teks": "41",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 762,
+    "soal_id": 75,
+    "teks": "42",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 763,
+    "soal_id": 75,
+    "teks": "None",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 76,
+  "stage_asal_id": 15,
+  "tipe": "token",
+  "teks": "Ubah teks jadi huruf besar.\nMethod apa yang dipakai?",
+  "kode_template": "teks = \"hello\"\nprint(teks.___())",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: upper. Hasilnya: HELLO.",
+  "poin": 20,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 770,
+    "soal_id": 76,
+    "teks": "lower",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 771,
+    "soal_id": 76,
+    "teks": "upper",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 772,
+    "soal_id": 76,
+    "teks": "capitalize",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 773,
+    "soal_id": 76,
+    "teks": "title",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 77,
+  "stage_asal_id": 15,
+  "tipe": "token",
+  "teks": "Pisahkan string dengan spasi.\nBerapa elemen hasil split?",
+  "kode_template": "kalimat = \"ikan laut dalam\"\nhasil = kalimat.split()\nprint(len(hasil))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 3. Hasilnya: 3.",
+  "poin": 20,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 780,
+    "soal_id": 77,
+    "teks": "1",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 781,
+    "soal_id": 77,
+    "teks": "3",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 782,
+    "soal_id": 77,
+    "teks": "4",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 783,
+    "soal_id": 77,
+    "teks": "15",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 78,
+  "stage_asal_id": 15,
+  "tipe": "token",
+  "teks": "Format output dengan f-string.\nLengkapi kode!",
+  "kode_template": "nama = \"Budi\"\numur = 25\nprint(___\"Nama: {nama}, Umur: {umur}\")",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: f. Hasilnya: Nama: Budi, Umur: 25.",
+  "poin": 20,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 790,
+    "soal_id": 78,
+    "teks": "f",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 791,
+    "soal_id": 78,
+    "teks": "s",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 792,
+    "soal_id": 78,
+    "teks": "r",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 793,
+    "soal_id": 78,
+    "teks": "",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 79,
+  "stage_asal_id": 15,
+  "tipe": "token",
+  "teks": "Ganti kata dalam string.\nApa hasilnya?",
+  "kode_template": "teks = \"laut biru\"\nbaru = teks.replace(\"biru\", \"hijau\")\nprint(baru)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: laut hijau. Hasilnya: laut hijau.",
+  "poin": 20,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 800,
+    "soal_id": 79,
+    "teks": "laut biru",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 801,
+    "soal_id": 79,
+    "teks": "laut hijau",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 802,
+    "soal_id": 79,
+    "teks": "hijau biru",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 803,
+    "soal_id": 79,
+    "teks": "None",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 80,
+  "stage_asal_id": 15,
+  "tipe": "token",
+  "teks": "Hapus spasi di awal dan akhir.\nMethod apa?",
+  "kode_template": "teks = \"  kapal  \"\nprint(teks.___())",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: strip. Hasilnya: kapal.",
+  "poin": 20,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 810,
+    "soal_id": 80,
+    "teks": "trim",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 811,
+    "soal_id": 80,
+    "teks": "strip",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 812,
+    "soal_id": 80,
+    "teks": "remove",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 813,
+    "soal_id": 80,
+    "teks": "clean",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 81,
+  "stage_asal_id": 16,
+  "tipe": "token",
+  "teks": "Definisikan fungsi sapa.\nKeyword apa yang dipakai?",
+  "kode_template": "___ sapa():\n    print(\"Halo\")",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: def. Hasilnya: valid.",
+  "poin": 20,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 820,
+    "soal_id": 81,
+    "teks": "function",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 821,
+    "soal_id": 81,
+    "teks": "def",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 822,
+    "soal_id": 81,
+    "teks": "func",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 823,
+    "soal_id": 81,
+    "teks": "define",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 82,
+  "stage_asal_id": 16,
+  "tipe": "token",
+  "teks": "Fungsi kali_dua mengembalikan nilai.\nApa hasilnya?",
+  "kode_template": "def kali_dua(x):\n    return x * 2\nprint(kali_dua(7))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 14. Hasilnya: 14.",
+  "poin": 20,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 830,
+    "soal_id": 82,
+    "teks": "7",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 831,
+    "soal_id": 82,
+    "teks": "14",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 832,
+    "soal_id": 82,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 833,
+    "soal_id": 82,
+    "teks": "None",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 83,
+  "stage_asal_id": 16,
+  "tipe": "token",
+  "teks": "Fungsi tanpa return.\nApa nilai kembaliannya?",
+  "kode_template": "def cetak():\n    print(\"tes\")\nhasil = cetak()\nprint(hasil)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: None. Hasilnya: None.",
+  "poin": 20,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 840,
+    "soal_id": 83,
+    "teks": "tes",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 841,
+    "soal_id": 83,
+    "teks": "None",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 842,
+    "soal_id": 83,
+    "teks": "0",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 843,
+    "soal_id": 83,
+    "teks": "False",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 84,
+  "stage_asal_id": 16,
+  "tipe": "token",
+  "teks": "Fungsi dengan 2 parameter.\nBerapa hasilnya?",
+  "kode_template": "def tambah(a, b):\n    return a + b\nprint(tambah(10, 5))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 15. Hasilnya: 15.",
+  "poin": 20,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 850,
+    "soal_id": 84,
+    "teks": "10",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 851,
+    "soal_id": 84,
+    "teks": "15",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 852,
+    "soal_id": 84,
+    "teks": "5",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 853,
+    "soal_id": 84,
+    "teks": "105",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 85,
+  "stage_asal_id": 16,
+  "tipe": "token",
+  "teks": "Variabel lokal dalam fungsi.\nApa output?",
+  "kode_template": "def tes():\n    x = 10\n    return x\nprint(tes())",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 10. Hasilnya: 10.",
+  "poin": 20,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 860,
+    "soal_id": 85,
+    "teks": "NameError",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 861,
+    "soal_id": 85,
+    "teks": "10",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 862,
+    "soal_id": 85,
+    "teks": "None",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 863,
+    "soal_id": 85,
+    "teks": "x",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 86,
+  "stage_asal_id": 17,
+  "tipe": "token",
+  "teks": "Fungsi dengan default parameter.\nApa output tanpa argumen kedua?",
+  "kode_template": "def hitung(a, b=5):\n    return a + b\nprint(hitung(3))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 8. Hasilnya: 8.",
+  "poin": 20,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 870,
+    "soal_id": 86,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 871,
+    "soal_id": 86,
+    "teks": "8",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 872,
+    "soal_id": 86,
+    "teks": "5",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 873,
+    "soal_id": 86,
+    "teks": "TypeError",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 87,
+  "stage_asal_id": 17,
+  "tipe": "token",
+  "teks": "Override nilai default.\nBerapa hasilnya?",
+  "kode_template": "def kali(x, y=2):\n    return x * y\nprint(kali(4, 3))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 12. Hasilnya: 12.",
+  "poin": 20,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 880,
+    "soal_id": 87,
+    "teks": "8",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 881,
+    "soal_id": 87,
+    "teks": "12",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 882,
+    "soal_id": 87,
+    "teks": "6",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 883,
+    "soal_id": 87,
+    "teks": "7",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 88,
+  "stage_asal_id": 17,
+  "tipe": "token",
+  "teks": "Panggil fungsi dengan keyword argument.\nApa hasilnya?",
+  "kode_template": "def info(nama, umur):\n    return f\"{nama} {umur}\"\nprint(info(umur=25, nama=\"Ali\"))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: Ali 25. Hasilnya: Ali 25.",
+  "poin": 20,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 890,
+    "soal_id": 88,
+    "teks": "TypeError",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 891,
+    "soal_id": 88,
+    "teks": "Ali 25",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 892,
+    "soal_id": 88,
+    "teks": "25 Ali",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 893,
+    "soal_id": 88,
+    "teks": "None",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 89,
+  "stage_asal_id": 17,
+  "tipe": "token",
+  "teks": "Default parameter harus di akhir.\nMana yang valid?",
+  "kode_template": "# Pilih definisi yang benar",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: def f(a, b=1):. Hasilnya: valid.",
+  "poin": 20,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 900,
+    "soal_id": 89,
+    "teks": "def f(a=1, b):",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 901,
+    "soal_id": 89,
+    "teks": "def f(a, b=1):",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 902,
+    "soal_id": 89,
+    "teks": "def f(a=1, b=2, c):",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 903,
+    "soal_id": 89,
+    "teks": "def f(a, b, c=1, d):",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 90,
+  "stage_asal_id": 17,
+  "tipe": "token",
+  "teks": "Fungsi dengan beberapa default.\nBerapa hasil?",
+  "kode_template": "def hitung(a, b=2, c=3):\n    return a + b + c\nprint(hitung(1))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 6. Hasilnya: 6.",
+  "poin": 20,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 910,
+    "soal_id": 90,
+    "teks": "1",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 911,
+    "soal_id": 90,
+    "teks": "6",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 912,
+    "soal_id": 90,
+    "teks": "5",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 913,
+    "soal_id": 90,
+    "teks": "TypeError",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 91,
+  "stage_asal_id": 18,
+  "tipe": "token",
+  "teks": "Tangani error pembagian nol.\nBlock mana yang jalan?",
+  "kode_template": "try:\n    hasil = 5 / 0\nexcept ZeroDivisionError:\n    print(\"Error\")",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: except. Hasilnya: Error.",
+  "poin": 20,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 920,
+    "soal_id": 91,
+    "teks": "try",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 921,
+    "soal_id": 91,
+    "teks": "except",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 922,
+    "soal_id": 91,
+    "teks": "both",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 923,
+    "soal_id": 91,
+    "teks": "none",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 92,
+  "stage_asal_id": 18,
+  "tipe": "token",
+  "teks": "Akses indeks di luar batas.\nJenis error apa?",
+  "kode_template": "try:\n    data = [1, 2]\n    print(data[5])\nexcept ___:\n    print(\"Error\")",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: IndexError. Hasilnya: Error.",
+  "poin": 20,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 930,
+    "soal_id": 92,
+    "teks": "ValueError",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 931,
+    "soal_id": 92,
+    "teks": "IndexError",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 932,
+    "soal_id": 92,
+    "teks": "KeyError",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 933,
+    "soal_id": 92,
+    "teks": "TypeError",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 93,
+  "stage_asal_id": 18,
+  "tipe": "token",
+  "teks": "Konversi string ke int gagal.\nError apa?",
+  "kode_template": "try:\n    angka = int(\"abc\")\nexcept ___:\n    print(\"Gagal\")",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: ValueError. Hasilnya: Gagal.",
+  "poin": 20,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 940,
+    "soal_id": 93,
+    "teks": "TypeError",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 941,
+    "soal_id": 93,
+    "teks": "ValueError",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 942,
+    "soal_id": 93,
+    "teks": "KeyError",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 943,
+    "soal_id": 93,
+    "teks": "IndexError",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 94,
+  "stage_asal_id": 18,
+  "tipe": "token",
+  "teks": "Block else dijalankan jika tidak ada error.\nApa output?",
+  "kode_template": "try:\n    x = 10\nexcept:\n    print(\"Error\")\nelse:\n    print(\"Sukses\")",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: Sukses. Hasilnya: Sukses.",
+  "poin": 20,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 950,
+    "soal_id": 94,
+    "teks": "Error",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 951,
+    "soal_id": 94,
+    "teks": "Sukses",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 952,
+    "soal_id": 94,
+    "teks": "Error Sukses",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 953,
+    "soal_id": 94,
+    "teks": "nothing",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 95,
+  "stage_asal_id": 18,
+  "tipe": "token",
+  "teks": "Finally selalu jalan.\nBerapa banyak print?",
+  "kode_template": "try:\n    print(\"A\")\nexcept:\n    print(\"B\")\nfinally:\n    print(\"C\")",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 2. Hasilnya: 2.",
+  "poin": 20,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 960,
+    "soal_id": 95,
+    "teks": "1",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 961,
+    "soal_id": 95,
+    "teks": "2",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 962,
+    "soal_id": 95,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 963,
+    "soal_id": 95,
+    "teks": "0",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 96,
+  "stage_asal_id": 19,
+  "tipe": "token",
+  "teks": "Fungsi filter bilangan genap.\nBerapa panjang hasil?",
+  "kode_template": "def filter_genap(nums):\n    hasil = []\n    for n in nums:\n        if n % 2 == 0:\n            hasil.append(n)\n    return hasil\nprint(len(filter_genap([1,2,3,4,5,6])))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 3. Hasilnya: 3.",
+  "poin": 20,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 970,
+    "soal_id": 96,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 971,
+    "soal_id": 96,
+    "teks": "3",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 972,
+    "soal_id": 96,
+    "teks": "4",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 973,
+    "soal_id": 96,
+    "teks": "6",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 97,
+  "stage_asal_id": 19,
+  "tipe": "token",
+  "teks": "List comprehension kuadrat.\nApa elemen pertama?",
+  "kode_template": "angka = [1, 2, 3]\nkuadrat = [x**2 for x in angka]\nprint(kuadrat[0])",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 1. Hasilnya: 1.",
+  "poin": 20,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 980,
+    "soal_id": 97,
+    "teks": "1",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 981,
+    "soal_id": 97,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 982,
+    "soal_id": 97,
+    "teks": "4",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 983,
+    "soal_id": 97,
+    "teks": "9",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 98,
+  "stage_asal_id": 19,
+  "tipe": "token",
+  "teks": "Fungsi hitung total list.\nBerapa hasilnya?",
+  "kode_template": "def total(nums):\n    t = 0\n    for n in nums:\n        t = t + n\n    return t\nprint(total([5, 10, 15]))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 30. Hasilnya: 30.",
+  "poin": 20,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 990,
+    "soal_id": 98,
+    "teks": "15",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 991,
+    "soal_id": 98,
+    "teks": "30",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 992,
+    "soal_id": 98,
+    "teks": "20",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 993,
+    "soal_id": 98,
+    "teks": "10",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 99,
+  "stage_asal_id": 19,
+  "tipe": "token",
+  "teks": "Fungsi kembalikan list terbalik.\nApa elemen terakhir hasil?",
+  "kode_template": "def balik(lst):\n    return lst[::-1]\nhasil = balik([10, 20, 30])\nprint(hasil[-1])",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 10. Hasilnya: 10.",
+  "poin": 20,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 1000,
+    "soal_id": 99,
+    "teks": "30",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 1001,
+    "soal_id": 99,
+    "teks": "10",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 1002,
+    "soal_id": 99,
+    "teks": "20",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 1003,
+    "soal_id": 99,
+    "teks": "None",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 100,
+  "stage_asal_id": 19,
+  "tipe": "token",
+  "teks": "List comprehension dengan kondisi.\nBerapa panjang hasil?",
+  "kode_template": "nums = [1, 2, 3, 4, 5, 6, 7, 8]\nhasil = [x for x in nums if x > 5]\nprint(len(hasil))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 3. Hasilnya: 3.",
+  "poin": 20,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 1010,
+    "soal_id": 100,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 1011,
+    "soal_id": 100,
+    "teks": "3",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 1012,
+    "soal_id": 100,
+    "teks": "4",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 1013,
+    "soal_id": 100,
+    "teks": "5",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 101,
+  "stage_asal_id": 20,
+  "tipe": "token",
+  "teks": "Nested loop hitung kombinasi.\nBerapa total print?",
+  "kode_template": "for i in range(2):\n    for j in range(3):\n        print(i, j)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 6. Hasilnya: 6x.",
+  "poin": 25,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 1020,
+    "soal_id": 101,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 1021,
+    "soal_id": 101,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 1022,
+    "soal_id": 101,
+    "teks": "5",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 1023,
+    "soal_id": 101,
+    "teks": "6",
+    "benar": 1,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 102,
+  "stage_asal_id": 20,
+  "tipe": "token",
+  "teks": "Fungsi dengan list dan dict.\nApa nilai total?",
+  "kode_template": "def hitung(data):\n    total = 0\n    for item in data:\n        total = total + item[\"nilai\"]\n    return total\nhasil = hitung([{\"nilai\": 10}, {\"nilai\": 20}])\nprint(hasil)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 30. Hasilnya: 30.",
+  "poin": 25,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 1030,
+    "soal_id": 102,
+    "teks": "10",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 1031,
+    "soal_id": 102,
+    "teks": "20",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 1032,
+    "soal_id": 102,
+    "teks": "30",
+    "benar": 1,
+    "urutan": 3
+   },
+   {
+    "id": 1033,
+    "soal_id": 102,
+    "teks": "KeyError",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 103,
+  "stage_asal_id": 20,
+  "tipe": "token",
+  "teks": "List comprehension dengan fungsi.\nApa elemen ke-2?",
+  "kode_template": "def tambah_10(x):\n    return x + 10\nhasil = [tambah_10(n) for n in [1, 2, 3]]\nprint(hasil[1])",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 12. Hasilnya: 12.",
+  "poin": 25,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 1040,
+    "soal_id": 103,
+    "teks": "11",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 1041,
+    "soal_id": 103,
+    "teks": "12",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 1042,
+    "soal_id": 103,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 1043,
+    "soal_id": 103,
+    "teks": "10",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 104,
+  "stage_asal_id": 20,
+  "tipe": "token",
+  "teks": "String split + loop + dict.\nBerapa panjang result?",
+  "kode_template": "teks = \"a b c d\"\nkata = teks.split()\nresult = {k: len(k) for k in kata}\nprint(len(result))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 4. Hasilnya: 4.",
+  "poin": 25,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 1050,
+    "soal_id": 104,
+    "teks": "1",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 1051,
+    "soal_id": 104,
+    "teks": "4",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 1052,
+    "soal_id": 104,
+    "teks": "7",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 1053,
+    "soal_id": 104,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 105,
+  "stage_asal_id": 20,
+  "tipe": "token",
+  "teks": "Try/except dengan fungsi.\nApa output?",
+  "kode_template": "def bagi(a, b):\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return \"Error\"\nprint(bagi(10, 0))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: Error. Hasilnya: Error.",
+  "poin": 25,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 1060,
+    "soal_id": 105,
+    "teks": "10",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 1061,
+    "soal_id": 105,
+    "teks": "0",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 1062,
+    "soal_id": 105,
+    "teks": "Error",
+    "benar": 1,
+    "urutan": 3
+   },
+   {
+    "id": 1063,
+    "soal_id": 105,
+    "teks": "None",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 106,
+  "stage_asal_id": 20,
+  "tipe": "token",
+  "teks": "Loop update dict values.\nApa nilai x setelah loop?",
+  "kode_template": "data = {\"x\": 5, \"y\": 10}\nfor k in data:\n    data[k] = data[k] * 2\nprint(data[\"x\"])",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 10. Hasilnya: 10.",
+  "poin": 25,
+  "urutan": 6,
+  "pilihan": [
+   {
+    "id": 1070,
+    "soal_id": 106,
+    "teks": "5",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 1071,
+    "soal_id": 106,
+    "teks": "10",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 1072,
+    "soal_id": 106,
+    "teks": "15",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 1073,
+    "soal_id": 106,
+    "teks": "20",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 107,
+  "stage_asal_id": 20,
+  "tipe": "token",
+  "teks": "Fungsi return list dengan default param.\nBerapa panjang?",
+  "kode_template": "def buat_list(n=3):\n    return [i for i in range(n)]\nprint(len(buat_list()))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 3. Hasilnya: 3.",
+  "poin": 25,
+  "urutan": 7,
+  "pilihan": [
+   {
+    "id": 1080,
+    "soal_id": 107,
+    "teks": "0",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 1081,
+    "soal_id": 107,
+    "teks": "3",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 1082,
+    "soal_id": 107,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 1083,
+    "soal_id": 107,
+    "teks": "None",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 108,
+  "stage_asal_id": 20,
+  "tipe": "token",
+  "teks": "Filter list dengan fungsi.\nApa elemen pertama hasil?",
+  "kode_template": "def lebih_dari_5(nums):\n    return [x for x in nums if x > 5]\nhasil = lebih_dari_5([3, 7, 4, 9, 2])\nprint(hasil[0])",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 7. Hasilnya: 7.",
+  "poin": 25,
+  "urutan": 8,
+  "pilihan": [
+   {
+    "id": 1090,
+    "soal_id": 108,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 1091,
+    "soal_id": 108,
+    "teks": "7",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 1092,
+    "soal_id": 108,
+    "teks": "9",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 1093,
+    "soal_id": 108,
+    "teks": "4",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 109,
+  "stage_asal_id": 20,
+  "tipe": "token",
+  "teks": "Nested dict dan list.\nApa nilai kedua array?",
+  "kode_template": "data = {\"items\": [10, 20, 30]}\nprint(data[\"items\"][1])",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 20. Hasilnya: 20.",
+  "poin": 25,
+  "urutan": 9,
+  "pilihan": [
+   {
+    "id": 1100,
+    "soal_id": 109,
+    "teks": "10",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 1101,
+    "soal_id": 109,
+    "teks": "20",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 1102,
+    "soal_id": 109,
+    "teks": "30",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 1103,
+    "soal_id": 109,
+    "teks": "KeyError",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 110,
+  "stage_asal_id": 20,
+  "tipe": "token",
+  "teks": "Loop dalam fungsi dengan kondisi.\nBerapa nilai kembalian?",
+  "kode_template": "def hitung_ganjil(nums):\n    total = 0\n    for n in nums:\n        if n % 2 == 1:\n            total = total + 1\n    return total\nprint(hitung_ganjil([1,2,3,4,5,6,7]))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 4. Hasilnya: 4.",
+  "poin": 25,
+  "urutan": 10,
+  "pilihan": [
+   {
+    "id": 1110,
+    "soal_id": 110,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 1111,
+    "soal_id": 110,
+    "teks": "4",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 1112,
+    "soal_id": 110,
+    "teks": "7",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 1113,
+    "soal_id": 110,
+    "teks": "10",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
  }
 ]

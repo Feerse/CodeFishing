@@ -141,6 +141,146 @@
  },
  {
   "id": 11,
+  "nama": "Krill",
+  "nama_ilmiah": "Euphausia superba",
+  "tier": "biasa",
+  "konsep_python": "for dan range",
+  "deskripsi": "Krill ditemukan di perairan CodeFishing. Selesaikan Stage 11 untuk menambahkannya ke koleksi.",
+  "asal_stage_id": 11,
+  "syarat_unlock": "Selesaikan Stage 11",
+  "nilai_xp": 20,
+  "bobot_kg": 0.01,
+  "gambar": "ikan_krill",
+  "urutan": 11
+ },
+ {
+  "id": 12,
+  "nama": "Penguin",
+  "nama_ilmiah": "Aptenodytes forsteri",
+  "tier": "biasa",
+  "konsep_python": "List dasar",
+  "deskripsi": "Penguin ditemukan di perairan CodeFishing. Selesaikan Stage 12 untuk menambahkannya ke koleksi.",
+  "asal_stage_id": 12,
+  "syarat_unlock": "Selesaikan Stage 12",
+  "nilai_xp": 25,
+  "bobot_kg": 15,
+  "gambar": "ikan_penguin",
+  "urutan": 12
+ },
+ {
+  "id": 13,
+  "nama": "Seal",
+  "nama_ilmiah": "Hydrurga leptonyx",
+  "tier": "biasa",
+  "konsep_python": "Loop di list",
+  "deskripsi": "Seal ditemukan di perairan CodeFishing. Selesaikan Stage 13 untuk menambahkannya ke koleksi.",
+  "asal_stage_id": 13,
+  "syarat_unlock": "Selesaikan Stage 13",
+  "nilai_xp": 30,
+  "bobot_kg": 300,
+  "gambar": "ikan_seal",
+  "urutan": 13
+ },
+ {
+  "id": 14,
+  "nama": "Orca",
+  "nama_ilmiah": "Orcinus orca",
+  "tier": "epik",
+  "konsep_python": "Dictionary",
+  "deskripsi": "Orca ditemukan di perairan CodeFishing. Selesaikan Stage 14 untuk menambahkannya ke koleksi.",
+  "asal_stage_id": 14,
+  "syarat_unlock": "Selesaikan Stage 14",
+  "nilai_xp": 45,
+  "bobot_kg": 5000,
+  "gambar": "ikan_orca",
+  "urutan": 14
+ },
+ {
+  "id": 15,
+  "nama": "Albatros",
+  "nama_ilmiah": "Diomedea exulans",
+  "tier": "epik",
+  "konsep_python": "String method",
+  "deskripsi": "Albatros ditemukan di perairan CodeFishing. Selesaikan Stage 15 untuk menambahkannya ke koleksi.",
+  "asal_stage_id": 15,
+  "syarat_unlock": "Selesaikan Stage 15",
+  "nilai_xp": 45,
+  "bobot_kg": 8,
+  "gambar": "ikan_albatros",
+  "urutan": 15
+ },
+ {
+  "id": 16,
+  "nama": "Hiu Paus",
+  "nama_ilmiah": "Rhincodon typus",
+  "tier": "epik",
+  "konsep_python": "Fungsi",
+  "deskripsi": "Hiu Paus ditemukan di perairan CodeFishing. Selesaikan Stage 16 untuk menambahkannya ke koleksi.",
+  "asal_stage_id": 16,
+  "syarat_unlock": "Selesaikan Stage 16",
+  "nilai_xp": 50,
+  "bobot_kg": 20000,
+  "gambar": "ikan_hiu_paus",
+  "urutan": 16
+ },
+ {
+  "id": 17,
+  "nama": "Lumba-lumba",
+  "nama_ilmiah": "Tursiops truncatus",
+  "tier": "epik",
+  "konsep_python": "Parameter default",
+  "deskripsi": "Lumba-lumba ditemukan di perairan CodeFishing. Selesaikan Stage 17 untuk menambahkannya ke koleksi.",
+  "asal_stage_id": 17,
+  "syarat_unlock": "Selesaikan Stage 17",
+  "nilai_xp": 50,
+  "bobot_kg": 200,
+  "gambar": "ikan_lumba-lumba",
+  "urutan": 17
+ },
+ {
+  "id": 18,
+  "nama": "Gurita",
+  "nama_ilmiah": "Enteroctopus dofleini",
+  "tier": "epik",
+  "konsep_python": "Error handling",
+  "deskripsi": "Gurita ditemukan di perairan CodeFishing. Selesaikan Stage 18 untuk menambahkannya ke koleksi.",
+  "asal_stage_id": 18,
+  "syarat_unlock": "Selesaikan Stage 18",
+  "nilai_xp": 50,
+  "bobot_kg": 70,
+  "gambar": "ikan_gurita",
+  "urutan": 18
+ },
+ {
+  "id": 19,
+  "nama": "Naga Laut",
+  "nama_ilmiah": "Phycodurus eques",
+  "tier": "legenda",
+  "konsep_python": "List + fungsi",
+  "deskripsi": "Naga Laut ditemukan di perairan CodeFishing. Selesaikan Stage 19 untuk menambahkannya ke koleksi.",
+  "asal_stage_id": 19,
+  "syarat_unlock": "Selesaikan Stage 19",
+  "nilai_xp": 80,
+  "bobot_kg": 0.15,
+  "gambar": "ikan_naga_laut",
+  "urutan": 19
+ },
+ {
+  "id": 20,
+  "nama": "Paus Biru",
+  "nama_ilmiah": "Balaenoptera musculus",
+  "tier": "legenda",
+  "konsep_python": "Boss Ujian Antartika",
+  "deskripsi": "Paus Biru ditemukan di perairan CodeFishing. Selesaikan Stage 20 untuk menambahkannya ke koleksi.",
+  "asal_stage_id": 20,
+  "syarat_unlock": "Selesaikan Stage 20",
+  "nilai_xp": 100,
+  "bobot_kg": 150000,
+  "gambar": "ikan_paus_biru",
+  "urutan": 20
+ },
+ {
+  "id": 21,
   "nama": "Kerapu",
   "nama_ilmiah": "Epinephelus coioides",
   "tier": "langka",
@@ -151,10 +291,10 @@
   "nilai_xp": 40,
   "bobot_kg": 2,
   "gambar": "ikan_kerapu",
-  "urutan": 11
+  "urutan": 21
  },
  {
-  "id": 12,
+  "id": 22,
   "nama": "Barakuda",
   "nama_ilmiah": "Sphyraena barracuda",
   "tier": "langka",
@@ -165,10 +305,10 @@
   "nilai_xp": 50,
   "bobot_kg": 4.5,
   "gambar": "ikan_barakuda",
-  "urutan": 12
+  "urutan": 22
  },
  {
-  "id": 13,
+  "id": 23,
   "nama": "Tenggiri",
   "nama_ilmiah": "Scomberomorus commerson",
   "tier": "langka",
@@ -179,38 +319,38 @@
   "nilai_xp": 55,
   "bobot_kg": 5.2,
   "gambar": "ikan_tenggiri",
-  "urutan": 13
+  "urutan": 23
  },
  {
-  "id": 14,
+  "id": 24,
   "nama": "Arwana",
   "nama_ilmiah": "Scleropages formosus",
   "tier": "legenda",
-  "konsep_python": "Selesaikan seluruh stage",
+  "konsep_python": "Selesaikan 20 stage",
   "deskripsi": "Arwana ditemukan di perairan CodeFishing. Selesaikan tantangan khusus untuk menambahkannya ke koleksi.",
   "asal_stage_id": null,
   "syarat_unlock": "Tantangan khusus",
   "nilai_xp": 90,
   "bobot_kg": 3,
   "gambar": "ikan_arwana",
-  "urutan": 14
+  "urutan": 24
  },
  {
-  "id": 15,
+  "id": 25,
   "nama": "Hiu Merah",
   "nama_ilmiah": "Carcharhinus longimanus",
   "tier": "mitos",
-  "konsep_python": "Selesaikan seluruh stage tanpa salah",
+  "konsep_python": "Selesaikan 20 stage tanpa salah",
   "deskripsi": "Hiu Merah ditemukan di perairan CodeFishing. Selesaikan tantangan khusus untuk menambahkannya ke koleksi.",
   "asal_stage_id": null,
   "syarat_unlock": "Tantangan khusus",
   "nilai_xp": 150,
   "bobot_kg": 120,
   "gambar": "ikan_hiu_merah",
-  "urutan": 15
+  "urutan": 25
  },
  {
-  "id": 16,
+  "id": 26,
   "nama": "Kakap Merah",
   "nama_ilmiah": "Lutjanus campechanus",
   "tier": "biasa",
@@ -224,7 +364,7 @@
   "urutan": 16
  },
  {
-  "id": 17,
+  "id": 27,
   "nama": "Tongkol",
   "nama_ilmiah": "Euthynnus affinis",
   "tier": "biasa",
@@ -238,7 +378,7 @@
   "urutan": 17
  },
  {
-  "id": 18,
+  "id": 28,
   "nama": "Cakalang",
   "nama_ilmiah": "Katsuwonus pelamis",
   "tier": "biasa",
@@ -252,7 +392,7 @@
   "urutan": 18
  },
  {
-  "id": 19,
+  "id": 29,
   "nama": "Sarden",
   "nama_ilmiah": "Sardinella lemuru",
   "tier": "biasa",
@@ -266,7 +406,7 @@
   "urutan": 19
  },
  {
-  "id": 20,
+  "id": 30,
   "nama": "Kembung",
   "nama_ilmiah": "Rastrelliger kanagurta",
   "tier": "biasa",
@@ -280,7 +420,7 @@
   "urutan": 20
  },
  {
-  "id": 21,
+  "id": 31,
   "nama": "Layang",
   "nama_ilmiah": "Decapterus macrosoma",
   "tier": "biasa",
@@ -294,7 +434,7 @@
   "urutan": 21
  },
  {
-  "id": 22,
+  "id": 32,
   "nama": "Kue",
   "nama_ilmiah": "Kuhlia rupestris",
   "tier": "biasa",
@@ -308,7 +448,7 @@
   "urutan": 22
  },
  {
-  "id": 23,
+  "id": 33,
   "nama": "Baronang",
   "nama_ilmiah": "Siganus guttatus",
   "tier": "biasa",
@@ -322,7 +462,7 @@
   "urutan": 23
  },
  {
-  "id": 24,
+  "id": 34,
   "nama": "Belanak",
   "nama_ilmiah": "Mugil cephalus",
   "tier": "biasa",
@@ -336,7 +476,7 @@
   "urutan": 24
  },
  {
-  "id": 25,
+  "id": 35,
   "nama": "Tawes",
   "nama_ilmiah": "Barbonymus gonionotus",
   "tier": "biasa",
@@ -350,7 +490,7 @@
   "urutan": 25
  },
  {
-  "id": 26,
+  "id": 36,
   "nama": "Nilem",
   "nama_ilmiah": "Osteochilus hasselti",
   "tier": "biasa",
@@ -364,7 +504,7 @@
   "urutan": 26
  },
  {
-  "id": 27,
+  "id": 37,
   "nama": "Mas",
   "nama_ilmiah": "Cyprinus carpio",
   "tier": "biasa",
@@ -378,7 +518,7 @@
   "urutan": 27
  },
  {
-  "id": 28,
+  "id": 38,
   "nama": "Betok",
   "nama_ilmiah": "Anabas testudineus",
   "tier": "biasa",
@@ -392,7 +532,7 @@
   "urutan": 28
  },
  {
-  "id": 29,
+  "id": 39,
   "nama": "Sidat",
   "nama_ilmiah": "Anguilla bicolor",
   "tier": "langka",
@@ -406,7 +546,7 @@
   "urutan": 29
  },
  {
-  "id": 30,
+  "id": 40,
   "nama": "Kakap Putih",
   "nama_ilmiah": "Lates calcarifer",
   "tier": "langka",
@@ -420,7 +560,7 @@
   "urutan": 30
  },
  {
-  "id": 31,
+  "id": 41,
   "nama": "Kuwe",
   "nama_ilmiah": "Caranx sexfasciatus",
   "tier": "langka",
@@ -434,7 +574,7 @@
   "urutan": 31
  },
  {
-  "id": 32,
+  "id": 42,
   "nama": "Bawal Hitam",
   "nama_ilmiah": "Parastromateus niger",
   "tier": "langka",
@@ -448,7 +588,7 @@
   "urutan": 32
  },
  {
-  "id": 33,
+  "id": 43,
   "nama": "Bawal Bintang",
   "nama_ilmiah": "Trachinotus blochii",
   "tier": "langka",
@@ -462,7 +602,7 @@
   "urutan": 33
  },
  {
-  "id": 34,
+  "id": 44,
   "nama": "Kerong-kerong",
   "nama_ilmiah": "Terapon jarbua",
   "tier": "langka",
@@ -476,7 +616,7 @@
   "urutan": 34
  },
  {
-  "id": 35,
+  "id": 45,
   "nama": "Gulamah",
   "nama_ilmiah": "Nibea albiflora",
   "tier": "langka",
@@ -490,7 +630,7 @@
   "urutan": 35
  },
  {
-  "id": 36,
+  "id": 46,
   "nama": "Manyung",
   "nama_ilmiah": "Arius thalassinus",
   "tier": "langka",
@@ -504,7 +644,7 @@
   "urutan": 36
  },
  {
-  "id": 37,
+  "id": 47,
   "nama": "Pari Manta",
   "nama_ilmiah": "Mobula birostris",
   "tier": "epik",
@@ -518,7 +658,7 @@
   "urutan": 37
  },
  {
-  "id": 38,
+  "id": 48,
   "nama": "Hiu Tutul",
   "nama_ilmiah": "Rhincodon typus",
   "tier": "epik",
@@ -532,7 +672,7 @@
   "urutan": 38
  },
  {
-  "id": 39,
+  "id": 49,
   "nama": "Hiu Martil",
   "nama_ilmiah": "Sphyrna lewini",
   "tier": "epik",
@@ -546,7 +686,7 @@
   "urutan": 39
  },
  {
-  "id": 40,
+  "id": 50,
   "nama": "Mola-mola",
   "nama_ilmiah": "Mola mola",
   "tier": "epik",
@@ -560,7 +700,7 @@
   "urutan": 40
  },
  {
-  "id": 41,
+  "id": 51,
   "nama": "Napoleon",
   "nama_ilmiah": "Cheilinus undulatus",
   "tier": "epik",
@@ -574,7 +714,7 @@
   "urutan": 41
  },
  {
-  "id": 42,
+  "id": 52,
   "nama": "Ikan Pedang",
   "nama_ilmiah": "Xiphias gladius",
   "tier": "epik",
@@ -588,7 +728,7 @@
   "urutan": 42
  },
  {
-  "id": 43,
+  "id": 53,
   "nama": "Marlin Hitam",
   "nama_ilmiah": "Makaira indica",
   "tier": "epik",
@@ -602,7 +742,7 @@
   "urutan": 43
  },
  {
-  "id": 44,
+  "id": 54,
   "nama": "Tuna Sirip Biru",
   "nama_ilmiah": "Thunnus thynnus",
   "tier": "legenda",
@@ -616,7 +756,7 @@
   "urutan": 44
  },
  {
-  "id": 45,
+  "id": 55,
   "nama": "Coelacanth",
   "nama_ilmiah": "Latimeria chalumnae",
   "tier": "legenda",
@@ -630,7 +770,7 @@
   "urutan": 45
  },
  {
-  "id": 46,
+  "id": 56,
   "nama": "Hiu Greenland",
   "nama_ilmiah": "Somniosus microcephalus",
   "tier": "legenda",
@@ -644,7 +784,7 @@
   "urutan": 46
  },
  {
-  "id": 47,
+  "id": 57,
   "nama": "Oarfish",
   "nama_ilmiah": "Regalecus glesne",
   "tier": "mitos",
@@ -658,7 +798,7 @@
   "urutan": 47
  },
  {
-  "id": 48,
+  "id": 58,
   "nama": "Hiu Putih Raksasa",
   "nama_ilmiah": "Carcharodon carcharias",
   "tier": "mitos",

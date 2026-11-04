@@ -88,5 +88,95 @@
   "output_contoh": "6",
   "trik_nelayan": "Cek kondisi di dalam loop pada setiap putaran; jangan lupa mengubah penghitung.",
   "urutan": 1
+ },
+ {
+  "id": 10,
+  "stage_id": 11,
+  "judul": "Perulangan for dan range",
+  "isi_markdown": "for digunakan untuk mengulang sejumlah kali tertentu. range(n) menghasilkan angka 0 sampai n-1.",
+  "contoh_kode": "for i in range(3):\n    print(i)",
+  "output_contoh": "0\n1\n2",
+  "trik_nelayan": "for lebih ringkas dari while jika tahu jumlah iterasi. range(n) = 0 sampai n-1.",
+  "urutan": 1
+ },
+ {
+  "id": 11,
+  "stage_id": 12,
+  "judul": "List dasar (indeks, append)",
+  "isi_markdown": "List menyimpan banyak nilai dalam satu variabel. Akses dengan indeks mulai dari 0.",
+  "contoh_kode": "ikan = [\"tuna\", \"salmon\"]\nprint(ikan[0])",
+  "output_contoh": "tuna",
+  "trik_nelayan": "List indeks dimulai dari 0. Indeks negatif dimulai dari akhir: -1 = elemen terakhir.",
+  "urutan": 1
+ },
+ {
+  "id": 12,
+  "stage_id": 13,
+  "judul": "Loop di atas list",
+  "isi_markdown": "for dapat mengiterasi setiap elemen dalam list. Gunakan for item in list atau for i in range(len(list)).",
+  "contoh_kode": "ikan = [\"tuna\", \"salmon\"]\nfor i in ikan:\n    print(i)",
+  "output_contoh": "tuna\nsalmon",
+  "trik_nelayan": "Loop di list: for item in list lebih mudah dibaca dari for i in range(len(list)).",
+  "urutan": 1
+ },
+ {
+  "id": 13,
+  "stage_id": 14,
+  "judul": "Dictionary",
+  "isi_markdown": "Dictionary menyimpan pasangan key-value. Akses value dengan key.",
+  "contoh_kode": "kapal = {\"nama\": \"Titanic\", \"panjang\": 269}\nprint(kapal[\"nama\"])",
+  "output_contoh": "Titanic",
+  "trik_nelayan": "Dict key harus unik. Akses value dengan key, bukan indeks.",
+  "urutan": 1
+ },
+ {
+  "id": 14,
+  "stage_id": 15,
+  "judul": "String method dan f-string",
+  "isi_markdown": "String punya banyak method seperti upper(), lower(), split(). F-string format output dengan {}.",
+  "contoh_kode": "nama = \"kapal\"\nprint(f\"Nama: {nama.upper()}\")",
+  "output_contoh": "Nama: KAPAL",
+  "trik_nelayan": "String method tidak ubah string asli, tapi return baru. Simpan hasilnya.",
+  "urutan": 1
+ },
+ {
+  "id": 15,
+  "stage_id": 16,
+  "judul": "Fungsi (def, return)",
+  "isi_markdown": "Fungsi adalah blok kode yang bisa dipanggil berulang. Gunakan def untuk membuat fungsi dan return untuk mengembalikan nilai.",
+  "contoh_kode": "def hitung_luas(p, l):\n    return p * l\nprint(hitung_luas(5, 3))",
+  "output_contoh": "15",
+  "trik_nelayan": "Fungsi buat kode reusable. Return mengirim nilai ke pemanggil.",
+  "urutan": 1
+ },
+ {
+  "id": 16,
+  "stage_id": 17,
+  "judul": "Parameter dan nilai default",
+  "isi_markdown": "Fungsi bisa punya nilai default untuk parameter. Parameter bisa dipanggil dengan keyword.",
+  "contoh_kode": "def sapa(nama, formal=True):\n    if formal:\n        return f\"Selamat pagi, {nama}\"\n    return f\"Hai {nama}\"",
+  "output_contoh": "",
+  "trik_nelayan": "Default parameter harus setelah parameter wajib. Keyword argument boleh tidak urut.",
+  "urutan": 1
+ },
+ {
+  "id": 17,
+  "stage_id": 18,
+  "judul": "Error dan try/except",
+  "isi_markdown": "Error bisa ditangani dengan try/except agar program tidak crash. Python punya berbagai jenis error.",
+  "contoh_kode": "try:\n    x = 10 / 0\nexcept ZeroDivisionError:\n    print(\"Tidak bisa bagi nol\")",
+  "output_contoh": "Tidak bisa bagi nol",
+  "trik_nelayan": "Try/except tangani error agar program tidak crash. Gunakan jenis error yang spesifik.",
+  "urutan": 1
+ },
+ {
+  "id": 18,
+  "stage_id": 19,
+  "judul": "Gabungan list + fungsi",
+  "isi_markdown": "Fungsi dapat menerima dan mengembalikan list. List comprehension membuat list baru dengan sintaks ringkas.",
+  "contoh_kode": "def kali_dua(nums):\n    return [x * 2 for x in nums]\nprint(kali_dua([1, 2, 3]))",
+  "output_contoh": "[2, 4, 6]",
+  "trik_nelayan": "List comprehension singkat dan cepat. Gunakan untuk transform/filter list sederhana.",
+  "urutan": 1
  }
 ]

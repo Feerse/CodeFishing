@@ -22,10 +22,10 @@ class SeedValidationTest {
 
     @Test
     fun jumlahKontenSesuaiDfd() {
-        assertEquals(10, baca("stage.json").length())
-        assertEquals(9, baca("materi.json").length())
-        assertEquals(55, baca("soal.json").length())
-        assertEquals(48, baca("ikan.json").length())
+        assertEquals(20, baca("stage.json").length())
+        assertEquals(18, baca("materi.json").length())
+        assertEquals(110, baca("soal.json").length())
+        assertEquals(58, baca("ikan.json").length())
         assertEquals(7, baca("misi.json").length())
     }
 
@@ -35,6 +35,7 @@ class SeedValidationTest {
         assertTrue(soal.ids().size == soal.size)
         val komposisi = baca("komposisi_kuis.json").objects()
         val perStage = komposisi.groupBy { it.getInt("stage_id") }
+        // Stage 1-9: 5 soal (Pasifik)
         (1..9).forEach { stage ->
             assertEquals("Stage $stage harus 5 soal", 5, perStage[stage]?.size)
             assertEquals(5, perStage[stage]!!.map { it.getInt("soal_id") }.toSet().size)
@@ -44,6 +45,16 @@ class SeedValidationTest {
         assertEquals("Stage 10 (boss) harus 10 soal", 10, perStage[10]?.size)
         assertEquals(10, perStage[10]!!.map { it.getInt("soal_id") }.toSet().size)
         assertTrue(perStage[10]!!.all { it.getInt("soal_id") in soal.ids() })
+        // Stage 11-19: 5 soal (Antartika)
+        (11..19).forEach { stage ->
+            assertEquals("Stage $stage harus 5 soal", 5, perStage[stage]?.size)
+            assertEquals(5, perStage[stage]!!.map { it.getInt("soal_id") }.toSet().size)
+            assertTrue(perStage[stage]!!.all { it.getInt("soal_id") in soal.ids() })
+        }
+        // Boss stage 20: 10 soal
+        assertEquals("Stage 20 (boss) harus 10 soal", 10, perStage[20]?.size)
+        assertEquals(10, perStage[20]!!.map { it.getInt("soal_id") }.toSet().size)
+        assertTrue(perStage[20]!!.all { it.getInt("soal_id") in soal.ids() })
     }
 
     @Test
@@ -58,13 +69,13 @@ class SeedValidationTest {
     }
 
     @Test
-    fun katalogIkanPunyaLimaBelasIlustrasiDanTigaPuluhTigaPlaceholder() {
+    fun katalogIkanPunyaIlustrasiDanPlaceholder() {
         val ikan = baca("ikan.json").objects()
-        assertEquals(48, ikan.ids().size)
-        assertEquals(48, ikan.map { it.getString("nama") }.toSet().size)
+        assertEquals(58, ikan.ids().size)
+        assertEquals(58, ikan.map { it.getString("nama") }.toSet().size)
         val ilustrasi = ikan.count { !it.getString("gambar").contains("tanda_tanya") }
         val placeholder = ikan.count { it.getString("gambar") == "tanda_tanya_ikan" }
-        assertEquals(15, ilustrasi)
+        assertEquals(25, ilustrasi)
         assertEquals(33, placeholder)
         assertTrue(ikan.filter { it.getString("gambar") == "tanda_tanya_ikan" }
             .all { it.getString("syarat_unlock").contains("Segera hadir") })
