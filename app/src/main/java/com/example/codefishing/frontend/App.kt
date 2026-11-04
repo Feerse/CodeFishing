@@ -1,6 +1,10 @@
 package com.example.codefishing.frontend
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -131,22 +135,28 @@ fun App() {
             }
         },
     ) { padding ->
-        when (saatIni.screen) {
-            Screen.Home -> HomeScreen(nav, padding)
-            Screen.PilihMode -> PilihModeScreen(nav, padding)
-            Screen.Peta -> PetaScreen(nav, padding)
-            Screen.Materi -> MateriScreen(nav, padding)
-            Screen.Kuis -> KuisScreen(nav, padding)
-            Screen.HasilStage -> HasilStageScreen(nav, padding)
-            Screen.Sandbox -> SandboxScreen(nav, padding)
-            Screen.HasilProgram -> HasilProgramScreen(nav, padding)
-            Screen.Koleksi -> KoleksiScreen(nav, padding)
-            Screen.Pengaturan -> PengaturanScreen(nav, padding)
-            Screen.UmpanHabis -> UmpanHabisScreen(nav, padding)
-            Screen.Boss -> BossScreen(nav, padding)
-            Screen.Akuarium -> AkuariumScreen(nav, padding)
-            Screen.GaleriAset -> GaleriAsetScreen(padding)
-            Screen.Pengenalan -> Unit
+        AnimatedContent(
+            targetState = saatIni.screen to saatIni.stage,
+            transitionSpec = { fadeIn() togetherWith fadeOut() },
+            label = "screen_transition"
+        ) { (screen, _) ->
+            when (screen) {
+                Screen.Home -> HomeScreen(nav, padding)
+                Screen.PilihMode -> PilihModeScreen(nav, padding)
+                Screen.Peta -> PetaScreen(nav, padding)
+                Screen.Materi -> MateriScreen(nav, padding)
+                Screen.Kuis -> KuisScreen(nav, padding)
+                Screen.HasilStage -> HasilStageScreen(nav, padding)
+                Screen.Sandbox -> SandboxScreen(nav, padding)
+                Screen.HasilProgram -> HasilProgramScreen(nav, padding)
+                Screen.Koleksi -> KoleksiScreen(nav, padding)
+                Screen.Pengaturan -> PengaturanScreen(nav, padding)
+                Screen.UmpanHabis -> UmpanHabisScreen(nav, padding)
+                Screen.Boss -> BossScreen(nav, padding)
+                Screen.Akuarium -> AkuariumScreen(nav, padding)
+                Screen.GaleriAset -> GaleriAsetScreen(padding)
+                Screen.Pengenalan -> Unit
+            }
         }
     }
 }
