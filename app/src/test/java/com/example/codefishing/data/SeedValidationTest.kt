@@ -24,22 +24,26 @@ class SeedValidationTest {
     fun jumlahKontenSesuaiDfd() {
         assertEquals(10, baca("stage.json").length())
         assertEquals(9, baca("materi.json").length())
-        assertEquals(45, baca("soal.json").length())
+        assertEquals(55, baca("soal.json").length())
         assertEquals(48, baca("ikan.json").length())
         assertEquals(7, baca("misi.json").length())
     }
 
     @Test
-    fun setiapStagePunyaLimaSoalUnik() {
+    fun setiapStagePunyaSoalSesuaiTipe() {
         val soal = baca("soal.json").objects()
         assertTrue(soal.ids().size == soal.size)
         val komposisi = baca("komposisi_kuis.json").objects()
         val perStage = komposisi.groupBy { it.getInt("stage_id") }
-        (1..10).forEach { stage ->
+        (1..9).forEach { stage ->
             assertEquals("Stage $stage harus 5 soal", 5, perStage[stage]?.size)
             assertEquals(5, perStage[stage]!!.map { it.getInt("soal_id") }.toSet().size)
             assertTrue(perStage[stage]!!.all { it.getInt("soal_id") in soal.ids() })
         }
+        // Boss stage 10: 10 soal
+        assertEquals("Stage 10 (boss) harus 10 soal", 10, perStage[10]?.size)
+        assertEquals(10, perStage[10]!!.map { it.getInt("soal_id") }.toSet().size)
+        assertTrue(perStage[10]!!.all { it.getInt("soal_id") in soal.ids() })
     }
 
     @Test

@@ -216,7 +216,9 @@ class GameRepository(
         val stage = stageDao.berdasarkanId(stageId) ?: return null
         val rows = contentDao.soalStage(stageId)
         if (rows.isEmpty()) return null
-        val ulangi = (stageDao.progres(stageId)?.percobaan ?: 0) > 0
+        val progres = stageDao.progres(stageId)
+        val ulangi = (progres?.percobaan ?: 0) > 0
+        val boss = stage.tipe == "boss"
         val soal = urutanSoal(
             rows.map { s ->
                 SoalKuis(
@@ -231,8 +233,9 @@ class GameRepository(
                 )
             },
             ulangi,
+            boss,
         )
-        val lulus = if (stage.tipe == "boss") 80 else stage.skor_lulus
+        val lulus = if (boss) 80 else stage.skor_lulus
         return QuizData(stage, soal, lulus)
     }
 

@@ -695,6 +695,136 @@
      "sc": "count",
      "v": "",
      "vn": "trawler"
+    },
+    {
+     "q": "Kapten menghitung tangkapan, lalu menambah 3.\nBerapa hasil akhir x?",
+     "code": "x = 2\nx = x * 3\nx = x + 3\nprint(x)",
+     "o": [
+      {
+       "t": "5",
+       "out": "5"
+      },
+      {
+       "t": "8",
+       "out": "8"
+      },
+      {
+       "t": "9",
+       "out": "9"
+      },
+      {
+       "t": "11",
+       "out": "11"
+      }
+     ],
+     "ok": 2,
+     "sc": "box",
+     "v": "x",
+     "vn": "kapal"
+    },
+    {
+     "q": "Penjaga dermaga menggabungkan dua teks.\nOperator untuk menyambung string!",
+     "code": "a = \"Ikan\"\nb = \"Hiu\"\nprint(a ___ b)",
+     "o": [
+      {
+       "t": "*",
+       "out": "Error"
+      },
+      {
+       "t": "+",
+       "out": "IkanHiu"
+      },
+      {
+       "t": "&",
+       "out": "Error"
+      },
+      {
+       "t": "and",
+       "out": "Hiu"
+      }
+     ],
+     "ok": 1,
+     "sc": "board",
+     "v": "",
+     "vn": "dermaga"
+    },
+    {
+     "q": "Loop berhenti saat n mencapai 5. Berapa kali loop berjalan?",
+     "code": "n = 1\nwhile n < 5:\n    n = n + 1",
+     "o": [
+      {
+       "t": "3",
+       "out": "3x"
+      },
+      {
+       "t": "4",
+       "out": "4x"
+      },
+      {
+       "t": "5",
+       "out": "5x"
+      },
+      {
+       "t": "6",
+       "out": "6x"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "jaring"
+    },
+    {
+     "q": "Hanya ikan ganjil yang dihitung total.\nBerapa nilai total setelah loop?",
+     "code": "n = 0\ntotal = 0\nwhile n < 5:\n    n = n + 1\n    if n % 2 == 1:\n        total = total + n\nprint(total)",
+     "o": [
+      {
+       "t": "6",
+       "out": "6"
+      },
+      {
+       "t": "9",
+       "out": "9"
+      },
+      {
+       "t": "10",
+       "out": "10"
+      },
+      {
+       "t": "15",
+       "out": "15"
+      }
+     ],
+     "ok": 1,
+     "sc": "count",
+     "v": "",
+     "vn": "pukat"
+    },
+    {
+     "q": "Perbandingan suhu air laut.\nKondisi True jika air lebih dingin dari 10!",
+     "code": "suhu = 8\nprint(suhu ___ 10)",
+     "o": [
+      {
+       "t": ">",
+       "out": "False"
+      },
+      {
+       "t": "==",
+       "out": "False"
+      },
+      {
+       "t": "<=",
+       "out": "True"
+      },
+      {
+       "t": "<",
+       "out": "True"
+      }
+     ],
+     "ok": 3,
+     "sc": "board",
+     "v": "",
+     "vn": "es"
     }
    ]
   }

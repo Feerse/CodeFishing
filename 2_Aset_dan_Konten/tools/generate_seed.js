@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '../..');
-const SRC = path.join(ROOT, 'app/src/main/assets/content');
+const SRC = path.join(ROOT, '2_Aset_dan_Konten/konten');
 const OUT_SRC = path.join(ROOT, '2_Aset_dan_Konten/konten/seed');
 const OUT_ASSET = path.join(ROOT, 'app/src/main/assets/seed');
 
@@ -25,8 +25,8 @@ const stageRows = stagesLama.map((s, i) => ({
   zona: ZONA[i],
   konsep: s.topic,
   tipe: s.boss ? 'boss' : 'materi',
-  jumlah_soal: 5,
-  skor_lulus: 70,
+  jumlah_soal: s.boss ? 10 : 5,
+  skor_lulus: s.boss ? 80 : 70,
   xp_reward: s.boss ? 100 : 50,
   ikan_target_id: i + 1,
   urutan: i + 1,
@@ -208,23 +208,13 @@ const TAMBAHAN = {
   ],
 };
 
-// Soal boss lama dipindahkan ke stage yang sesuai agar tidak ada soal yatim.
-const bossLama = stagesLama[9].qs;
-const pinjam = {
-  1: [bossLama[0]],
-  2: [bossLama[1]],
-  5: [bossLama[2]],
-  8: [bossLama[3]],
-  9: [bossLama[4]],
-};
-
+// Stage 1-9: 5 soal per stage dari konten lama + tambahan
 const soalRows = [];
 let soalId = 1;
 const perStage = {};
 for (let s = 1; s <= 9; s++) {
   const qs = [];
   for (const q of stagesLama[s - 1].qs) qs.push(conv(q, s, qs.length + 1));
-  for (const q of pinjam[s] || []) qs.push(conv(q, s, qs.length + 1));
   for (const q of TAMBAHAN[s]) qs.push({ ...q, stage_asal_id: s, tipe: 'token', poin: 25, urutan: qs.length + 1 });
   while (qs.length < 5) qs.push({ ...TAMBAHAN[s][0], stage_asal_id: s, tipe: 'token', poin: 25, urutan: qs.length + 1 });
   perStage[s] = [];
@@ -246,13 +236,38 @@ for (let s = 1; s <= 9; s++) {
   }
 }
 
+// Stage 10: Boss, semua soal dari stagesLama[9].qs
+perStage[10] = [];
+for (const q of stagesLama[9].qs) {
+  const row = {
+    id: soalId++,
+    stage_asal_id: 10,
+    tipe: 'token',
+    teks: q.q,
+    kode_template: q.code,
+    jawaban_benar: null,
+    pembahasan: `Jawaban benar: ${q.o[q.ok].t}. Hasilnya: ${q.o[q.ok].out}.`,
+    poin: 25,
+    urutan: perStage[10].length + 1,
+    pilihan: q.o.map((p, i) => ({
+      id: soalId * 10 + i,
+      soal_id: soalId - 1,
+      teks: p.t,
+      benar: i === q.ok ? 1 : 0,
+      urutan: i + 1,
+    })),
+  };
+  perStage[10].push(row.id);
+  soalRows.push(row);
+}
+
 const komposisi = [];
 let komposisiId = 1;
 for (let s = 1; s <= 9; s++) {
   perStage[s].forEach((qid, i) => komposisi.push({ id: komposisiId++, stage_id: s, soal_id: qid, urutan: i + 1 }));
 }
-// Boss memakai lima soal dari stage berbeda.
-[1, 2, 5, 8, 9].forEach((s, i) => komposisi.push({ id: komposisiId++, stage_id: 10, soal_id: perStage[s][0], urutan: i + 1 }));
+// Boss memakai semua soal boss (10 soal)
+perStage[10].forEach((qid, i) => komposisi.push({ id: komposisiId++, stage_id: 10, soal_id: qid, urutan: i + 1 }));
 
 const misiRows = misiLama.map((m, i) => {
   const par = { m1: 2, m2: 14, m3: 48, m4: 36, m5: 40, m6: 36, bebas: 999 }[m.id];

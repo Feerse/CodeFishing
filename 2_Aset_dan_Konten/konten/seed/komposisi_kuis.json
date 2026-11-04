@@ -272,31 +272,61 @@
  {
   "id": 46,
   "stage_id": 10,
-  "soal_id": 1,
+  "soal_id": 46,
   "urutan": 1
  },
  {
   "id": 47,
   "stage_id": 10,
-  "soal_id": 6,
+  "soal_id": 47,
   "urutan": 2
  },
  {
   "id": 48,
   "stage_id": 10,
-  "soal_id": 21,
+  "soal_id": 48,
   "urutan": 3
  },
  {
   "id": 49,
   "stage_id": 10,
-  "soal_id": 36,
+  "soal_id": 49,
   "urutan": 4
  },
  {
   "id": 50,
   "stage_id": 10,
-  "soal_id": 41,
+  "soal_id": 50,
   "urutan": 5
+ },
+ {
+  "id": 51,
+  "stage_id": 10,
+  "soal_id": 51,
+  "urutan": 6
+ },
+ {
+  "id": 52,
+  "stage_id": 10,
+  "soal_id": 52,
+  "urutan": 7
+ },
+ {
+  "id": 53,
+  "stage_id": 10,
+  "soal_id": 53,
+  "urutan": 8
+ },
+ {
+  "id": 54,
+  "stage_id": 10,
+  "soal_id": 54,
+  "urutan": 9
+ },
+ {
+  "id": 55,
+  "stage_id": 10,
+  "soal_id": 55,
+  "urutan": 10
  }
 ]

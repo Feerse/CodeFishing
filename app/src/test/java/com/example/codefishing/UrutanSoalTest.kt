@@ -36,4 +36,21 @@ class UrutanSoalTest {
         val daftar = listOf(soal(1))
         assertEquals(daftar, urutanSoal(daftar, ulangi = true))
     }
+
+    @Test
+    fun bossPercobaanPertamaDiacak() {
+        val daftar = (1..10).map(::soal)
+        val hasil = urutanSoal(daftar, ulangi = false, boss = true, random = Random(42))
+        assertEquals(daftar.map { it.id }.toSet(), hasil.map { it.id }.toSet())
+        // Probabilitas tetap urut = 1/10! sangat kecil, pasti berubah
+        assert(hasil.map { it.id } != daftar.map { it.id })
+    }
+
+    @Test
+    fun bossSelalu10Soal() {
+        val daftar = (46..55).map(::soal)
+        val hasil = urutanSoal(daftar, ulangi = true, boss = true, random = Random(123))
+        assertEquals(10, hasil.size)
+        assertEquals(daftar.map { it.id }.toSet(), hasil.map { it.id }.toSet())
+    }
 }

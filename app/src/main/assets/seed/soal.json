@@ -85,38 +85,38 @@
   "id": 3,
   "stage_asal_id": 1,
   "tipe": "token",
-  "teks": "Kapal pukat melapor ke pelabuhan di tengah badai.\nPerintah menampilkan teks Halo!",
-  "kode_template": "___(\"Halo\")",
+  "teks": "Papan skor pelabuhan harus menampilkan kata Python.",
+  "kode_template": "print(___)",
   "jawaban_benar": null,
-  "pembahasan": "Jawaban benar: print. Hasilnya: Halo.",
+  "pembahasan": "Teks harus diapit tanda kutip dan dicetak dengan print().",
   "poin": 25,
   "urutan": 3,
   "pilihan": [
    {
     "id": 40,
     "soal_id": 3,
-    "teks": "print",
+    "teks": "\"Python\"",
     "benar": 1,
     "urutan": 1
    },
    {
     "id": 41,
     "soal_id": 3,
-    "teks": "echo",
+    "teks": "Python",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 42,
     "soal_id": 3,
-    "teks": "Print",
+    "teks": "\"Python",
     "benar": 0,
     "urutan": 3
    },
    {
     "id": 43,
     "soal_id": 3,
-    "teks": "say",
+    "teks": "echo(\"Python\")",
     "benar": 0,
     "urutan": 4
    }
@@ -126,38 +126,38 @@
   "id": 4,
   "stage_asal_id": 1,
   "tipe": "token",
-  "teks": "Papan skor pelabuhan harus menampilkan kata Python.",
-  "kode_template": "print(___)",
+  "teks": "Dua baris teks dicetak berurutan: Laut lalu Tenang.",
+  "kode_template": "print(\"Laut\")\n___(\"Tenang\")",
   "jawaban_benar": null,
-  "pembahasan": "Teks harus diapit tanda kutip dan dicetak dengan print().",
+  "pembahasan": "print() dapat dipanggil berulang untuk mencetak baris baru.",
   "poin": 25,
   "urutan": 4,
   "pilihan": [
    {
     "id": 50,
     "soal_id": 4,
-    "teks": "\"Python\"",
+    "teks": "print",
     "benar": 1,
     "urutan": 1
    },
    {
     "id": 51,
     "soal_id": 4,
-    "teks": "Python",
+    "teks": "echo",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 52,
     "soal_id": 4,
-    "teks": "\"Python",
+    "teks": "out",
     "benar": 0,
     "urutan": 3
    },
    {
     "id": 53,
     "soal_id": 4,
-    "teks": "echo(\"Python\")",
+    "teks": "write",
     "benar": 0,
     "urutan": 4
    }
@@ -167,38 +167,38 @@
   "id": 5,
   "stage_asal_id": 1,
   "tipe": "token",
-  "teks": "Dua baris teks dicetak berurutan: Laut lalu Tenang.",
-  "kode_template": "print(\"Laut\")\n___(\"Tenang\")",
+  "teks": "Papan skor pelabuhan harus menampilkan kata Python.",
+  "kode_template": "print(___)",
   "jawaban_benar": null,
-  "pembahasan": "print() dapat dipanggil berulang untuk mencetak baris baru.",
+  "pembahasan": "Teks harus diapit tanda kutip dan dicetak dengan print().",
   "poin": 25,
   "urutan": 5,
   "pilihan": [
    {
     "id": 60,
     "soal_id": 5,
-    "teks": "print",
+    "teks": "\"Python\"",
     "benar": 1,
     "urutan": 1
    },
    {
     "id": 61,
     "soal_id": 5,
-    "teks": "echo",
+    "teks": "Python",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 62,
     "soal_id": 5,
-    "teks": "out",
+    "teks": "\"Python",
     "benar": 0,
     "urutan": 3
    },
    {
     "id": 63,
     "soal_id": 5,
-    "teks": "write",
+    "teks": "echo(\"Python\")",
     "benar": 0,
     "urutan": 4
    }
@@ -290,38 +290,38 @@
   "id": 8,
   "stage_asal_id": 2,
   "tipe": "token",
-  "teks": "Penyelam menyimpan hasil tembakan.\nIsi baris kedua agar x menjadi 7!",
-  "kode_template": "x = 5\nx = ___\nprint(x)",
+  "teks": "Nelayan menyimpan 10 umpan ke variabel umpan.",
+  "kode_template": "umpan ___ 10",
   "jawaban_benar": null,
-  "pembahasan": "Jawaban benar: x + 2. Hasilnya: 7.",
+  "pembahasan": "Tanda = memasukkan nilai ke variabel; == membandingkan.",
   "poin": 25,
   "urutan": 3,
   "pilihan": [
    {
     "id": 90,
     "soal_id": 8,
-    "teks": "2",
-    "benar": 0,
+    "teks": "=",
+    "benar": 1,
     "urutan": 1
    },
    {
     "id": 91,
     "soal_id": 8,
-    "teks": "x + x",
+    "teks": "==",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 92,
     "soal_id": 8,
-    "teks": "x + 2",
-    "benar": 1,
+    "teks": "=>",
+    "benar": 0,
     "urutan": 3
    },
    {
     "id": 93,
     "soal_id": 8,
-    "teks": "x = 2",
+    "teks": ":",
     "benar": 0,
     "urutan": 4
    }
@@ -331,38 +331,38 @@
   "id": 9,
   "stage_asal_id": 2,
   "tipe": "token",
-  "teks": "Nelayan menyimpan 10 umpan ke variabel umpan.",
-  "kode_template": "umpan ___ 10",
+  "teks": "Nama ikan diganti dari teri menjadi gurame. Tampilkan isi variabel nama.",
+  "kode_template": "nama = \"teri\"\nnama = \"gurame\"\nprint(___)",
   "jawaban_benar": null,
-  "pembahasan": "Tanda = memasukkan nilai ke variabel; == membandingkan.",
+  "pembahasan": "print(nama) membaca nilai terbaru yang disimpan di variabel.",
   "poin": 25,
   "urutan": 4,
   "pilihan": [
    {
     "id": 100,
     "soal_id": 9,
-    "teks": "=",
+    "teks": "nama",
     "benar": 1,
     "urutan": 1
    },
    {
     "id": 101,
     "soal_id": 9,
-    "teks": "==",
+    "teks": "\"nama\"",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 102,
     "soal_id": 9,
-    "teks": "=>",
+    "teks": "nama()",
     "benar": 0,
     "urutan": 3
    },
    {
     "id": 103,
     "soal_id": 9,
-    "teks": ":",
+    "teks": "\"teri\"",
     "benar": 0,
     "urutan": 4
    }
@@ -372,38 +372,38 @@
   "id": 10,
   "stage_asal_id": 2,
   "tipe": "token",
-  "teks": "Nama ikan diganti dari teri menjadi gurame. Tampilkan isi variabel nama.",
-  "kode_template": "nama = \"teri\"\nnama = \"gurame\"\nprint(___)",
+  "teks": "Nelayan menyimpan 10 umpan ke variabel umpan.",
+  "kode_template": "umpan ___ 10",
   "jawaban_benar": null,
-  "pembahasan": "print(nama) membaca nilai terbaru yang disimpan di variabel.",
+  "pembahasan": "Tanda = memasukkan nilai ke variabel; == membandingkan.",
   "poin": 25,
   "urutan": 5,
   "pilihan": [
    {
     "id": 110,
     "soal_id": 10,
-    "teks": "nama",
+    "teks": "=",
     "benar": 1,
     "urutan": 1
    },
    {
     "id": 111,
     "soal_id": 10,
-    "teks": "\"nama\"",
+    "teks": "==",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 112,
     "soal_id": 10,
-    "teks": "nama()",
+    "teks": "=>",
     "benar": 0,
     "urutan": 3
    },
    {
     "id": 113,
     "soal_id": 10,
-    "teks": "\"teri\"",
+    "teks": ":",
     "benar": 0,
     "urutan": 4
    }
@@ -905,38 +905,38 @@
   "id": 23,
   "stage_asal_id": 5,
   "tipe": "token",
-  "teks": "Ketebalan es diperiksa sebelum memancing.\nNilai bertipe bool!",
+  "teks": "Suhu air tercatat 27.5 derajat. Pilih nilai float.",
   "kode_template": "print(type(___))",
   "jawaban_benar": null,
-  "pembahasan": "Jawaban benar: True. Hasilnya: <class 'bool'>.",
+  "pembahasan": "float memakai titik desimal.",
   "poin": 25,
   "urutan": 3,
   "pilihan": [
    {
     "id": 240,
     "soal_id": 23,
-    "teks": "\"True\"",
-    "benar": 0,
+    "teks": "27.5",
+    "benar": 1,
     "urutan": 1
    },
    {
     "id": 241,
     "soal_id": 23,
-    "teks": "1",
+    "teks": "27",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 242,
     "soal_id": 23,
-    "teks": "True",
-    "benar": 1,
+    "teks": "\"27.5\"",
+    "benar": 0,
     "urutan": 3
    },
    {
     "id": 243,
     "soal_id": 23,
-    "teks": "1.0",
+    "teks": "True",
     "benar": 0,
     "urutan": 4
    }
@@ -946,38 +946,38 @@
   "id": 24,
   "stage_asal_id": 5,
   "tipe": "token",
-  "teks": "Suhu air tercatat 27.5 derajat. Pilih nilai float.",
+  "teks": "Periksa apakah 5 lebih besar dari 3. Hasilnya bertipe bool.",
   "kode_template": "print(type(___))",
   "jawaban_benar": null,
-  "pembahasan": "float memakai titik desimal.",
+  "pembahasan": "Perbandingan menghasilkan True atau False bertipe bool.",
   "poin": 25,
   "urutan": 4,
   "pilihan": [
    {
     "id": 250,
     "soal_id": 24,
-    "teks": "27.5",
+    "teks": "5 > 3",
     "benar": 1,
     "urutan": 1
    },
    {
     "id": 251,
     "soal_id": 24,
-    "teks": "27",
+    "teks": "\"5 > 3\"",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 252,
     "soal_id": 24,
-    "teks": "\"27.5\"",
+    "teks": "5 + 3",
     "benar": 0,
     "urutan": 3
    },
    {
     "id": 253,
     "soal_id": 24,
-    "teks": "True",
+    "teks": "\"True\"",
     "benar": 0,
     "urutan": 4
    }
@@ -987,38 +987,38 @@
   "id": 25,
   "stage_asal_id": 5,
   "tipe": "token",
-  "teks": "Periksa apakah 5 lebih besar dari 3. Hasilnya bertipe bool.",
+  "teks": "Suhu air tercatat 27.5 derajat. Pilih nilai float.",
   "kode_template": "print(type(___))",
   "jawaban_benar": null,
-  "pembahasan": "Perbandingan menghasilkan True atau False bertipe bool.",
+  "pembahasan": "float memakai titik desimal.",
   "poin": 25,
   "urutan": 5,
   "pilihan": [
    {
     "id": 260,
     "soal_id": 25,
-    "teks": "5 > 3",
+    "teks": "27.5",
     "benar": 1,
     "urutan": 1
    },
    {
     "id": 261,
     "soal_id": 25,
-    "teks": "\"5 > 3\"",
+    "teks": "27",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 262,
     "soal_id": 25,
-    "teks": "5 + 3",
+    "teks": "\"27.5\"",
     "benar": 0,
     "urutan": 3
    },
    {
     "id": 263,
     "soal_id": 25,
-    "teks": "\"True\"",
+    "teks": "True",
     "benar": 0,
     "urutan": 4
    }
@@ -1520,39 +1520,39 @@
   "id": 38,
   "stage_asal_id": 8,
   "tipe": "token",
-  "teks": "Bubu dinaikkan tiga kali.\nIsi kondisi agar loop berjalan 3 kali!",
-  "kode_template": "n = 0\nwhile ___:\n    n = n + 1",
+  "teks": "Putar loop tepat 4 kali.",
+  "kode_template": "n = 0\nwhile n < ___:\n    n = n + 1",
   "jawaban_benar": null,
-  "pembahasan": "Jawaban benar: n < 3. Hasilnya: 3x.",
+  "pembahasan": "Kondisi n < 4 bernilai benar untuk n = 0,1,2,3.",
   "poin": 25,
   "urutan": 3,
   "pilihan": [
    {
     "id": 390,
     "soal_id": 38,
-    "teks": "n > 3",
-    "benar": 0,
+    "teks": "4",
+    "benar": 1,
     "urutan": 1
    },
    {
     "id": 391,
     "soal_id": 38,
-    "teks": "n == 5",
+    "teks": "3",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 392,
     "soal_id": 38,
-    "teks": "n = 3",
+    "teks": "5",
     "benar": 0,
     "urutan": 3
    },
    {
     "id": 393,
     "soal_id": 38,
-    "teks": "n < 3",
-    "benar": 1,
+    "teks": "n",
+    "benar": 0,
     "urutan": 4
    }
   ]
@@ -1561,38 +1561,38 @@
   "id": 39,
   "stage_asal_id": 8,
   "tipe": "token",
-  "teks": "Putar loop tepat 4 kali.",
-  "kode_template": "n = 0\nwhile n < ___:\n    n = n + 1",
+  "teks": "Setelah loop selesai, berapa nilai n?",
+  "kode_template": "n = 0\nwhile n < 5:\n    n = n + 1\nprint(___)",
   "jawaban_benar": null,
-  "pembahasan": "Kondisi n < 4 bernilai benar untuk n = 0,1,2,3.",
+  "pembahasan": "Setiap putaran menambah n; setelah 5 putaran n bernilai 5.",
   "poin": 25,
   "urutan": 4,
   "pilihan": [
    {
     "id": 400,
     "soal_id": 39,
-    "teks": "4",
+    "teks": "n",
     "benar": 1,
     "urutan": 1
    },
    {
     "id": 401,
     "soal_id": 39,
-    "teks": "3",
+    "teks": "5",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 402,
     "soal_id": 39,
-    "teks": "5",
+    "teks": "0",
     "benar": 0,
     "urutan": 3
    },
    {
     "id": 403,
     "soal_id": 39,
-    "teks": "n",
+    "teks": "\"n\"",
     "benar": 0,
     "urutan": 4
    }
@@ -1602,38 +1602,38 @@
   "id": 40,
   "stage_asal_id": 8,
   "tipe": "token",
-  "teks": "Setelah loop selesai, berapa nilai n?",
-  "kode_template": "n = 0\nwhile n < 5:\n    n = n + 1\nprint(___)",
+  "teks": "Putar loop tepat 4 kali.",
+  "kode_template": "n = 0\nwhile n < ___:\n    n = n + 1",
   "jawaban_benar": null,
-  "pembahasan": "Setiap putaran menambah n; setelah 5 putaran n bernilai 5.",
+  "pembahasan": "Kondisi n < 4 bernilai benar untuk n = 0,1,2,3.",
   "poin": 25,
   "urutan": 5,
   "pilihan": [
    {
     "id": 410,
     "soal_id": 40,
-    "teks": "n",
+    "teks": "4",
     "benar": 1,
     "urutan": 1
    },
    {
     "id": 411,
     "soal_id": 40,
-    "teks": "5",
+    "teks": "3",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 412,
     "soal_id": 40,
-    "teks": "0",
+    "teks": "5",
     "benar": 0,
     "urutan": 3
    },
    {
     "id": 413,
     "soal_id": 40,
-    "teks": "\"n\"",
+    "teks": "n",
     "benar": 0,
     "urutan": 4
    }
@@ -1725,39 +1725,39 @@
   "id": 43,
   "stage_asal_id": 9,
   "tipe": "token",
-  "teks": "Hanya ikan bernomor lebih dari 2 yang dihitung.\nIsi kondisi agar total berisi 7!",
-  "kode_template": "n = 0\ntotal = 0\nwhile n < 4:\n    n = n + 1\n    if ___:\n        total = total + n",
+  "teks": "Jumlahkan bilangan 1 sampai 3 dengan for.",
+  "kode_template": "total = 0\nfor i in range(1, 4):\n    total = total + i\nprint(total)",
   "jawaban_benar": null,
-  "pembahasan": "Jawaban benar: n > 2. Hasilnya: 7.",
+  "pembahasan": "1 + 2 + 3 = 6.",
   "poin": 25,
   "urutan": 3,
   "pilihan": [
    {
     "id": 440,
     "soal_id": 43,
-    "teks": "n < 2",
-    "benar": 0,
+    "teks": "6",
+    "benar": 1,
     "urutan": 1
    },
    {
     "id": 441,
     "soal_id": 43,
-    "teks": "n == 2",
+    "teks": "3",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 442,
     "soal_id": 43,
-    "teks": "n % 2 == 0",
+    "teks": "10",
     "benar": 0,
     "urutan": 3
    },
    {
     "id": 443,
     "soal_id": 43,
-    "teks": "n > 2",
-    "benar": 1,
+    "teks": "0",
+    "benar": 0,
     "urutan": 4
    }
   ]
@@ -1766,31 +1766,31 @@
   "id": 44,
   "stage_asal_id": 9,
   "tipe": "token",
-  "teks": "Jumlahkan bilangan 1 sampai 3 dengan for.",
-  "kode_template": "total = 0\nfor i in range(1, 4):\n    total = total + i\nprint(total)",
+  "teks": "Penghitung berhenti saat mencapai 3. Berapa hasil akhirnya?",
+  "kode_template": "n = 0\nwhile n < 3:\n    n = n + 1\nprint(n)",
   "jawaban_benar": null,
-  "pembahasan": "1 + 2 + 3 = 6.",
+  "pembahasan": "Loop berhenti ketika n < 3 bernilai salah, yaitu n = 3.",
   "poin": 25,
   "urutan": 4,
   "pilihan": [
    {
     "id": 450,
     "soal_id": 44,
-    "teks": "6",
+    "teks": "3",
     "benar": 1,
     "urutan": 1
    },
    {
     "id": 451,
     "soal_id": 44,
-    "teks": "3",
+    "teks": "2",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 452,
     "soal_id": 44,
-    "teks": "10",
+    "teks": "4",
     "benar": 0,
     "urutan": 3
    },
@@ -1807,31 +1807,31 @@
   "id": 45,
   "stage_asal_id": 9,
   "tipe": "token",
-  "teks": "Penghitung berhenti saat mencapai 3. Berapa hasil akhirnya?",
-  "kode_template": "n = 0\nwhile n < 3:\n    n = n + 1\nprint(n)",
+  "teks": "Jumlahkan bilangan 1 sampai 3 dengan for.",
+  "kode_template": "total = 0\nfor i in range(1, 4):\n    total = total + i\nprint(total)",
   "jawaban_benar": null,
-  "pembahasan": "Loop berhenti ketika n < 3 bernilai salah, yaitu n = 3.",
+  "pembahasan": "1 + 2 + 3 = 6.",
   "poin": 25,
   "urutan": 5,
   "pilihan": [
    {
     "id": 460,
     "soal_id": 45,
-    "teks": "3",
+    "teks": "6",
     "benar": 1,
     "urutan": 1
    },
    {
     "id": 461,
     "soal_id": 45,
-    "teks": "2",
+    "teks": "3",
     "benar": 0,
     "urutan": 2
    },
    {
     "id": 462,
     "soal_id": 45,
-    "teks": "4",
+    "teks": "10",
     "benar": 0,
     "urutan": 3
    },
@@ -1840,6 +1840,416 @@
     "soal_id": 45,
     "teks": "0",
     "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 46,
+  "stage_asal_id": 10,
+  "tipe": "token",
+  "teks": "Kapal pukat melapor ke pelabuhan di tengah badai.\nPerintah menampilkan teks Halo!",
+  "kode_template": "___(\"Halo\")",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: print. Hasilnya: Halo.",
+  "poin": 25,
+  "urutan": 1,
+  "pilihan": [
+   {
+    "id": 470,
+    "soal_id": 46,
+    "teks": "print",
+    "benar": 1,
+    "urutan": 1
+   },
+   {
+    "id": 471,
+    "soal_id": 46,
+    "teks": "echo",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 472,
+    "soal_id": 46,
+    "teks": "Print",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 473,
+    "soal_id": 46,
+    "teks": "say",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 47,
+  "stage_asal_id": 10,
+  "tipe": "token",
+  "teks": "Penyelam menyimpan hasil tembakan.\nIsi baris kedua agar x menjadi 7!",
+  "kode_template": "x = 5\nx = ___\nprint(x)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: x + 2. Hasilnya: 7.",
+  "poin": 25,
+  "urutan": 2,
+  "pilihan": [
+   {
+    "id": 480,
+    "soal_id": 47,
+    "teks": "2",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 481,
+    "soal_id": 47,
+    "teks": "x + x",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 482,
+    "soal_id": 47,
+    "teks": "x + 2",
+    "benar": 1,
+    "urutan": 3
+   },
+   {
+    "id": 483,
+    "soal_id": 47,
+    "teks": "x = 2",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 48,
+  "stage_asal_id": 10,
+  "tipe": "token",
+  "teks": "Ketebalan es diperiksa sebelum memancing.\nNilai bertipe bool!",
+  "kode_template": "print(type(___))",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: True. Hasilnya: <class 'bool'>.",
+  "poin": 25,
+  "urutan": 3,
+  "pilihan": [
+   {
+    "id": 490,
+    "soal_id": 48,
+    "teks": "\"True\"",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 491,
+    "soal_id": 48,
+    "teks": "1",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 492,
+    "soal_id": 48,
+    "teks": "True",
+    "benar": 1,
+    "urutan": 3
+   },
+   {
+    "id": 493,
+    "soal_id": 48,
+    "teks": "1.0",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 49,
+  "stage_asal_id": 10,
+  "tipe": "token",
+  "teks": "Bubu dinaikkan tiga kali.\nIsi kondisi agar loop berjalan 3 kali!",
+  "kode_template": "n = 0\nwhile ___:\n    n = n + 1",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: n < 3. Hasilnya: 3x.",
+  "poin": 25,
+  "urutan": 4,
+  "pilihan": [
+   {
+    "id": 500,
+    "soal_id": 49,
+    "teks": "n > 3",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 501,
+    "soal_id": 49,
+    "teks": "n == 5",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 502,
+    "soal_id": 49,
+    "teks": "n = 3",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 503,
+    "soal_id": 49,
+    "teks": "n < 3",
+    "benar": 1,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 50,
+  "stage_asal_id": 10,
+  "tipe": "token",
+  "teks": "Hanya ikan bernomor lebih dari 2 yang dihitung.\nIsi kondisi agar total berisi 7!",
+  "kode_template": "n = 0\ntotal = 0\nwhile n < 4:\n    n = n + 1\n    if ___:\n        total = total + n",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: n > 2. Hasilnya: 7.",
+  "poin": 25,
+  "urutan": 5,
+  "pilihan": [
+   {
+    "id": 510,
+    "soal_id": 50,
+    "teks": "n < 2",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 511,
+    "soal_id": 50,
+    "teks": "n == 2",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 512,
+    "soal_id": 50,
+    "teks": "n % 2 == 0",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 513,
+    "soal_id": 50,
+    "teks": "n > 2",
+    "benar": 1,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 51,
+  "stage_asal_id": 10,
+  "tipe": "token",
+  "teks": "Kapten menghitung tangkapan, lalu menambah 3.\nBerapa hasil akhir x?",
+  "kode_template": "x = 2\nx = x * 3\nx = x + 3\nprint(x)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 9. Hasilnya: 9.",
+  "poin": 25,
+  "urutan": 6,
+  "pilihan": [
+   {
+    "id": 520,
+    "soal_id": 51,
+    "teks": "5",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 521,
+    "soal_id": 51,
+    "teks": "8",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 522,
+    "soal_id": 51,
+    "teks": "9",
+    "benar": 1,
+    "urutan": 3
+   },
+   {
+    "id": 523,
+    "soal_id": 51,
+    "teks": "11",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 52,
+  "stage_asal_id": 10,
+  "tipe": "token",
+  "teks": "Penjaga dermaga menggabungkan dua teks.\nOperator untuk menyambung string!",
+  "kode_template": "a = \"Ikan\"\nb = \"Hiu\"\nprint(a ___ b)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: +. Hasilnya: IkanHiu.",
+  "poin": 25,
+  "urutan": 7,
+  "pilihan": [
+   {
+    "id": 530,
+    "soal_id": 52,
+    "teks": "*",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 531,
+    "soal_id": 52,
+    "teks": "+",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 532,
+    "soal_id": 52,
+    "teks": "&",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 533,
+    "soal_id": 52,
+    "teks": "and",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 53,
+  "stage_asal_id": 10,
+  "tipe": "token",
+  "teks": "Loop berhenti saat n mencapai 5. Berapa kali loop berjalan?",
+  "kode_template": "n = 1\nwhile n < 5:\n    n = n + 1",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 4. Hasilnya: 4x.",
+  "poin": 25,
+  "urutan": 8,
+  "pilihan": [
+   {
+    "id": 540,
+    "soal_id": 53,
+    "teks": "3",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 541,
+    "soal_id": 53,
+    "teks": "4",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 542,
+    "soal_id": 53,
+    "teks": "5",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 543,
+    "soal_id": 53,
+    "teks": "6",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 54,
+  "stage_asal_id": 10,
+  "tipe": "token",
+  "teks": "Hanya ikan ganjil yang dihitung total.\nBerapa nilai total setelah loop?",
+  "kode_template": "n = 0\ntotal = 0\nwhile n < 5:\n    n = n + 1\n    if n % 2 == 1:\n        total = total + n\nprint(total)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: 9. Hasilnya: 9.",
+  "poin": 25,
+  "urutan": 9,
+  "pilihan": [
+   {
+    "id": 550,
+    "soal_id": 54,
+    "teks": "6",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 551,
+    "soal_id": 54,
+    "teks": "9",
+    "benar": 1,
+    "urutan": 2
+   },
+   {
+    "id": 552,
+    "soal_id": 54,
+    "teks": "10",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 553,
+    "soal_id": 54,
+    "teks": "15",
+    "benar": 0,
+    "urutan": 4
+   }
+  ]
+ },
+ {
+  "id": 55,
+  "stage_asal_id": 10,
+  "tipe": "token",
+  "teks": "Perbandingan suhu air laut.\nKondisi True jika air lebih dingin dari 10!",
+  "kode_template": "suhu = 8\nprint(suhu ___ 10)",
+  "jawaban_benar": null,
+  "pembahasan": "Jawaban benar: <. Hasilnya: True.",
+  "poin": 25,
+  "urutan": 10,
+  "pilihan": [
+   {
+    "id": 560,
+    "soal_id": 55,
+    "teks": ">",
+    "benar": 0,
+    "urutan": 1
+   },
+   {
+    "id": 561,
+    "soal_id": 55,
+    "teks": "==",
+    "benar": 0,
+    "urutan": 2
+   },
+   {
+    "id": 562,
+    "soal_id": 55,
+    "teks": "<=",
+    "benar": 0,
+    "urutan": 3
+   },
+   {
+    "id": 563,
+    "soal_id": 55,
+    "teks": "<",
+    "benar": 1,
     "urutan": 4
    }
   ]

@@ -123,8 +123,8 @@
   "zona": "Abisal",
   "konsep": "Boss: Ujian Pasifik",
   "tipe": "boss",
-  "jumlah_soal": 5,
-  "skor_lulus": 70,
+  "jumlah_soal": 10,
+  "skor_lulus": 80,
   "xp_reward": 100,
   "ikan_target_id": 10,
   "urutan": 10
