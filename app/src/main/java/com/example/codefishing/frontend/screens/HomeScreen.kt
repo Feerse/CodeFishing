@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -31,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.LocalContainer
@@ -72,35 +70,22 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
     val terkumpul = statistik?.ikan_terkumpul ?: 0
 
     Box(Modifier.fillMaxSize().padding(padding)) {
-        if (warna.gelap) {
-            Gambar(Art.latar_langit_malam, null, Modifier.fillMaxSize(), ContentScale.Crop)
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(Color.Transparent, warna.latarBawah.copy(alpha = 0.82f), warna.latarBawah),
-                        ),
-                    ),
-            )
-        } else {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(Brush.verticalGradient(listOf(warna.latarAtas, warna.latarBawah))),
-            )
-            Gambar(
-                Art.ombak_pola,
-                null,
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .height(220.dp)
-                    .alpha(0.22f),
-                ContentScale.Crop,
-                warna = warna.ombak,
-            )
-        }
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(Brush.verticalGradient(listOf(warna.latarAtas, warna.latarBawah))),
+        )
+        Gambar(
+            Art.ombak_pola,
+            null,
+            Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(220.dp)
+                .alpha(if (warna.gelap) 0.16f else 0.22f),
+            ContentScale.Crop,
+            warna = warna.ombak,
+        )
         Column(
             Modifier
                 .fillMaxSize()
