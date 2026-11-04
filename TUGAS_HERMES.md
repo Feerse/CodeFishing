@@ -10,7 +10,7 @@ Cara kerja: kerjakan tugas BERIKUTNYA yang belum dicentang, satu per giliran. Se
 Urutan dipilih dari yang paling kecil dan berisiko rendah ke yang paling besar.
 
 ## Status
-- [ ] T6  Hapus kompas di pojok kanan atas peta
+- [x] T6  Hapus kompas di pojok kanan atas peta
 - [ ] T1  Background Home mode gelap disamakan dengan mode terang
 - [ ] T2  Boss Mode Pemula: 10+ soal, acak urutan saat gagal
 - [ ] T3  Transisi antar layar + menutupi proses booting
