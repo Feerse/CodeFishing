@@ -68,6 +68,7 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
     val xp = player?.xp ?: 0
     val level = player?.level ?: 1
     val terkumpul = statistik?.ikan_terkumpul ?: 0
+    val totalIkan by produceState<Int?>(null) { value = c.game.jumlahIkan() }
 
     Box(Modifier.fillMaxSize().padding(padding)) {
         Box(
@@ -203,11 +204,11 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Gambar(Art.ikan_hiu_merah, "Hiu Merah", Modifier.size(56.dp))
                     Column(Modifier.weight(1f)) {
-                        Text("Koleksi $terkumpul/48 ikan", style = MaterialTheme.typography.titleMedium)
-                        Text("15 ikan berilustrasi siap ditangkap. Sisanya segera hadir.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("Koleksi $terkumpul/${totalIkan ?: "…"} ikan", style = MaterialTheme.typography.titleMedium)
+                        Text("Ikan berilustrasi siap ditangkap. Sisanya segera hadir.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     CircularProgressIndicator(
-                        progress = { terkumpul / 48f },
+                        progress = { totalIkan?.let { terkumpul / it.toFloat() } ?: 0f },
                         modifier = Modifier.size(36.dp),
                         color = MaterialTheme.colorScheme.primary,
                         trackColor = warna.garis,

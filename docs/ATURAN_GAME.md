@@ -20,17 +20,17 @@ Semua permainan berjalan **offline** di perangkat; aplikasi tidak meminta izin i
 
 ### Ikan dan kelangkaan
 
-Katalog berisi **48 ikan**: 15 ikan berilustrasi yang bisa didapatkan dan 33 ikan placeholder dengan label **“Segera hadir — menunggu aset”**.
+Katalog berisi **58 ikan**: 25 ikan berilustrasi yang bisa didapatkan dan 33 ikan placeholder dengan label **“Segera hadir — menunggu aset”**.
 
 | Kelangkaan | Warna | Cara dapat |
 |---|---|---|
-| Biasa | abu-abu | Ikan target Stage 1-7 |
+| Biasa | abu-abu | Ikan target Stage 1-7 dan 11-13 |
 | Langka | biru | Jawaban benar beruntun 3 (Kerapu), 4 (Barakuda), 5 (Tenggiri) |
-| Epik | ungu | Ikan target Stage 8-9 |
-| Legenda | emas | Gabus Stage 10; Arwana setelah seluruh stage 1-10 lulus |
-| Mitos | merah | Gabus saat boss sempurna (naik satu tier); Hiu Merah setelah seluruh 10 stage sempurna (skor 100) |
+| Epik | ungu | Ikan target Stage 8-9 dan 14-18 |
+| Legenda | emas | Gabus Stage 10, Naga Laut Stage 19, Paus Biru Stage 20; Arwana setelah seluruh stage 1-10 lulus |
+| Mitos | merah | Gabus/Paus Biru saat boss sempurna (naik satu tier); Hiu Merah setelah seluruh 10 stage Pasifik sempurna (skor 100) |
 
-Urutan 15 ikan berilustrasi: Teri, Bandeng, Bawal, Mujair, Nila, Lele, Patin, Gurame, Sepat, Gabus, Kerapu, Barakuda, Tenggiri, Arwana, Hiu Merah.
+Urutan 25 ikan berilustrasi: Teri, Bandeng, Bawal, Mujair, Nila, Lele, Patin, Gurame, Sepat, Krill, Penguin, Seal, Orca, Albatros, Hiu Paus, Lumba-lumba, Gurita, Naga Laut, Paus Biru, Gabus, Kerapu, Barakuda, Tenggiri, Arwana, Hiu Merah.
 Karena satu stage hanya 5 soal, ambang combo bonus adalah 3/4/5 dan semua bonus yang tercapai diberikan pada hasil stage.
 
 Ikan yang sama boleh ditangkap berulang; jumlah, bobot terbesar, tier terbaik, dan level/kenyang disimpan di `koleksi_ikan`.

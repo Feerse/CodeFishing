@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -56,6 +57,8 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
     val statistik by c.game.observeStatistik().collectAsState(null)
     val tema by c.theme.mode.collectAsState()
     val warna = LocalWarna.current
+    val totalIkan by produceState<Int?>(null) { value = c.game.jumlahIkan() }
+    val totalStage by produceState<Int?>(null) { value = c.game.jumlahStage() }
     var konfirmasi by remember { mutableStateOf(false) }
 
     val pengaturan = tersimpan ?: PengaturanEntity()
@@ -80,8 +83,8 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         LabelNilai("Level", "${s.level}")
                         LabelNilai("XP", "${s.xp}")
-                        LabelNilai("Stage", "${s.stage_selesai}/20")
-                        LabelNilai("Ikan", "${s.ikan_terkumpul}/48")
+                        LabelNilai("Stage", "${s.stage_selesai}/${totalStage ?: "…"}")
+                        LabelNilai("Ikan", "${s.ikan_terkumpul}/${totalIkan ?: "…"}")
                     }
                 } ?: Text("Memuat statistik...", style = MaterialTheme.typography.bodySmall)
             }

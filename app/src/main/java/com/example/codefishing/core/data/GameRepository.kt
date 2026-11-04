@@ -418,6 +418,10 @@ class GameRepository(
     suspend fun ikan(id: Int): IkanEntity? = contentDao.ikan(id)
     suspend fun semuaIkan(): List<IkanEntity> = contentDao.semuaIkan()
 
+    /** Jumlah katalog dan stage dari seed, agar layar tidak menulis angka tetap. */
+    suspend fun jumlahIkan(): Int = contentDao.jumlahIkan()
+    suspend fun jumlahStage(): Int = contentDao.jumlahStage()
+
     suspend fun beriIkan(
         ikan: IkanEntity,
         tier: String,

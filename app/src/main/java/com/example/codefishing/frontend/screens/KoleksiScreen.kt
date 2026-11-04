@@ -83,6 +83,7 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
     val totalAkuarium = jumlahAkuarium.values.sum()
     var dipilih by remember { mutableStateOf<KoleksiLengkapView?>(null) }
     val dimiliki = statistik?.ikan_terkumpul ?: list.count { it.dimiliki == 1 }
+    val totalIkan by produceState<Int?>(null) { value = c.game.jumlahIkan() }
 
     Box(
         Modifier
@@ -94,7 +95,7 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
             Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("Koleksi Ikan", style = MaterialTheme.typography.headlineMedium)
                 Text(
-                    "$dimiliki dari 48 jenis ikan sudah dikoleksi · akuarium $totalAkuarium/${KAPASITAS_AKUARIUM} ekor",
+                    "$dimiliki dari ${totalIkan ?: "…"} jenis ikan sudah dikoleksi · akuarium $totalAkuarium/${KAPASITAS_AKUARIUM} ekor",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
