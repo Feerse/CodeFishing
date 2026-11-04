@@ -147,14 +147,7 @@ add(`<g transform="translate(878 388)">
   <path d="M0 -60V-150M0 -60L150 -110M0 -60L-150 -110" stroke="#FFD166" stroke-opacity=".2" stroke-width="18" stroke-linecap="round"/>
 </g>`);
 
-// Kompas dekoratif.
-add(`<g transform="translate(${pusatKompas[0]} ${pusatKompas[1]})">
-  <circle r="54" fill="#081B26" opacity=".62" stroke="#8FB2B8" stroke-opacity=".45" stroke-width="2"/>
-  <circle r="40" fill="none" stroke="#8FB2B8" stroke-opacity=".28" stroke-width="1.5"/>
-  <polygon points="0,-38 8,-8 38,0 8,8 0,38 -8,8 -38,0 -8,-8" fill="#F26A2E" opacity=".9"/>
-  <polygon points="0,-38 8,-8 0,0 -8,-8" fill="#FFD166"/>
-  <circle r="5" fill="#081B26"/>
-</g>`);
+
 
 // Cahaya lembut di setiap titik stage agar node Compose mudah dibaca.
 stageTitik.forEach(([x, y]) => {
