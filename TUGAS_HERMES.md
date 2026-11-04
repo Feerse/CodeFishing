@@ -11,7 +11,7 @@ Urutan dipilih dari yang paling kecil dan berisiko rendah ke yang paling besar.
 
 ## Status
 - [x] T6  Hapus kompas di pojok kanan atas peta
-- [ ] T1  Background Home mode gelap disamakan dengan mode terang
+- [x] T1  Background Home mode gelap disamakan dengan mode terang
 - [ ] T2  Boss Mode Pemula: 10+ soal, acak urutan saat gagal
 - [ ] T3  Transisi antar layar + menutupi proses booting
 - [ ] T5  Peta Antartika (materi lanjutan), dikerjakan bertahap (5a → 5d)
