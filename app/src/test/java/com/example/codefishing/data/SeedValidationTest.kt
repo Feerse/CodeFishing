@@ -79,23 +79,17 @@ class SeedValidationTest {
         assertEquals(0, ikan.count { it.getString("gambar") == "tanda_tanya_ikan" })
         assertEquals(0, ikan.count { it.getString("syarat_unlock").contains("Segera hadir") })
 
-        // 15 ikan stage Pasifik + 33 tangkapan sampingan sudah punya aset.
+        // Seluruh 58 ikan sudah punya ilustrasi berwarna dan siluet terkunci.
         val bergambar = ikan.filter { Art.byName(it.getString("gambar")) != null }
-        assertEquals(48, bergambar.size)
+        assertEquals(58, bergambar.size)
         bergambar.forEach { i ->
             val kunci = "ikan_terkunci_" + i.getString("gambar").removePrefix("ikan_")
             assertNotNull("Siluet terkunci hilang: $kunci", Art.byName(kunci))
         }
 
-        // 10 fauna Antartika masih memakai tanda tanya. Daftar ini harus menyusut
-        // saat asetnya dibuat; jangan biarkan ikan lain ikut tanpa ilustrasi.
         val belumBergambar = ikan.filter { Art.byName(it.getString("gambar")) == null }
             .map { it.getString("nama") }
-        assertEquals(
-            listOf("Krill", "Penguin", "Seal", "Orca", "Albatros", "Hiu Paus",
-                "Lumba-lumba", "Gurita", "Naga Laut", "Paus Biru"),
-            belumBergambar,
-        )
+        assertEquals(emptyList<String>(), belumBergambar)
     }
 
     @Test

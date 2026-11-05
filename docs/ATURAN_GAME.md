@@ -21,7 +21,7 @@ Semua permainan berjalan **offline** di perangkat; aplikasi tidak meminta izin i
 
 ### Ikan dan kelangkaan
 
-Katalog berisi **58 ikan**. 48 di antaranya sudah berilustrasi penuh (versi berwarna dan siluet terkunci): 15 ikan stage Pasifik ditambah 33 tangkapan sampingan. Sepuluh fauna Antartika (Krill, Penguin, Seal, Orca, Albatros, Hiu Paus, Lumba-lumba, Gurita, Naga Laut, Paus Biru) belum punya aset sehingga masih tampil sebagai tanda tanya.
+Katalog berisi **58 ikan** dan seluruhnya sudah berilustrasi penuh (versi berwarna dan siluet terkunci): 20 ikan target stage (10 Pasifik + 10 Antartika), 33 tangkapan sampingan, dan 5 hadiah tantangan khusus.
 
 | Kelangkaan | Warna | Cara dapat |
 |---|---|---|
@@ -33,7 +33,7 @@ Katalog berisi **58 ikan**. 48 di antaranya sudah berilustrasi penuh (versi berw
 
 - **Tangkapan sampingan**: setiap stage yang lulus punya peluang **35%** memberi satu ikan tambahan. Stage Pasifik (1–10) mengundi ikan Biasa/Langka, stage Antartika (11–20) mengundi Epik/Legenda/Mitos. Ikan yang sudah dimiliki tetap bisa muncul lagi; duplikat menambah jumlah dan bisa menaikkan bobot terbesar.
 
-Urutan 25 ikan berilustrasi: Teri, Bandeng, Bawal, Mujair, Nila, Lele, Patin, Gurame, Sepat, Krill, Penguin, Seal, Orca, Albatros, Hiu Paus, Lumba-lumba, Gurita, Naga Laut, Paus Biru, Gabus, Kerapu, Barakuda, Tenggiri, Arwana, Hiu Merah.
+Urutan 25 ikan inti (target stage dan hadiah khusus): Teri, Bandeng, Bawal, Mujair, Nila, Lele, Patin, Gurame, Sepat, Krill, Penguin, Seal, Orca, Albatros, Hiu Paus, Lumba-lumba, Gurita, Naga Laut, Paus Biru, Gabus, Kerapu, Barakuda, Tenggiri, Arwana, Hiu Merah.
 33 ikan tangkapan sampingan (Kakap Merah sampai Hiu Putih Raksasa) tidak menjadi target stage; kartunya menampilkan petunjuk cara mendapatkannya (perairan Pasifik atau laut dalam).
 Karena satu stage hanya 5 soal, ambang combo bonus adalah 3/4/5 dan semua bonus yang tercapai diberikan pada hasil stage.
 

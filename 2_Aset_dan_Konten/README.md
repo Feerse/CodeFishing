@@ -37,7 +37,7 @@ Generator membaca konten prototipe di `app/src/main/assets/content/`, lalu menul
 
 Isi seed: 20 stage, 18 materi, 110 soal, 110 komposisi kuis, 58 ikan, dan 7 misi Sandbox. Setelah mengubah seed, naikkan `SeedLoader.SEED_VERSION` di `core/db/SeedLoader.kt` agar konten diperbarui saat aplikasi dibuka kembali.
 
-Semua 58 ikan punya nama aset `ikan_<slug>`; 48 di antaranya sudah tersedia berwarna + siluet `ikan_terkunci_<slug>`. Sepuluh fauna Antartika (Krill … Paus Biru) belum dibuat.
+Semua 58 ikan punya aset berwarna `ikan_<slug>` dan siluet `ikan_terkunci_<slug>`. Fauna non-ikan (penguin, seal, albatros, krill, gurita) digambar dengan jalur `lapisan` di `generate_ikan.py`.
 
 ## Audio
 

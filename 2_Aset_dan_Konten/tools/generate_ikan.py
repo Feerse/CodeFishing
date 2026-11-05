@@ -132,6 +132,14 @@ PROFIL = {
         "bawah": [(0.98, 0.00), (0.94, 0.08), (0.84, 0.22), (0.70, 0.36),
                   (0.52, 0.42), (0.32, 0.40), (0.16, 0.28), (0.08, 0.11)],
     },
+    "paus": {
+        "atas": [(0.02, -0.03), (0.06, -0.10), (0.14, -0.21), (0.28, -0.29),
+                 (0.48, -0.31), (0.66, -0.30), (0.80, -0.25), (0.90, -0.17),
+                 (0.97, -0.07), (1.00, 0.00)],
+        "bawah": [(1.00, 0.00), (0.96, 0.08), (0.90, 0.16), (0.80, 0.22),
+                  (0.64, 0.26), (0.44, 0.26), (0.26, 0.22), (0.12, 0.14),
+                  (0.05, 0.06), (0.02, 0.03)],
+    },
 }
 
 EKOR = {
@@ -150,6 +158,8 @@ EKOR = {
                  (-0.16, 0.055), (-0.25, 0.20), (-0.14, 0.29), (0.03, 0.065)],
     "pari": [(0.03, -0.03), (-0.16, -0.06), (-0.32, -0.03), (-0.44, 0.00), (-0.32, 0.01), (-0.16, 0.02), (0.03, 0.03)],
     "bulat": [(0.13, -0.11), (0.00, -0.20), (-0.06, 0.00), (0.00, 0.20), (0.13, 0.11)],
+    "paus": [(0.04, -0.05), (-0.04, -0.16), (-0.14, -0.20), (-0.11, -0.06),
+             (-0.03, 0.00), (-0.11, 0.06), (-0.14, 0.20), (-0.04, 0.16), (0.04, 0.05)],
 }
 
 SIRIP = {
@@ -199,6 +209,11 @@ SIRIP = {
         "dubur": [(0.38, 0.41), (0.56, 0.66), (0.66, 0.41)],
         "dada": [(0.72, 0.02), (0.64, 0.22), (0.80, 0.14)],
     },
+    "paus": {
+        "punggung": [(0.32, -0.28), (0.37, -0.44), (0.44, -0.28)],
+        "dubur": [(0.40, 0.24), (0.44, 0.32), (0.50, 0.24)],
+        "dada": [(0.68, 0.05), (0.58, 0.23), (0.74, 0.14)],
+    },
 }
 
 
@@ -207,6 +222,26 @@ def spesies(slug, bentuk, atas, bawah, warna_sirip, warna_aksen=None, **kw):
     if warna_aksen:
         palet["aksen"] = warna(warna_aksen)
     data = dict(slug=slug, bentuk=bentuk, palet=palet)
+    data.update(kw)
+    return data
+
+
+def bebas(slug, lapisan, mata, gores=None, **kw):
+    """Spesies non-ikan (burung, mamalia laut, krustasea).
+
+    Bentuk digambar dari daftar poligon + warna, urut dari belakang ke depan.
+    `gores` berisi garis tipis (antena, kaki, kumis) yang digambar setelah
+    lapisan. `mata` tetap dipakai untuk mata bergaya yang sama dengan ikan.
+    """
+    data = dict(
+        slug=slug,
+        bentuk="bebas",
+        palet=dict(atas=warna("#000000"), bawah=warna("#000000"), sirip=warna("#000000")),
+        lapisan=lapisan,
+        mata=mata,
+    )
+    if gores:
+        data["gores"] = gores
     data.update(kw)
     return data
 
@@ -348,42 +383,215 @@ DAFTAR = [
                    [(0.62, 0.05), (0.58, 0.20), (0.64, 0.16)], [(0.58, 0.05), (0.52, 0.22), (0.58, 0.18)]]),
     spesies("hiu_putih_raksasa", "hiu", "#8E9BA3", "#DDE3E6", "#6E7A82",
             mata=(0.90, -0.06, 0.032), insang=False),
+
+    # ---------- fauna Antartika (target stage 11-20)
+    bebas("krill",
+          [([(0.04, -0.05), (-0.04, -0.14), (-0.10, -0.09), (-0.03, -0.02),
+             (-0.10, 0.05), (-0.03, 0.10), (0.04, 0.05)], "#D97E72"),
+           ([(0.02, -0.06), (0.10, -0.12), (0.25, -0.16), (0.42, -0.16),
+             (0.58, -0.14), (0.72, -0.10), (0.82, -0.06), (0.86, -0.02),
+             (0.86, 0.02), (0.78, 0.06), (0.62, 0.10), (0.44, 0.12),
+             (0.28, 0.14), (0.14, 0.12), (0.04, 0.06)], "#F2A79B"),
+           ([(0.06, -0.05), (0.12, -0.11), (0.26, -0.15), (0.42, -0.15),
+             (0.58, -0.13), (0.72, -0.09), (0.82, -0.05), (0.84, -0.02),
+             (0.62, -0.02), (0.40, -0.03), (0.20, -0.04)], "#DE8C82")],
+          mata=(0.79, -0.03, 0.030),
+          gores=[
+              ([(0.30, -0.14), (0.31, -0.02), (0.30, 0.11)], "#B85F55", 0.006),
+              ([(0.42, -0.15), (0.43, -0.02), (0.42, 0.11)], "#B85F55", 0.006),
+              ([(0.54, -0.13), (0.55, -0.01), (0.54, 0.09)], "#B85F55", 0.006),
+              ([(0.66, -0.10), (0.67, 0.00), (0.66, 0.07)], "#B85F55", 0.006),
+              ([(0.50, 0.11), (0.48, 0.20)], "#C97266", 0.005),
+              ([(0.60, 0.09), (0.59, 0.19)], "#C97266", 0.005),
+              ([(0.68, 0.06), (0.68, 0.16)], "#C97266", 0.005),
+              ([(0.85, -0.04), (1.02, -0.16)], "#B85F55", 0.004),
+              ([(0.84, 0.02), (1.00, 0.08)], "#B85F55", 0.004),
+          ]),
+    bebas("penguin",
+          [([(0.38, 0.34), (0.28, 0.45), (0.43, 0.43), (0.47, 0.35)], "#E8952F"),
+           ([(0.50, 0.35), (0.48, 0.46), (0.64, 0.44), (0.61, 0.36)], "#E8952F"),
+           ([(0.30, -0.40), (0.40, -0.44), (0.50, -0.42), (0.56, -0.36),
+             (0.58, -0.30), (0.60, -0.24), (0.62, -0.14), (0.64, 0.02),
+             (0.62, 0.18), (0.56, 0.30), (0.46, 0.36), (0.34, 0.36),
+             (0.26, 0.30), (0.22, 0.18), (0.21, 0.02), (0.22, -0.14),
+             (0.25, -0.26), (0.27, -0.34)], "#26313A"),
+           ([(0.50, -0.36), (0.56, -0.33), (0.58, -0.27), (0.54, -0.22),
+             (0.46, -0.21), (0.42, -0.26), (0.43, -0.32)], "#F4F6F7"),
+           ([(0.39, -0.12), (0.52, -0.10), (0.58, 0.02), (0.58, 0.16),
+             (0.52, 0.28), (0.42, 0.33), (0.33, 0.30), (0.29, 0.18),
+             (0.30, 0.02), (0.33, -0.08)], "#F4F6F7"),
+           ([(0.28, -0.10), (0.19, 0.06), (0.22, 0.22), (0.31, 0.10),
+             (0.33, -0.06)], "#1B242B"),
+           ([(0.57, -0.30), (0.72, -0.285), (0.72, -0.26), (0.57, -0.245)], "#E8952F")],
+          mata=(0.52, -0.29, 0.028)),
+    bebas("seal",
+          [([(0.05, -0.04), (-0.04, -0.14), (-0.15, -0.12), (-0.09, -0.02),
+             (-0.15, 0.09), (-0.05, 0.13), (0.05, 0.03)], "#4F5D67"),
+           ([(0.04, -0.04), (0.10, -0.12), (0.22, -0.19), (0.40, -0.22),
+             (0.58, -0.22), (0.71, -0.20), (0.77, -0.22), (0.84, -0.23),
+             (0.89, -0.20), (0.94, -0.14), (0.97, -0.06), (0.98, 0.00),
+             (0.98, 0.04), (0.93, 0.08), (0.85, 0.12), (0.72, 0.16),
+             (0.56, 0.19), (0.38, 0.20), (0.22, 0.17), (0.12, 0.12),
+             (0.06, 0.05), (0.04, 0.03)], "#7E8E99"),
+           ([(0.06, -0.05), (0.12, -0.13), (0.24, -0.20), (0.42, -0.23),
+             (0.60, -0.23), (0.72, -0.21), (0.78, -0.23), (0.85, -0.24),
+             (0.90, -0.21), (0.94, -0.14), (0.96, 0.00), (0.70, 0.03),
+             (0.45, 0.04), (0.20, 0.02), (0.08, 0.00)], "#5D6C77"),
+           ([(0.55, 0.10), (0.46, 0.24), (0.58, 0.26), (0.68, 0.14),
+             (0.64, 0.09)], "#4F5D67")],
+          mata=(0.88, -0.15, 0.028),
+          gores=[
+              ([(0.94, 0.00), (1.03, -0.05)], "#3E4A53", 0.004),
+              ([(0.95, 0.01), (1.05, 0.01)], "#3E4A53", 0.004),
+              ([(0.94, 0.02), (1.03, 0.07)], "#3E4A53", 0.004),
+              ([(0.89, 0.03), (0.96, 0.04)], "#3E4A53", 0.004),
+          ]),
+    spesies("orca", "paus", "#232F3A", "#F3F6F7", "#161F27", "#F3F6F7",
+            mata=(0.90, -0.06, 0.030), warna_dada="#1B252E",
+            aksen=[[(0.79, -0.13), (0.82, -0.16), (0.87, -0.165), (0.90, -0.14),
+                    (0.90, -0.10), (0.87, -0.075), (0.82, -0.08), (0.79, -0.10)]],
+            sirip={"punggung": [(0.34, -0.28), (0.40, -0.62), (0.48, -0.28)],
+                   "dubur": [(0.42, 0.24), (0.48, 0.34), (0.54, 0.24)],
+                   "dada": [(0.68, 0.02), (0.56, 0.24), (0.74, 0.14)]}),
+    bebas("albatros",
+          [([(0.46, -0.03), (0.38, -0.18), (0.30, -0.35), (0.27, -0.44),
+             (0.36, -0.44), (0.48, -0.28), (0.56, -0.12), (0.58, -0.04)], "#F0F3F4"),
+           ([(0.30, -0.33), (0.27, -0.44), (0.38, -0.44), (0.40, -0.38)], "#2E3C46"),
+           ([(0.46, 0.03), (0.38, 0.18), (0.30, 0.35), (0.27, 0.44),
+             (0.36, 0.44), (0.48, 0.28), (0.56, 0.12), (0.58, 0.04)], "#F0F3F4"),
+           ([(0.30, 0.33), (0.27, 0.44), (0.38, 0.44), (0.40, 0.38)], "#2E3C46"),
+           ([(0.30, -0.06), (0.42, -0.09), (0.60, -0.08), (0.76, -0.05),
+             (0.84, 0.00), (0.80, 0.05), (0.64, 0.08), (0.46, 0.09),
+             (0.32, 0.06), (0.24, 0.00)], "#E4E9EB"),
+           ([(0.28, 0.00), (0.19, -0.05), (0.13, -0.01), (0.17, 0.04),
+             (0.27, 0.03)], "#D7DEE2"),
+           ([(0.80, -0.055), (0.85, -0.06), (0.90, -0.04), (0.92, 0.00),
+             (0.90, 0.04), (0.85, 0.06), (0.80, 0.055), (0.77, 0.00)], "#FAFBFC"),
+           ([(0.91, -0.015), (1.02, 0.005), (1.02, 0.015), (0.91, 0.02)], "#E0A24A")],
+          mata=(0.87, -0.01, 0.024),
+          gores=[
+              ([(0.40, -0.18), (0.35, -0.34)], "#C2CDD3", 0.004),
+              ([(0.46, -0.14), (0.40, -0.30)], "#C2CDD3", 0.004),
+              ([(0.40, 0.18), (0.35, 0.34)], "#C2CDD3", 0.004),
+              ([(0.46, 0.14), (0.40, 0.30)], "#C2CDD3", 0.004),
+          ]),
+    spesies("hiu_paus", "hiu", "#6E8290", "#A8B8C1", "#4E6270",
+            mata=(0.88, -0.05, 0.020), insang=False,
+            bintik=[(0.20, -0.06, 0.014, "#DCE6EA"), (0.28, -0.10, 0.016, "#DCE6EA"),
+                    (0.36, -0.04, 0.013, "#DCE6EA"), (0.44, -0.11, 0.016, "#DCE6EA"),
+                    (0.52, -0.05, 0.014, "#DCE6EA"), (0.60, -0.10, 0.015, "#DCE6EA"),
+                    (0.68, -0.03, 0.013, "#DCE6EA"), (0.76, -0.07, 0.014, "#DCE6EA"),
+                    (0.24, 0.04, 0.013, "#DCE6EA"), (0.32, 0.00, 0.015, "#DCE6EA"),
+                    (0.40, 0.07, 0.013, "#DCE6EA"), (0.48, 0.02, 0.015, "#DCE6EA"),
+                    (0.56, 0.08, 0.013, "#DCE6EA"), (0.64, 0.03, 0.014, "#DCE6EA"),
+                    (0.72, 0.06, 0.012, "#DCE6EA")]),
+    spesies("lumba_lumba", "paus", "#4E7A99", "#C6D6DF", "#35586F",
+            mata=(0.90, -0.06, 0.028),
+            moncong=[(1.00, -0.045), (1.10, -0.012), (1.12, 0.000),
+                     (1.10, 0.012), (1.00, 0.045)],
+            sirip={"punggung": [(0.36, -0.28), (0.42, -0.52), (0.50, -0.28)],
+                   "dubur": [(0.44, 0.23), (0.50, 0.32), (0.56, 0.23)],
+                   "dada": [(0.68, 0.05), (0.58, 0.22), (0.74, 0.13)]}),
+    bebas("gurita",
+          [([(0.56, 0.10), (0.44, 0.22), (0.30, 0.32), (0.16, 0.34),
+             (0.06, 0.30), (0.10, 0.24), (0.22, 0.27), (0.34, 0.26),
+             (0.46, 0.16), (0.54, 0.06)], "#A9504A"),
+           ([(0.62, 0.14), (0.54, 0.30), (0.44, 0.42), (0.32, 0.48),
+             (0.22, 0.47), (0.26, 0.41), (0.36, 0.41), (0.46, 0.35),
+             (0.56, 0.22), (0.64, 0.08)], "#A9504A"),
+           ([(0.70, 0.16), (0.68, 0.32), (0.62, 0.46), (0.52, 0.55),
+             (0.42, 0.57), (0.45, 0.50), (0.54, 0.48), (0.60, 0.38),
+             (0.65, 0.24), (0.72, 0.10)], "#A9504A"),
+           ([(0.78, 0.16), (0.80, 0.32), (0.80, 0.46), (0.74, 0.55),
+             (0.66, 0.58), (0.68, 0.51), (0.74, 0.46), (0.75, 0.32),
+             (0.76, 0.18)], "#A9504A"),
+           ([(0.86, 0.12), (0.92, 0.26), (0.98, 0.38), (1.02, 0.44),
+             (0.96, 0.46), (0.90, 0.36), (0.86, 0.24), (0.86, 0.14)], "#A9504A"),
+           ([(0.52, -0.32), (0.64, -0.34), (0.76, -0.30), (0.86, -0.22),
+             (0.92, -0.10), (0.93, 0.02), (0.88, 0.12), (0.78, 0.18),
+             (0.66, 0.18), (0.56, 0.13), (0.50, 0.02), (0.49, -0.12),
+             (0.50, -0.24)], "#C1655A"),
+           ([(0.56, -0.26), (0.66, -0.28), (0.76, -0.25), (0.83, -0.18),
+             (0.87, -0.09), (0.85, -0.01), (0.78, 0.06), (0.68, 0.08),
+             (0.60, 0.04), (0.55, -0.05), (0.54, -0.16)], "#D07B70")],
+          mata=(0.84, -0.05, 0.038),
+          bintik=[(0.72, -0.05, 0.042, "#FFFFFF"), (0.72, -0.05, 0.022, "#081B26"),
+                  (0.18, 0.28, 0.012, "#E8C7B8"), (0.26, 0.30, 0.012, "#E8C7B8"),
+                  (0.36, 0.30, 0.011, "#E8C7B8"), (0.28, 0.44, 0.012, "#E8C7B8"),
+                  (0.38, 0.44, 0.011, "#E8C7B8"), (0.48, 0.50, 0.010, "#E8C7B8"),
+                  (0.54, 0.50, 0.010, "#E8C7B8"), (0.64, 0.51, 0.010, "#E8C7B8"),
+                  (0.74, 0.52, 0.010, "#E8C7B8"), (0.90, 0.34, 0.010, "#E8C7B8"),
+                  (0.98, 0.41, 0.010, "#E8C7B8")]),
+    spesies("naga_laut", "belut", "#8A9A5B", "#C2CB93", "#6B7A44", "#B7C083",
+            mata=(0.92, -0.030, 0.024),
+            moncong=[(1.00, -0.030), (1.22, -0.008), (1.24, 0.000),
+                     (1.22, 0.008), (1.00, 0.030)],
+            aksen=[[(0.17, -0.05), (0.20, -0.12), (0.23, -0.20), (0.26, -0.12), (0.30, -0.05)],
+                   [(0.34, -0.06), (0.37, -0.13), (0.40, -0.22), (0.43, -0.13), (0.47, -0.06)],
+                   [(0.51, -0.06), (0.54, -0.12), (0.57, -0.20), (0.60, -0.12), (0.64, -0.05)],
+                   [(0.66, -0.05), (0.69, -0.10), (0.71, -0.16), (0.74, -0.09), (0.77, -0.04)],
+                   [(0.26, 0.05), (0.28, 0.11), (0.31, 0.18), (0.34, 0.11), (0.37, 0.05)],
+                   [(0.42, 0.05), (0.44, 0.11), (0.47, 0.18), (0.50, 0.11), (0.53, 0.05)],
+                   [(0.56, 0.05), (0.58, 0.10), (0.61, 0.16), (0.64, 0.10), (0.67, 0.05)]]),
+    spesies("paus_biru", "paus", "#4B6E88", "#C3D2DA", "#33526A",
+            mata=(0.90, -0.07, 0.024),
+            sirip={"punggung": [(0.30, -0.27), (0.34, -0.38), (0.40, -0.27)],
+                   "dubur": [(0.42, 0.24), (0.46, 0.31), (0.52, 0.24)],
+                   "dada": [(0.68, 0.06), (0.60, 0.26), (0.76, 0.16)]},
+            corak=[([(0.54, 0.10), (0.548, 0.10), (0.548, 0.22), (0.54, 0.22)], "#A9BDC8"),
+                   ([(0.58, 0.11), (0.588, 0.11), (0.588, 0.23), (0.58, 0.23)], "#A9BDC8"),
+                   ([(0.62, 0.11), (0.628, 0.11), (0.628, 0.23), (0.62, 0.23)], "#A9BDC8"),
+                   ([(0.66, 0.10), (0.668, 0.10), (0.668, 0.22), (0.66, 0.22)], "#A9BDC8"),
+                   ([(0.70, 0.09), (0.708, 0.09), (0.708, 0.20), (0.70, 0.20)], "#A9BDC8")]),
 ]
 
 
 # --------------------------------------------------------------- render
 def gambar(spec, kunci=False):
-    bentuk = spec["bentuk"]
     palet = spec["palet"]
     rentang = spec.get("rentang", 1.0)
-    sirip = spec.get("sirip", SIRIP[bentuk])
-    ekor = spec.get("ekor", EKOR[bentuk])
-    p = PROFIL[bentuk]
-    insang = spec.get("insang", True)
+    lapisan = spec.get("lapisan")
 
-    def ubah(poly):
-        return [(x * rentang, y) for x, y in poly]
+    if lapisan:
+        # Bentuk bebas: daftar poligon + warna, digambar berurutan.
+        daftar = [(spline([(x * rentang, y) for x, y in poly]), w) for poly, w in lapisan]
+        gores = [(spline([(x * rentang, y) for x, y in poly]), w, t)
+                 for poly, w, t in spec.get("gores", [])]
+        poligon = [p for p, _ in daftar]
+        semua = poligon + [p for p, _, _ in gores]
+    else:
+        daftar = None
+        gores = []
+        bentuk = spec["bentuk"]
+        sirip = spec.get("sirip", SIRIP[bentuk])
+        ekor = spec.get("ekor", EKOR[bentuk])
+        p = PROFIL[bentuk]
+        insang = spec.get("insang", True)
 
-    atas = spline(ubah(p["atas"]))
-    bawah = spline(ubah(p["bawah"]))
-    ekor = ubah(ekor)
-    sirip = {k: ubah(v) for k, v in sirip.items()}
-    moncong = ubah(spec.get("moncong", []))
-    aksen = [ubah(v) for v in spec.get("aksen", [])]
-    corak = [(ubah(v), w) for v, w in spec.get("corak", [])]
-    ujung = max(x for x, _ in atas)
-    pangkal = atas[0][0]
+        def ubah(poly):
+            return [(x * rentang, y) for x, y in poly]
 
-    poligon = [atas + bawah[1:], ekor]
-    for poly in list(sirip.values()) + ([moncong] if moncong else []) + aksen:
-        if len(poly) > 2:
+        atas = spline(ubah(p["atas"]))
+        bawah = spline(ubah(p["bawah"]))
+        ekor = ubah(ekor)
+        sirip = {k: ubah(v) for k, v in sirip.items()}
+        moncong = ubah(spec.get("moncong", []))
+        aksen = [ubah(v) for v in spec.get("aksen", [])]
+        corak = [(ubah(v), w) for v, w in spec.get("corak", [])]
+        ujung = max(x for x, _ in atas)
+        pangkal = atas[0][0]
+
+        poligon = [atas + bawah[1:], ekor]
+        for poly in list(sirip.values()) + ([moncong] if moncong else []) + aksen:
+            if len(poly) > 2:
+                poligon.append(poly)
+        for poly, _ in corak:
             poligon.append(poly)
-    for poly, _ in corak:
-        poligon.append(poly)
+        semua = poligon
 
     # --- peta ke piksel
-    xs = [x for poly in poligon for x, _ in poly]
-    ys = [y for poly in poligon for _, y in poly]
+    xs = [x for poly in semua for x, _ in poly]
+    ys = [y for poly in semua for _, y in poly]
     lebar, tinggi = max(xs) - min(xs), max(ys) - min(ys)
     skala = MAKS / max(lebar, tinggi)
     kanvas_w = int(math.ceil(lebar * skala)) + MARGIN * 2
@@ -411,59 +619,71 @@ def gambar(spec, kunci=False):
     if kunci:
         for poly in poligon:
             isi(poly, KUNCI)
+        for poly, _, tebal in gores:
+            garis(poly, KUNCI, tebal)
         return im.resize((kanvas_w, kanvas_h), Image.LANCZOS)
 
     # --- bayangan
     for poly in poligon:
         d.polygon(titik(poly, BAYANG_DX, BAYANG_DY), fill=BAYANG)
 
-    sirip_gelap = palet["sirip"]
-    # --- sirip belakang + ekor
-    for nama in ("punggung", "dubur"):
-        isi(sirip.get(nama, []), sirip_gelap)
-    isi(ekor, palet.get("ekor_warna") or sirip_gelap)
+    if daftar is not None:
+        for poly, w in daftar:
+            isi(poly, warna(w) if isinstance(w, str) else w)
+        for poly, w, tebal in gores:
+            garis(poly, warna(w) if isinstance(w, str) else w, tebal)
+        for bx, by, br, bw in spec.get("bintik", []):
+            bx *= rentang
+            d.ellipse([(bx - br) * skala + ox, (by - br) * skala + oy,
+                       (bx + br) * skala + ox, (by + br) * skala + oy], fill=warna(bw))
+    else:
+        sirip_gelap = palet["sirip"]
+        # --- sirip belakang + ekor
+        for nama in ("punggung", "dubur"):
+            isi(sirip.get(nama, []), sirip_gelap)
+        isi(ekor, palet.get("ekor_warna") or sirip_gelap)
 
-    # --- badan
-    isi(atas + bawah[1:], palet["bawah"])
-    isi(atas + [(ujung, 0.00), (pangkal, 0.00)], palet["atas"])
-    isi(moncong, palet["bawah"])
+        # --- badan
+        isi(atas + bawah[1:], palet["bawah"])
+        isi(atas + [(ujung, 0.00), (pangkal, 0.00)], palet["atas"])
+        isi(moncong, palet["bawah"])
 
-    # --- sirip dada (menimpa badan)
-    isi(sirip.get("dada", []), campur(sirip_gelap, palet["bawah"], 0.25))
+        # --- sirip dada (menimpa badan)
+        warna_dada = warna(spec["warna_dada"]) if spec.get("warna_dada") else campur(sirip_gelap, palet["bawah"], 0.25)
+        isi(sirip.get("dada", []), warna_dada)
 
-    # --- corak, aksen
-    for poly, w in corak:
-        isi(poly, warna(w) if isinstance(w, str) else w)
-    for poly in aksen:
-        isi(poly, palet.get("aksen", sirip_gelap))
+        # --- corak, aksen
+        for poly, w in corak:
+            isi(poly, warna(w) if isinstance(w, str) else w)
+        for poly in aksen:
+            isi(poly, palet.get("aksen", sirip_gelap))
 
-    # --- bintik
-    for bx, by, br, bw in spec.get("bintik", []):
-        bx *= rentang
-        d.ellipse([(bx - br) * skala + ox, (by - br) * skala + oy,
-                   (bx + br) * skala + ox, (by + br) * skala + oy], fill=warna(bw))
+        # --- bintik
+        for bx, by, br, bw in spec.get("bintik", []):
+            bx *= rentang
+            d.ellipse([(bx - br) * skala + ox, (by - br) * skala + oy,
+                       (bx + br) * skala + ox, (by + br) * skala + oy], fill=warna(bw))
 
-    # --- sisik
-    if spec.get("sisik"):
-        lebar_sisik = max(2, int(0.016 * skala))
-        warna_sisik = gelap(palet["bawah"], 0.18)
-        for i in range(int(4 * rentang)):
-            cx = (0.34 + i * 0.13) * rentang
-            for cy in (-0.16, 0.10):
-                busur = [(cx - 0.010, cy - 0.055), (cx + 0.022, cy), (cx - 0.010, cy + 0.055)]
-                garis(spline(busur, 8), warna_sisik, 0.016)
+        # --- sisik
+        if spec.get("sisik"):
+            warna_sisik = gelap(palet["bawah"], 0.18)
+            for i in range(int(4 * rentang)):
+                cx = (0.34 + i * 0.13) * rentang
+                for cy in (-0.16, 0.10):
+                    busur = [(cx - 0.010, cy - 0.055), (cx + 0.022, cy), (cx - 0.010, cy + 0.055)]
+                    garis(spline(busur, 8), warna_sisik, 0.016)
 
-    # --- insang
-    if insang:
-        gx = insang if isinstance(insang, float) else 0.80
-        busur = [(gx, -0.20), (gx + 0.04, 0.0), (gx, 0.18)]
-        garis(spline([(x * rentang, y) for x, y in busur], 8),
-              gelap(palet["bawah"], 0.22), 0.008)
+        # --- insang
+        if insang:
+            gx = insang if isinstance(insang, float) else 0.80
+            busur = [(gx, -0.20), (gx + 0.04, 0.0), (gx, 0.18)]
+            garis(spline([(x * rentang, y) for x, y in busur], 8),
+                  gelap(palet["bawah"], 0.22), 0.008)
 
-    # --- kumis
-    for k in spec.get("kumis", []):
-        garis([(x * rentang, y) for x, y in spline(k, 8)],
-              gelap(palet["bawah"], 0.30), 0.010)
+        # --- kumis
+        for k in spec.get("kumis", []):
+            garis([(x * rentang, y) for x, y in spline(k, 8)],
+                  gelap(palet["bawah"], 0.30), 0.010)
 
     # --- mata
     mx, my, r = spec["mata"]

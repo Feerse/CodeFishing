@@ -132,6 +132,8 @@ const PLACEHOLDER = [
   ['Hiu Putih Raksasa', 'Carcharodon carcharias', 'mitos'],
 ];
 
+const slugIkan = (nama) => nama.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').replace(/^ikan_/, '');
+
 const ikanRows = [];
 IKAN.forEach((row, i) => {
   const [nama, ilmiah, tier, konsep, stageId, xp, berat, key] = row;
@@ -146,7 +148,7 @@ IKAN.forEach((row, i) => {
     syarat_unlock: stageId ? `Selesaikan Stage ${stageId}` : 'Tantangan khusus',
     nilai_xp: xp,
     bobot_kg: berat,
-    gambar: `ikan_${nama.toLowerCase().replace(/ /g, '_')}`,
+    gambar: `ikan_${slugIkan(nama)}`,
     urutan: i + 1,
   });
 });
@@ -159,8 +161,6 @@ const CARA_DAPAT = {
   legenda: 'Tangkapan sangat langka di laut dalam',
   mitos: 'Hanya muncul di laut dalam',
 };
-
-const slugIkan = (nama) => nama.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').replace(/^ikan_/, '');
 
 PLACEHOLDER.forEach((row, i) => {
   const [nama, ilmiah, tier] = row;
