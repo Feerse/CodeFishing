@@ -205,7 +205,7 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                     Gambar(Art.ikan_hiu_merah, "Hiu Merah", Modifier.size(56.dp))
                     Column(Modifier.weight(1f)) {
                         Text("Koleksi $terkumpul/${totalIkan ?: "…"} ikan", style = MaterialTheme.typography.titleMedium)
-                        Text("Ikan berilustrasi siap ditangkap. Sisanya segera hadir.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("Semua ikan sudah berilustrasi. Lengkapi koleksimu!", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     CircularProgressIndicator(
                         progress = { totalIkan?.let { terkumpul / it.toFloat() } ?: 0f },

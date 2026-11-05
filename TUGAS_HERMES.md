@@ -15,7 +15,7 @@ Urutan dipilih dari yang paling kecil dan berisiko rendah ke yang paling besar.
 - [x] **T2**: Boss Mode Pemula - 10+ soal, acak urutan saat gagal
 - [x] **T3**: Transisi antar layar + menutupi proses booting
 - [x] T5  Peta Antartika (materi lanjutan), dikerjakan bertahap (5a → 5d)
-- [ ] T4  Animasi pembuka (opsional, paling akhir)
+- [x] T4  Animasi pembuka (opsional, paling akhir)
 
 ---
 
@@ -91,7 +91,12 @@ Sub-tahap (satu sub-tahap per giliran, berhenti di tiap sub-tahap):
 
 ## T4 — Animasi pembuka (OPSIONAL, paling akhir)
 Usulan animasi dari pengguna TIDAK ada di repo. Sebelum membuat apa pun, tanyakan SATU pertanyaan: "Jelaskan animasi awal yang kamu usulkan (atau tempel deskripsinya)."
-Deskripsi pengguna (isi di sini bila sudah ada): [BELUM DIISI]
+Deskripsi pengguna (isi di sini bila sudah ada): "Bebas: logo + riak/gelembung" (dipilih 5 Nov 2026).
+
+Status: selesai. `frontend/components/Pembuka.kt` dipasang di cabang boot `MainActivity`
+(bukan layar baru). Logo fade + skala, tiga riak mengembang, delapan gelembung naik
+(memakai `Art.logo_codefishing`, `Art.gelembung`, `Art.ombak_pola`), selesai dalam
+1,9 detik, dan satu ketukan melewati animasi. Warna mengikuti `LocalWarna` (terang/gelap).
 
 Jika pengguna menjawab "bebas": logo CodeFishing + riak/gelembung dengan aset yang sudah ada (`Art.logo_codefishing`, `Art.gelembung`, `Art.ombak_pola`), maksimal ±2 detik, bisa dilewati dengan ketukan.
 Pasang di layar boot dari T3 (bukan layar baru). Gunakan animasi Compose (`rememberInfiniteTransition`/`animate*AsState`), tanpa library baru, tanpa aset baru. Hormati tema terang/gelap.

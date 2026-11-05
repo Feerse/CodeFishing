@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -13,17 +12,14 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import com.example.codefishing.core.AppContainer
 import com.example.codefishing.core.LocalContainer
-import com.example.codefishing.core.art.Art
 import com.example.codefishing.core.data.ThemeStore
 import com.example.codefishing.frontend.App
-import com.example.codefishing.frontend.components.Gambar
+import com.example.codefishing.frontend.components.Pembuka
 import com.example.codefishing.ui.theme.CodeFishingTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -70,9 +66,7 @@ class MainActivity : ComponentActivity() {
                         if (siap) {
                             App()
                         } else {
-                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                Gambar(Art.logo_codefishing, "CodeFishing", Modifier.fillMaxSize(0.4f))
-                            }
+                            Pembuka()
                         }
                     }
                 }
