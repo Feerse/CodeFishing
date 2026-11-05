@@ -99,33 +99,99 @@ object Art {
     @DrawableRes val ikan_arwana: Int = R.drawable.ikan_arwana
     @DrawableRes val ikan_bandeng: Int = R.drawable.ikan_bandeng
     @DrawableRes val ikan_barakuda: Int = R.drawable.ikan_barakuda
+    @DrawableRes val ikan_baronang: Int = R.drawable.ikan_baronang
     @DrawableRes val ikan_bawal: Int = R.drawable.ikan_bawal
+    @DrawableRes val ikan_bawal_bintang: Int = R.drawable.ikan_bawal_bintang
+    @DrawableRes val ikan_bawal_hitam: Int = R.drawable.ikan_bawal_hitam
+    @DrawableRes val ikan_belanak: Int = R.drawable.ikan_belanak
+    @DrawableRes val ikan_betok: Int = R.drawable.ikan_betok
+    @DrawableRes val ikan_cakalang: Int = R.drawable.ikan_cakalang
+    @DrawableRes val ikan_coelacanth: Int = R.drawable.ikan_coelacanth
     @DrawableRes val ikan_gabus: Int = R.drawable.ikan_gabus
+    @DrawableRes val ikan_gulamah: Int = R.drawable.ikan_gulamah
     @DrawableRes val ikan_gurame: Int = R.drawable.ikan_gurame
+    @DrawableRes val ikan_hiu_greenland: Int = R.drawable.ikan_hiu_greenland
+    @DrawableRes val ikan_hiu_martil: Int = R.drawable.ikan_hiu_martil
     @DrawableRes val ikan_hiu_merah: Int = R.drawable.ikan_hiu_merah
+    @DrawableRes val ikan_hiu_putih_raksasa: Int = R.drawable.ikan_hiu_putih_raksasa
+    @DrawableRes val ikan_hiu_tutul: Int = R.drawable.ikan_hiu_tutul
+    @DrawableRes val ikan_kakap_merah: Int = R.drawable.ikan_kakap_merah
+    @DrawableRes val ikan_kakap_putih: Int = R.drawable.ikan_kakap_putih
+    @DrawableRes val ikan_kembung: Int = R.drawable.ikan_kembung
     @DrawableRes val ikan_kerapu: Int = R.drawable.ikan_kerapu
+    @DrawableRes val ikan_kerong_kerong: Int = R.drawable.ikan_kerong_kerong
+    @DrawableRes val ikan_kue: Int = R.drawable.ikan_kue
+    @DrawableRes val ikan_kuwe: Int = R.drawable.ikan_kuwe
+    @DrawableRes val ikan_layang: Int = R.drawable.ikan_layang
     @DrawableRes val ikan_lele: Int = R.drawable.ikan_lele
+    @DrawableRes val ikan_manyung: Int = R.drawable.ikan_manyung
+    @DrawableRes val ikan_marlin_hitam: Int = R.drawable.ikan_marlin_hitam
+    @DrawableRes val ikan_mas: Int = R.drawable.ikan_mas
+    @DrawableRes val ikan_mola_mola: Int = R.drawable.ikan_mola_mola
     @DrawableRes val ikan_mujair: Int = R.drawable.ikan_mujair
+    @DrawableRes val ikan_napoleon: Int = R.drawable.ikan_napoleon
     @DrawableRes val ikan_nila: Int = R.drawable.ikan_nila
+    @DrawableRes val ikan_nilem: Int = R.drawable.ikan_nilem
+    @DrawableRes val ikan_oarfish: Int = R.drawable.ikan_oarfish
+    @DrawableRes val ikan_pari_manta: Int = R.drawable.ikan_pari_manta
     @DrawableRes val ikan_patin: Int = R.drawable.ikan_patin
+    @DrawableRes val ikan_pedang: Int = R.drawable.ikan_pedang
+    @DrawableRes val ikan_sarden: Int = R.drawable.ikan_sarden
     @DrawableRes val ikan_sepat: Int = R.drawable.ikan_sepat
+    @DrawableRes val ikan_sidat: Int = R.drawable.ikan_sidat
+    @DrawableRes val ikan_tawes: Int = R.drawable.ikan_tawes
     @DrawableRes val ikan_tenggiri: Int = R.drawable.ikan_tenggiri
     @DrawableRes val ikan_teri: Int = R.drawable.ikan_teri
     @DrawableRes val ikan_terkunci_arwana: Int = R.drawable.ikan_terkunci_arwana
     @DrawableRes val ikan_terkunci_bandeng: Int = R.drawable.ikan_terkunci_bandeng
     @DrawableRes val ikan_terkunci_barakuda: Int = R.drawable.ikan_terkunci_barakuda
+    @DrawableRes val ikan_terkunci_baronang: Int = R.drawable.ikan_terkunci_baronang
     @DrawableRes val ikan_terkunci_bawal: Int = R.drawable.ikan_terkunci_bawal
+    @DrawableRes val ikan_terkunci_bawal_bintang: Int = R.drawable.ikan_terkunci_bawal_bintang
+    @DrawableRes val ikan_terkunci_bawal_hitam: Int = R.drawable.ikan_terkunci_bawal_hitam
+    @DrawableRes val ikan_terkunci_belanak: Int = R.drawable.ikan_terkunci_belanak
+    @DrawableRes val ikan_terkunci_betok: Int = R.drawable.ikan_terkunci_betok
+    @DrawableRes val ikan_terkunci_cakalang: Int = R.drawable.ikan_terkunci_cakalang
+    @DrawableRes val ikan_terkunci_coelacanth: Int = R.drawable.ikan_terkunci_coelacanth
     @DrawableRes val ikan_terkunci_gabus: Int = R.drawable.ikan_terkunci_gabus
+    @DrawableRes val ikan_terkunci_gulamah: Int = R.drawable.ikan_terkunci_gulamah
     @DrawableRes val ikan_terkunci_gurame: Int = R.drawable.ikan_terkunci_gurame
+    @DrawableRes val ikan_terkunci_hiu_greenland: Int = R.drawable.ikan_terkunci_hiu_greenland
+    @DrawableRes val ikan_terkunci_hiu_martil: Int = R.drawable.ikan_terkunci_hiu_martil
     @DrawableRes val ikan_terkunci_hiu_merah: Int = R.drawable.ikan_terkunci_hiu_merah
+    @DrawableRes val ikan_terkunci_hiu_putih_raksasa: Int = R.drawable.ikan_terkunci_hiu_putih_raksasa
+    @DrawableRes val ikan_terkunci_hiu_tutul: Int = R.drawable.ikan_terkunci_hiu_tutul
+    @DrawableRes val ikan_terkunci_kakap_merah: Int = R.drawable.ikan_terkunci_kakap_merah
+    @DrawableRes val ikan_terkunci_kakap_putih: Int = R.drawable.ikan_terkunci_kakap_putih
+    @DrawableRes val ikan_terkunci_kembung: Int = R.drawable.ikan_terkunci_kembung
     @DrawableRes val ikan_terkunci_kerapu: Int = R.drawable.ikan_terkunci_kerapu
+    @DrawableRes val ikan_terkunci_kerong_kerong: Int = R.drawable.ikan_terkunci_kerong_kerong
+    @DrawableRes val ikan_terkunci_kue: Int = R.drawable.ikan_terkunci_kue
+    @DrawableRes val ikan_terkunci_kuwe: Int = R.drawable.ikan_terkunci_kuwe
+    @DrawableRes val ikan_terkunci_layang: Int = R.drawable.ikan_terkunci_layang
     @DrawableRes val ikan_terkunci_lele: Int = R.drawable.ikan_terkunci_lele
+    @DrawableRes val ikan_terkunci_manyung: Int = R.drawable.ikan_terkunci_manyung
+    @DrawableRes val ikan_terkunci_marlin_hitam: Int = R.drawable.ikan_terkunci_marlin_hitam
+    @DrawableRes val ikan_terkunci_mas: Int = R.drawable.ikan_terkunci_mas
+    @DrawableRes val ikan_terkunci_mola_mola: Int = R.drawable.ikan_terkunci_mola_mola
     @DrawableRes val ikan_terkunci_mujair: Int = R.drawable.ikan_terkunci_mujair
+    @DrawableRes val ikan_terkunci_napoleon: Int = R.drawable.ikan_terkunci_napoleon
     @DrawableRes val ikan_terkunci_nila: Int = R.drawable.ikan_terkunci_nila
+    @DrawableRes val ikan_terkunci_nilem: Int = R.drawable.ikan_terkunci_nilem
+    @DrawableRes val ikan_terkunci_oarfish: Int = R.drawable.ikan_terkunci_oarfish
+    @DrawableRes val ikan_terkunci_pari_manta: Int = R.drawable.ikan_terkunci_pari_manta
     @DrawableRes val ikan_terkunci_patin: Int = R.drawable.ikan_terkunci_patin
+    @DrawableRes val ikan_terkunci_pedang: Int = R.drawable.ikan_terkunci_pedang
+    @DrawableRes val ikan_terkunci_sarden: Int = R.drawable.ikan_terkunci_sarden
     @DrawableRes val ikan_terkunci_sepat: Int = R.drawable.ikan_terkunci_sepat
+    @DrawableRes val ikan_terkunci_sidat: Int = R.drawable.ikan_terkunci_sidat
+    @DrawableRes val ikan_terkunci_tawes: Int = R.drawable.ikan_terkunci_tawes
     @DrawableRes val ikan_terkunci_tenggiri: Int = R.drawable.ikan_terkunci_tenggiri
     @DrawableRes val ikan_terkunci_teri: Int = R.drawable.ikan_terkunci_teri
+    @DrawableRes val ikan_terkunci_tongkol: Int = R.drawable.ikan_terkunci_tongkol
+    @DrawableRes val ikan_terkunci_tuna_sirip_biru: Int = R.drawable.ikan_terkunci_tuna_sirip_biru
+    @DrawableRes val ikan_tongkol: Int = R.drawable.ikan_tongkol
+    @DrawableRes val ikan_tuna_sirip_biru: Int = R.drawable.ikan_tuna_sirip_biru
     @DrawableRes val ikon_gembok: Int = R.drawable.ikon_gembok
     @DrawableRes val ikon_gembok_terang: Int = R.drawable.ikon_gembok_terang
     @DrawableRes val kartu_ikan_kosong: Int = R.drawable.kartu_ikan_kosong
@@ -340,33 +406,99 @@ object Art {
             "ikan_arwana" to R.drawable.ikan_arwana,
             "ikan_bandeng" to R.drawable.ikan_bandeng,
             "ikan_barakuda" to R.drawable.ikan_barakuda,
+            "ikan_baronang" to R.drawable.ikan_baronang,
             "ikan_bawal" to R.drawable.ikan_bawal,
+            "ikan_bawal_bintang" to R.drawable.ikan_bawal_bintang,
+            "ikan_bawal_hitam" to R.drawable.ikan_bawal_hitam,
+            "ikan_belanak" to R.drawable.ikan_belanak,
+            "ikan_betok" to R.drawable.ikan_betok,
+            "ikan_cakalang" to R.drawable.ikan_cakalang,
+            "ikan_coelacanth" to R.drawable.ikan_coelacanth,
             "ikan_gabus" to R.drawable.ikan_gabus,
+            "ikan_gulamah" to R.drawable.ikan_gulamah,
             "ikan_gurame" to R.drawable.ikan_gurame,
+            "ikan_hiu_greenland" to R.drawable.ikan_hiu_greenland,
+            "ikan_hiu_martil" to R.drawable.ikan_hiu_martil,
             "ikan_hiu_merah" to R.drawable.ikan_hiu_merah,
+            "ikan_hiu_putih_raksasa" to R.drawable.ikan_hiu_putih_raksasa,
+            "ikan_hiu_tutul" to R.drawable.ikan_hiu_tutul,
+            "ikan_kakap_merah" to R.drawable.ikan_kakap_merah,
+            "ikan_kakap_putih" to R.drawable.ikan_kakap_putih,
+            "ikan_kembung" to R.drawable.ikan_kembung,
             "ikan_kerapu" to R.drawable.ikan_kerapu,
+            "ikan_kerong_kerong" to R.drawable.ikan_kerong_kerong,
+            "ikan_kue" to R.drawable.ikan_kue,
+            "ikan_kuwe" to R.drawable.ikan_kuwe,
+            "ikan_layang" to R.drawable.ikan_layang,
             "ikan_lele" to R.drawable.ikan_lele,
+            "ikan_manyung" to R.drawable.ikan_manyung,
+            "ikan_marlin_hitam" to R.drawable.ikan_marlin_hitam,
+            "ikan_mas" to R.drawable.ikan_mas,
+            "ikan_mola_mola" to R.drawable.ikan_mola_mola,
             "ikan_mujair" to R.drawable.ikan_mujair,
+            "ikan_napoleon" to R.drawable.ikan_napoleon,
             "ikan_nila" to R.drawable.ikan_nila,
+            "ikan_nilem" to R.drawable.ikan_nilem,
+            "ikan_oarfish" to R.drawable.ikan_oarfish,
+            "ikan_pari_manta" to R.drawable.ikan_pari_manta,
             "ikan_patin" to R.drawable.ikan_patin,
+            "ikan_pedang" to R.drawable.ikan_pedang,
+            "ikan_sarden" to R.drawable.ikan_sarden,
             "ikan_sepat" to R.drawable.ikan_sepat,
+            "ikan_sidat" to R.drawable.ikan_sidat,
+            "ikan_tawes" to R.drawable.ikan_tawes,
             "ikan_tenggiri" to R.drawable.ikan_tenggiri,
             "ikan_teri" to R.drawable.ikan_teri,
             "ikan_terkunci_arwana" to R.drawable.ikan_terkunci_arwana,
             "ikan_terkunci_bandeng" to R.drawable.ikan_terkunci_bandeng,
             "ikan_terkunci_barakuda" to R.drawable.ikan_terkunci_barakuda,
+            "ikan_terkunci_baronang" to R.drawable.ikan_terkunci_baronang,
             "ikan_terkunci_bawal" to R.drawable.ikan_terkunci_bawal,
+            "ikan_terkunci_bawal_bintang" to R.drawable.ikan_terkunci_bawal_bintang,
+            "ikan_terkunci_bawal_hitam" to R.drawable.ikan_terkunci_bawal_hitam,
+            "ikan_terkunci_belanak" to R.drawable.ikan_terkunci_belanak,
+            "ikan_terkunci_betok" to R.drawable.ikan_terkunci_betok,
+            "ikan_terkunci_cakalang" to R.drawable.ikan_terkunci_cakalang,
+            "ikan_terkunci_coelacanth" to R.drawable.ikan_terkunci_coelacanth,
             "ikan_terkunci_gabus" to R.drawable.ikan_terkunci_gabus,
+            "ikan_terkunci_gulamah" to R.drawable.ikan_terkunci_gulamah,
             "ikan_terkunci_gurame" to R.drawable.ikan_terkunci_gurame,
+            "ikan_terkunci_hiu_greenland" to R.drawable.ikan_terkunci_hiu_greenland,
+            "ikan_terkunci_hiu_martil" to R.drawable.ikan_terkunci_hiu_martil,
             "ikan_terkunci_hiu_merah" to R.drawable.ikan_terkunci_hiu_merah,
+            "ikan_terkunci_hiu_putih_raksasa" to R.drawable.ikan_terkunci_hiu_putih_raksasa,
+            "ikan_terkunci_hiu_tutul" to R.drawable.ikan_terkunci_hiu_tutul,
+            "ikan_terkunci_kakap_merah" to R.drawable.ikan_terkunci_kakap_merah,
+            "ikan_terkunci_kakap_putih" to R.drawable.ikan_terkunci_kakap_putih,
+            "ikan_terkunci_kembung" to R.drawable.ikan_terkunci_kembung,
             "ikan_terkunci_kerapu" to R.drawable.ikan_terkunci_kerapu,
+            "ikan_terkunci_kerong_kerong" to R.drawable.ikan_terkunci_kerong_kerong,
+            "ikan_terkunci_kue" to R.drawable.ikan_terkunci_kue,
+            "ikan_terkunci_kuwe" to R.drawable.ikan_terkunci_kuwe,
+            "ikan_terkunci_layang" to R.drawable.ikan_terkunci_layang,
             "ikan_terkunci_lele" to R.drawable.ikan_terkunci_lele,
+            "ikan_terkunci_manyung" to R.drawable.ikan_terkunci_manyung,
+            "ikan_terkunci_marlin_hitam" to R.drawable.ikan_terkunci_marlin_hitam,
+            "ikan_terkunci_mas" to R.drawable.ikan_terkunci_mas,
+            "ikan_terkunci_mola_mola" to R.drawable.ikan_terkunci_mola_mola,
             "ikan_terkunci_mujair" to R.drawable.ikan_terkunci_mujair,
+            "ikan_terkunci_napoleon" to R.drawable.ikan_terkunci_napoleon,
             "ikan_terkunci_nila" to R.drawable.ikan_terkunci_nila,
+            "ikan_terkunci_nilem" to R.drawable.ikan_terkunci_nilem,
+            "ikan_terkunci_oarfish" to R.drawable.ikan_terkunci_oarfish,
+            "ikan_terkunci_pari_manta" to R.drawable.ikan_terkunci_pari_manta,
             "ikan_terkunci_patin" to R.drawable.ikan_terkunci_patin,
+            "ikan_terkunci_pedang" to R.drawable.ikan_terkunci_pedang,
+            "ikan_terkunci_sarden" to R.drawable.ikan_terkunci_sarden,
             "ikan_terkunci_sepat" to R.drawable.ikan_terkunci_sepat,
+            "ikan_terkunci_sidat" to R.drawable.ikan_terkunci_sidat,
+            "ikan_terkunci_tawes" to R.drawable.ikan_terkunci_tawes,
             "ikan_terkunci_tenggiri" to R.drawable.ikan_terkunci_tenggiri,
             "ikan_terkunci_teri" to R.drawable.ikan_terkunci_teri,
+            "ikan_terkunci_tongkol" to R.drawable.ikan_terkunci_tongkol,
+            "ikan_terkunci_tuna_sirip_biru" to R.drawable.ikan_terkunci_tuna_sirip_biru,
+            "ikan_tongkol" to R.drawable.ikan_tongkol,
+            "ikan_tuna_sirip_biru" to R.drawable.ikan_tuna_sirip_biru,
             "ikon_gembok" to R.drawable.ikon_gembok,
             "ikon_gembok_terang" to R.drawable.ikon_gembok_terang,
             "kartu_ikan_kosong" to R.drawable.kartu_ikan_kosong,

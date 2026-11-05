@@ -150,6 +150,18 @@ IKAN.forEach((row, i) => {
     urutan: i + 1,
   });
 });
+// Ikan tanpa stage tetap punya ilustrasi; pemain menambahkannya lewat
+// tangkapan sampingan saat memancing (bukan hadiah stage).
+const CARA_DAPAT = {
+  biasa: 'Tangkapan sampingan di perairan Pasifik',
+  langka: 'Tangkapan langka di perairan Pasifik',
+  epik: 'Tangkapan langka di laut dalam',
+  legenda: 'Tangkapan sangat langka di laut dalam',
+  mitos: 'Hanya muncul di laut dalam',
+};
+
+const slugIkan = (nama) => nama.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').replace(/^ikan_/, '');
+
 PLACEHOLDER.forEach((row, i) => {
   const [nama, ilmiah, tier] = row;
   ikanRows.push({
@@ -157,13 +169,13 @@ PLACEHOLDER.forEach((row, i) => {
     nama,
     nama_ilmiah: ilmiah,
     tier,
-    konsep_python: 'Spesies dalam riset',
-    deskripsi: `${nama} masih dalam riset tim Material Collecting. Ilustrasinya akan ditambahkan pada pembaruan berikutnya.`,
+    konsep_python: 'Koleksi sampingan',
+    deskripsi: `${nama} (${ilmiah}) bukan hadiah stage, melainkan ikan yang bisa ikut tertangkap saat memancing.`,
     asal_stage_id: null,
-    syarat_unlock: 'Segera hadir — menunggu aset',
+    syarat_unlock: CARA_DAPAT[tier],
     nilai_xp: 10,
     bobot_kg: Math.round((0.2 + (i % 7) * 0.45) * 10) / 10,
-    gambar: 'tanda_tanya_ikan',
+    gambar: `ikan_${slugIkan(nama)}`,
     urutan: 16 + i,
   });
 });

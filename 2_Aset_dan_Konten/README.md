@@ -35,9 +35,9 @@ Generator membaca konten prototipe di `app/src/main/assets/content/`, lalu menul
 - `2_Aset_dan_Konten/konten/seed/` — salinan untuk tim konten.
 - `app/src/main/assets/seed/` — yang dibaca `SeedLoader` saat aplikasi pertama dibuka.
 
-Isi seed: 10 stage, 9 materi, 45 soal (5 per stage), 50 komposisi kuis, 48 ikan (15 berilustrasi + 33 placeholder), dan 7 misi Sandbox. Setelah mengubah seed, naikkan `SeedLoader.SEED_VERSION` di `core/db/SeedLoader.kt` agar konten diperbarui saat aplikasi dibuka kembali.
+Isi seed: 20 stage, 18 materi, 110 soal, 110 komposisi kuis, 58 ikan, dan 7 misi Sandbox. Setelah mengubah seed, naikkan `SeedLoader.SEED_VERSION` di `core/db/SeedLoader.kt` agar konten diperbarui saat aplikasi dibuka kembali.
 
-15 ikan berilustrasi memakai aset `ikan_teri` … `ikan_hiu_merah`; 33 sisanya memakai `tanda_tanya_ikan` dengan label “Segera hadir — menunggu aset”.
+Semua 58 ikan punya nama aset `ikan_<slug>`; 48 di antaranya sudah tersedia berwarna + siluet `ikan_terkunci_<slug>`. Sepuluh fauna Antartika (Krill … Paus Biru) belum dibuat.
 
 ## Audio
 

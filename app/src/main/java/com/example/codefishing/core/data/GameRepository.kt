@@ -493,9 +493,7 @@ class GameRepository(
             return TantanganData(ada, ikan)
         }
         val selesai = stageDao.stageSelesai()
-        val semua = contentDao.semuaIkan().filter {
-            it.syarat_unlock?.startsWith("Segera hadir") != true
-        }
+        val semua = contentDao.semuaIkan()
         val calon = semua.filter { it.asal_stage_id != null && it.asal_stage_id in selesai }
             .ifEmpty { semua.filter { it.asal_stage_id == 1 } }
             .ifEmpty { semua.take(1) }

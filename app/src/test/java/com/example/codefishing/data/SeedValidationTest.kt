@@ -1,8 +1,10 @@
 package com.example.codefishing.data
 
+import com.example.codefishing.core.art.Art
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
@@ -69,16 +71,30 @@ class SeedValidationTest {
     }
 
     @Test
-    fun katalogIkanPunyaIlustrasiDanPlaceholder() {
+    fun katalogIkanPunyaIlustrasiLengkap() {
         val ikan = baca("ikan.json").objects()
         assertEquals(58, ikan.ids().size)
         assertEquals(58, ikan.map { it.getString("nama") }.toSet().size)
-        val ilustrasi = ikan.count { !it.getString("gambar").contains("tanda_tanya") }
-        val placeholder = ikan.count { it.getString("gambar") == "tanda_tanya_ikan" }
-        assertEquals(25, ilustrasi)
-        assertEquals(33, placeholder)
-        assertTrue(ikan.filter { it.getString("gambar") == "tanda_tanya_ikan" }
-            .all { it.getString("syarat_unlock").contains("Segera hadir") })
+        assertEquals(0, ikan.count { it.getString("gambar") == "tanda_tanya_ikan" })
+        assertEquals(0, ikan.count { it.getString("syarat_unlock").contains("Segera hadir") })
+
+        // 15 ikan stage Pasifik + 33 tangkapan sampingan sudah punya aset.
+        val bergambar = ikan.filter { Art.byName(it.getString("gambar")) != null }
+        assertEquals(48, bergambar.size)
+        bergambar.forEach { i ->
+            val kunci = "ikan_terkunci_" + i.getString("gambar").removePrefix("ikan_")
+            assertNotNull("Siluet terkunci hilang: $kunci", Art.byName(kunci))
+        }
+
+        // 10 fauna Antartika masih memakai tanda tanya. Daftar ini harus menyusut
+        // saat asetnya dibuat; jangan biarkan ikan lain ikut tanpa ilustrasi.
+        val belumBergambar = ikan.filter { Art.byName(it.getString("gambar")) == null }
+            .map { it.getString("nama") }
+        assertEquals(
+            listOf("Krill", "Penguin", "Seal", "Orca", "Albatros", "Hiu Paus",
+                "Lumba-lumba", "Gurita", "Naga Laut", "Paus Biru"),
+            belumBergambar,
+        )
     }
 
     @Test

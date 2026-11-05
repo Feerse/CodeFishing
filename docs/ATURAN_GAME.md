@@ -21,7 +21,7 @@ Semua permainan berjalan **offline** di perangkat; aplikasi tidak meminta izin i
 
 ### Ikan dan kelangkaan
 
-Katalog berisi **58 ikan**: 25 ikan berilustrasi yang bisa didapatkan dan 33 ikan placeholder dengan label **“Segera hadir — menunggu aset”**.
+Katalog berisi **58 ikan**. 48 di antaranya sudah berilustrasi penuh (versi berwarna dan siluet terkunci): 15 ikan stage Pasifik ditambah 33 tangkapan sampingan. Sepuluh fauna Antartika (Krill, Penguin, Seal, Orca, Albatros, Hiu Paus, Lumba-lumba, Gurita, Naga Laut, Paus Biru) belum punya aset sehingga masih tampil sebagai tanda tanya.
 
 | Kelangkaan | Warna | Cara dapat |
 |---|---|---|
@@ -32,6 +32,7 @@ Katalog berisi **58 ikan**: 25 ikan berilustrasi yang bisa didapatkan dan 33 ika
 | Mitos | merah | Gabus/Paus Biru saat boss sempurna (naik satu tier); Hiu Merah setelah seluruh 10 stage Pasifik sempurna (skor 100) |
 
 Urutan 25 ikan berilustrasi: Teri, Bandeng, Bawal, Mujair, Nila, Lele, Patin, Gurame, Sepat, Krill, Penguin, Seal, Orca, Albatros, Hiu Paus, Lumba-lumba, Gurita, Naga Laut, Paus Biru, Gabus, Kerapu, Barakuda, Tenggiri, Arwana, Hiu Merah.
+33 ikan tangkapan sampingan (Kakap Merah sampai Hiu Putih Raksasa) tidak menjadi target stage; kartunya menampilkan petunjuk cara mendapatkannya (perairan Pasifik atau laut dalam).
 Karena satu stage hanya 5 soal, ambang combo bonus adalah 3/4/5 dan semua bonus yang tercapai diberikan pada hasil stage.
 
 Ikan yang sama boleh ditangkap berulang; jumlah, bobot terbesar, tier terbaik, dan level/kenyang disimpan di `koleksi_ikan`.

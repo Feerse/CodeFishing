@@ -46,43 +46,16 @@ fun tierLabel(tier: String): String = when (tier) {
     else -> "Biasa"
 }
 
-fun gambarIkan(gambar: String?): Int = when (gambar) {
-    "ikan_teri" -> Art.ikan_teri
-    "ikan_bandeng" -> Art.ikan_bandeng
-    "ikan_bawal" -> Art.ikan_bawal
-    "ikan_mujair" -> Art.ikan_mujair
-    "ikan_nila" -> Art.ikan_nila
-    "ikan_lele" -> Art.ikan_lele
-    "ikan_patin" -> Art.ikan_patin
-    "ikan_gurame" -> Art.ikan_gurame
-    "ikan_sepat" -> Art.ikan_sepat
-    "ikan_gabus" -> Art.ikan_gabus
-    "ikan_kerapu" -> Art.ikan_kerapu
-    "ikan_barakuda" -> Art.ikan_barakuda
-    "ikan_tenggiri" -> Art.ikan_tenggiri
-    "ikan_arwana" -> Art.ikan_arwana
-    "ikan_hiu_merah" -> Art.ikan_hiu_merah
-    else -> Art.tanda_tanya_ikan
-}
+/** Ilustrasi ikan berwarna. Nama aset datang dari seed; tanpa aset memakai tanda tanya. */
+fun gambarIkan(gambar: String?): Int =
+    gambar?.let { Art.byName(it) } ?: Art.tanda_tanya_ikan
 
-/** Siluet ikan yang belum dimiliki (aset ikan_terkunci_*). Ikan tanpa ilustrasi memakai tanda tanya. */
-fun gambarIkanTerkunci(gambar: String?): Int = when (gambar) {
-    "ikan_teri" -> Art.ikan_terkunci_teri
-    "ikan_bandeng" -> Art.ikan_terkunci_bandeng
-    "ikan_bawal" -> Art.ikan_terkunci_bawal
-    "ikan_mujair" -> Art.ikan_terkunci_mujair
-    "ikan_nila" -> Art.ikan_terkunci_nila
-    "ikan_lele" -> Art.ikan_terkunci_lele
-    "ikan_patin" -> Art.ikan_terkunci_patin
-    "ikan_gurame" -> Art.ikan_terkunci_gurame
-    "ikan_sepat" -> Art.ikan_terkunci_sepat
-    "ikan_gabus" -> Art.ikan_terkunci_gabus
-    "ikan_kerapu" -> Art.ikan_terkunci_kerapu
-    "ikan_barakuda" -> Art.ikan_terkunci_barakuda
-    "ikan_tenggiri" -> Art.ikan_terkunci_tenggiri
-    "ikan_arwana" -> Art.ikan_terkunci_arwana
-    "ikan_hiu_merah" -> Art.ikan_terkunci_hiu_merah
-    else -> Art.tanda_tanya_ikan
+/** Siluet ikan yang belum dimiliki (aset ikan_terkunci_*), dengan cadangan ke versi berwarna. */
+fun gambarIkanTerkunci(gambar: String?): Int {
+    val nama = gambar ?: return Art.tanda_tanya_ikan
+    val kunci = if (nama.startsWith("ikan_terkunci_")) nama
+    else "ikan_terkunci_" + nama.removePrefix("ikan_")
+    return Art.byName(kunci) ?: Art.byName(nama) ?: Art.tanda_tanya_ikan
 }
 
 /** Lencana kelangkaan bergambar (Common sampai Mythic) untuk tier ikan. */

@@ -1,0 +1,501 @@
+﻿#!/usr/bin/env python3
+"""Membuat ilustrasi ikan koleksi CodeFishing (gaya flat vektor).
+
+Setiap spesies menghasilkan dua berkas di assets-source/05_Ikan_Koleksi:
+  ikan_<slug>.png            versi berwarna
+  ikan_terkunci_<slug>.png   siluet abu-slate untuk koleksi terkunci
+
+Jalankan dari mana saja:
+  python 2_Aset_dan_Konten/tools/generate_ikan.py
+  python 2_Aset_dan_Konten/tools/generate_ikan.py kakap_merah oarfish
+
+Setelah itu jalankan sync_assets.py agar berkas masuk ke app/src/main/res.
+"""
+from __future__ import annotations
+
+import math
+import os
+import sys
+
+from PIL import Image, ImageDraw
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
+TUJUAN = os.path.join(ROOT, "assets-source", "05_Ikan_Koleksi")
+
+S = 3                 # supersampling
+MARGIN = 20
+MAKS = 600            # sisi terpanjang gambar (sebelum margin)
+BAYANG = (0x00, 0x0D, 0x17, 0x40)
+BAYANG_DX = 0.012
+BAYANG_DY = 0.014
+MATA_PUTIH = (0xFF, 0xFF, 0xFF, 0xFF)
+MATA_PUPIL = (0x08, 0x1B, 0x26, 0xFF)
+KUNCI = (0x53, 0x72, 0x80, 0xFF)
+
+
+def warna(teks: str) -> tuple[int, int, int, int]:
+    teks = teks.lstrip("#")
+    return (int(teks[0:2], 16), int(teks[2:4], 16), int(teks[4:6], 16), 0xFF)
+
+
+# --------------------------------------------------------------- kurva
+def spline(pts, n=14):
+    """Sampling kurva Catmull-Rom melalui titik kontrol."""
+    if len(pts) < 3:
+        return list(pts)
+    p = [pts[0]] + list(pts) + [pts[-1]]
+    out = []
+    for i in range(len(p) - 3):
+        p0, p1, p2, p3 = p[i], p[i + 1], p[i + 2], p[i + 3]
+        for j in range(n):
+            t = j / n
+            t2, t3 = t * t, t * t * t
+            out.append((
+                0.5 * (2 * p1[0] + (-p0[0] + p2[0]) * t
+                       + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2
+                       + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3),
+                0.5 * (2 * p1[1] + (-p0[1] + p2[1]) * t
+                       + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2
+                       + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3),
+            ))
+    out.append(p[-2])
+    return out
+
+
+def campur(a, b, t):
+    return tuple(int(round(a[i] + (b[i] - a[i]) * t)) for i in range(3)) + (0xFF,)
+
+
+def gelap(w, t=0.25):
+    return campur(w, (0, 0, 0), t)
+
+
+# --------------------------------------------------------------- bentuk
+# x: 0 = pangkal ekor, 1 = ujung moncong. y negatif = punggung.
+PROFIL = {
+    "dalam": {
+        "atas": [(0.01, -0.060), (0.06, -0.13), (0.16, -0.28), (0.30, -0.38),
+                 (0.46, -0.42), (0.62, -0.38), (0.78, -0.27), (0.90, -0.14), (1.00, 0.00)],
+        "bawah": [(1.00, 0.00), (0.92, 0.12), (0.80, 0.24), (0.64, 0.33),
+                  (0.46, 0.36), (0.30, 0.31), (0.16, 0.20), (0.06, 0.09), (0.01, 0.060)],
+    },
+    "ramping": {
+        "atas": [(0.01, -0.045), (0.08, -0.11), (0.22, -0.20), (0.40, -0.25),
+                 (0.58, -0.24), (0.74, -0.19), (0.88, -0.10), (1.00, 0.00)],
+        "bawah": [(1.00, 0.00), (0.90, 0.09), (0.74, 0.17), (0.58, 0.21),
+                  (0.40, 0.21), (0.22, 0.16), (0.08, 0.08), (0.01, 0.045)],
+    },
+    "hiu": {
+        "atas": [(0.01, -0.045), (0.10, -0.07), (0.25, -0.12), (0.45, -0.15),
+                 (0.65, -0.13), (0.80, -0.10), (0.86, -0.05), (0.88, 0.00)],
+        "bawah": [(0.88, 0.00), (0.84, 0.07), (0.72, 0.12), (0.58, 0.14),
+                  (0.42, 0.13), (0.28, 0.10), (0.14, 0.06), (0.01, 0.050)],
+    },
+    "martil": {
+        "atas": [(0.01, -0.045), (0.10, -0.07), (0.25, -0.12), (0.45, -0.15),
+                 (0.62, -0.13), (0.74, -0.11), (0.82, -0.20), (0.95, -0.235),
+                 (1.05, -0.16), (1.08, 0.00)],
+        "bawah": [(1.08, 0.00), (1.05, 0.16), (0.95, 0.235), (0.82, 0.20),
+                  (0.74, 0.115), (0.62, 0.13), (0.45, 0.13), (0.28, 0.10),
+                  (0.14, 0.06), (0.01, 0.050)],
+    },
+    "belut": {
+        "atas": [(0.01, -0.030), (0.15, -0.07), (0.35, -0.10), (0.55, -0.11),
+                 (0.75, -0.09), (0.90, -0.05), (1.00, 0.00)],
+        "bawah": [(1.00, 0.00), (0.90, 0.05), (0.75, 0.08), (0.55, 0.095),
+                  (0.35, 0.085), (0.15, 0.055), (0.01, 0.030)],
+    },
+    "manyung": {
+        "atas": [(0.01, -0.035), (0.10, -0.06), (0.28, -0.10), (0.50, -0.13),
+                 (0.68, -0.16), (0.80, -0.22), (0.92, -0.21), (1.00, -0.05)],
+        "bawah": [(1.00, 0.02), (0.92, 0.20), (0.80, 0.23), (0.68, 0.18),
+                  (0.50, 0.14), (0.28, 0.10), (0.10, 0.05), (0.01, 0.035)],
+    },
+    "napoleon": {
+        "atas": [(0.01, -0.055), (0.06, -0.13), (0.16, -0.28), (0.30, -0.39),
+                 (0.46, -0.43), (0.62, -0.42), (0.76, -0.38), (0.87, -0.34),
+                 (0.95, -0.26), (1.00, -0.10), (1.02, 0.00)],
+        "bawah": [(1.02, 0.00), (1.00, 0.06), (0.93, 0.16), (0.80, 0.26),
+                  (0.64, 0.34), (0.46, 0.37), (0.30, 0.32), (0.16, 0.20),
+                  (0.06, 0.09), (0.01, 0.055)],
+    },
+    "pari": {
+        "atas": [(0.02, -0.05), (0.10, -0.26), (0.32, -0.54), (0.56, -0.70),
+                 (0.78, -0.48), (0.90, -0.22), (0.97, -0.07), (1.00, 0.00)],
+        "bawah": [(1.00, 0.00), (0.97, 0.07), (0.90, 0.22), (0.78, 0.48),
+                  (0.56, 0.70), (0.32, 0.54), (0.10, 0.26), (0.02, 0.05)],
+    },
+    "bulat": {
+        "atas": [(0.08, -0.10), (0.16, -0.29), (0.32, -0.40), (0.52, -0.41),
+                 (0.70, -0.33), (0.84, -0.19), (0.94, -0.07), (0.98, 0.00)],
+        "bawah": [(0.98, 0.00), (0.94, 0.08), (0.84, 0.22), (0.70, 0.36),
+                  (0.52, 0.42), (0.32, 0.40), (0.16, 0.28), (0.08, 0.11)],
+    },
+}
+
+EKOR = {
+    "dalam": [(0.03, -0.065), (-0.14, -0.29), (-0.25, -0.20), (-0.16, -0.055),
+              (-0.16, 0.055), (-0.25, 0.20), (-0.14, 0.29), (0.03, 0.065)],
+    "ramping": [(0.03, -0.05), (-0.11, -0.26), (-0.21, -0.17), (-0.13, -0.045),
+                (-0.13, 0.045), (-0.21, 0.17), (-0.11, 0.26), (0.03, 0.05)],
+    "hiu": [(0.03, -0.05), (-0.17, -0.32), (-0.27, -0.12), (-0.10, -0.03),
+            (-0.24, 0.17), (-0.15, 0.24), (0.03, 0.05)],
+    "martil": [(0.03, -0.05), (-0.17, -0.32), (-0.27, -0.12), (-0.10, -0.03),
+               (-0.24, 0.17), (-0.15, 0.24), (0.03, 0.05)],
+    "belut": [(0.03, -0.02), (-0.05, -0.11), (-0.11, -0.03), (-0.05, 0.06), (0.03, 0.02)],
+    "manyung": [(0.03, -0.035), (-0.13, -0.22), (-0.21, -0.13), (-0.13, 0.00),
+                (-0.21, 0.13), (-0.13, 0.22), (0.03, 0.035)],
+    "napoleon": [(0.03, -0.065), (-0.14, -0.29), (-0.25, -0.20), (-0.16, -0.055),
+                 (-0.16, 0.055), (-0.25, 0.20), (-0.14, 0.29), (0.03, 0.065)],
+    "pari": [(0.03, -0.03), (-0.16, -0.06), (-0.32, -0.03), (-0.44, 0.00), (-0.32, 0.01), (-0.16, 0.02), (0.03, 0.03)],
+    "bulat": [(0.13, -0.11), (0.00, -0.20), (-0.06, 0.00), (0.00, 0.20), (0.13, 0.11)],
+}
+
+SIRIP = {
+    "dalam": {
+        "punggung": [(0.26, -0.36), (0.40, -0.64), (0.60, -0.36)],
+        "dubur": [(0.32, 0.30), (0.38, 0.47), (0.50, 0.30)],
+        "dada": [(0.70, 0.02), (0.61, 0.22), (0.78, 0.11)],
+    },
+    "ramping": {
+        "punggung": [(0.30, -0.22), (0.38, -0.44), (0.52, -0.21)],
+        "dubur": [(0.34, 0.18), (0.41, 0.36), (0.52, 0.18)],
+        "dada": [(0.66, 0.02), (0.57, 0.16), (0.71, 0.12)],
+    },
+    "hiu": {
+        "punggung": [(0.29, -0.13), (0.38, -0.36), (0.52, -0.14)],
+        "dubur": [(0.38, 0.13), (0.45, 0.24), (0.54, 0.13)],
+        "dada": [(0.60, 0.07), (0.50, 0.20), (0.68, 0.11)],
+    },
+    "martil": {
+        "punggung": [(0.29, -0.13), (0.38, -0.36), (0.52, -0.14)],
+        "dubur": [(0.38, 0.13), (0.45, 0.24), (0.54, 0.13)],
+        "dada": [(0.60, 0.07), (0.50, 0.20), (0.68, 0.11)],
+    },
+    "belut": {
+        "punggung": [(0.08, -0.06), (0.30, -0.17), (0.62, -0.15), (0.86, -0.07),
+                     (0.86, -0.05), (0.20, -0.03)],
+        "dubur": [],
+        "dada": [(0.62, 0.03), (0.53, 0.17), (0.66, 0.14)],
+    },
+    "manyung": {
+        "punggung": [(0.30, -0.09), (0.33, -0.32), (0.40, -0.09)],
+        "dubur": [(0.30, 0.08), (0.36, 0.24), (0.44, 0.08)],
+        "dada": [(0.74, 0.02), (0.66, 0.18), (0.80, 0.10)],
+    },
+    "napoleon": {
+        "punggung": [(0.26, -0.38), (0.40, -0.64), (0.60, -0.40)],
+        "dubur": [(0.32, 0.31), (0.38, 0.48), (0.50, 0.31)],
+        "dada": [(0.72, 0.02), (0.63, 0.24), (0.80, 0.12)],
+    },
+    "pari": {
+        "punggung": [],
+        "dubur": [],
+        "dada": [],
+    },
+    "bulat": {
+        "punggung": [(0.38, -0.40), (0.56, -0.66), (0.66, -0.40)],
+        "dubur": [(0.38, 0.41), (0.56, 0.66), (0.66, 0.41)],
+        "dada": [(0.72, 0.02), (0.64, 0.22), (0.80, 0.14)],
+    },
+}
+
+
+def spesies(slug, bentuk, atas, bawah, warna_sirip, warna_aksen=None, **kw):
+    palet = dict(atas=warna(atas), bawah=warna(bawah), sirip=warna(warna_sirip))
+    if warna_aksen:
+        palet["aksen"] = warna(warna_aksen)
+    data = dict(slug=slug, bentuk=bentuk, palet=palet)
+    data.update(kw)
+    return data
+
+
+# --------------------------------------------------------------- daftar ikan
+DAFTAR = [
+    # ---------- biasa
+    spesies("kakap_merah", "dalam", "#E2685F", "#C3483F", "#9C332C",
+            sisik=True, mata=(0.90, -0.07, 0.056)),
+    spesies("tongkol", "ramping", "#56718C", "#3D5368", "#2C3E4F",
+            mata=(0.90, -0.07, 0.042), corak=[
+                ([(0.38, -0.24), (0.44, -0.24), (0.40, -0.02), (0.34, -0.02)], "#2C3E4F"),
+                ([(0.52, -0.25), (0.58, -0.25), (0.54, -0.03), (0.48, -0.03)], "#2C3E4F"),
+                ([(0.66, -0.22), (0.72, -0.22), (0.68, -0.02), (0.62, -0.02)], "#2C3E4F"),
+            ]),
+    spesies("cakalang", "ramping", "#4C7CA8", "#35608A", "#22415F",
+            mata=(0.90, -0.07, 0.042), corak=[
+                ([(0.34, 0.02), (0.78, 0.02), (0.78, 0.06), (0.34, 0.06)], "#22415F"),
+                ([(0.34, 0.10), (0.76, 0.10), (0.76, 0.14), (0.34, 0.14)], "#22415F"),
+                ([(0.36, 0.17), (0.72, 0.17), (0.72, 0.20), (0.36, 0.20)], "#22415F"),
+            ]),
+    spesies("sarden", "ramping", "#A9C0CE", "#8199A9", "#5E7484",
+            sisik=True, mata=(0.90, -0.06, 0.040),
+            bintik=[(0.74, -0.08, 0.030, "#4E6472")], insang=False),
+    spesies("kembung", "ramping", "#5E93A8", "#43738A", "#2F5566",
+            mata=(0.90, -0.07, 0.042), corak=[
+                ([(0.36, -0.18), (0.42, -0.18), (0.40, 0.04), (0.34, 0.04)], "#2F5566"),
+                ([(0.50, -0.20), (0.56, -0.20), (0.54, 0.02), (0.48, 0.02)], "#2F5566"),
+                ([(0.64, -0.18), (0.70, -0.18), (0.68, 0.00), (0.62, 0.00)], "#2F5566"),
+            ]),
+    spesies("layang", "ramping", "#6FA9A6", "#4C8480", "#C7A94E",
+            mata=(0.90, -0.07, 0.042), ekor_warna="#C7A94E", insang=False),
+    spesies("kue", "dalam", "#D9B24C", "#B08C2E", "#8A6A1F",
+            sisik=True, mata=(0.90, -0.08, 0.050), ekor_warna="#6B5A2A"),
+    spesies("baronang", "dalam", "#A08B4F", "#7C6A38", "#5C4E28",
+            sisik=True, mata=(0.90, -0.08, 0.052),
+            bintik=[(0.40, -0.16, 0.014, "#E4D9A8"), (0.52, -0.10, 0.013, "#E4D9A8"),
+                    (0.46, 0.06, 0.013, "#E4D9A8"), (0.60, -0.18, 0.012, "#E4D9A8"),
+                    (0.58, 0.14, 0.012, "#E4D9A8"), (0.70, -0.06, 0.011, "#E4D9A8")]),
+    spesies("belanak", "ramping", "#B9C4C6", "#94A3A7", "#6F7E83",
+            sisik=True, mata=(0.90, -0.07, 0.048)),
+    spesies("tawes", "dalam", "#A9B37E", "#87915F", "#66713F",
+            sisik=True, mata=(0.90, -0.08, 0.052)),
+    spesies("nilem", "ramping", "#A7BFA0", "#84A07E", "#637D5E",
+            sisik=True, mata=(0.90, -0.07, 0.048)),
+    spesies("mas", "dalam", "#E8A24B", "#C67F2E", "#9C5F1E",
+            sisik=True, mata=(0.90, -0.08, 0.052),
+            kumis=[[(0.99, -0.02), (0.99, 0.06), (0.95, 0.10)],
+                   [(0.99, -0.02), (1.00, 0.08), (0.97, 0.12)]]),
+    spesies("betok", "dalam", "#7C8A57", "#5E6B3D", "#46512C",
+            mata=(0.90, -0.08, 0.050),
+            bintik=[(0.16, -0.12, 0.040, "#3E4726"), (0.34, -0.20, 0.022, "#46512C"),
+                    (0.52, -0.24, 0.018, "#46512C"), (0.66, -0.16, 0.016, "#46512C")]),
+    spesies("sidat", "belut", "#6B6259", "#4F4841", "#3A342F",
+            mata=(0.93, -0.045, 0.030), insang=False, rentang=1.25),
+
+    # ---------- langka
+    spesies("kakap_putih", "dalam", "#D7DEE0", "#B4BEC2", "#8E9BA0",
+            sisik=True, mata=(0.90, -0.07, 0.055)),
+    spesies("kuwe", "ramping", "#7C9FB8", "#5B7F98", "#3F5F75",
+            sisik=True, mata=(0.90, -0.07, 0.050)),
+    spesies("bawal_hitam", "dalam", "#4A4B4E", "#333438", "#232427",
+            sisik=True, mata=(0.90, -0.08, 0.048)),
+    spesies("bawal_bintang", "dalam", "#C9CFD2", "#A6AEB2", "#7E878C",
+            sisik=True, mata=(0.90, -0.08, 0.052),
+            bintik=[(0.38, -0.22, 0.026, "#3A4144"), (0.52, -0.12, 0.024, "#3A4144"),
+                    (0.44, 0.06, 0.022, "#3A4144"), (0.62, -0.24, 0.020, "#3A4144"),
+                    (0.64, 0.12, 0.022, "#3A4144"), (0.76, -0.10, 0.018, "#3A4144"),
+                    (0.30, 0.12, 0.018, "#3A4144")]),
+    spesies("kerong_kerong", "dalam", "#C9A85E", "#A68743", "#7E632D",
+            sisik=True, mata=(0.90, -0.08, 0.052), corak=[
+                ([(0.30, -0.34), (0.35, -0.34), (0.35, 0.30), (0.30, 0.28)], "#7E632D"),
+                ([(0.46, -0.40), (0.51, -0.40), (0.51, 0.34), (0.46, 0.33)], "#7E632D"),
+                ([(0.62, -0.38), (0.67, -0.38), (0.67, 0.30), (0.62, 0.30)], "#7E632D"),
+                ([(0.78, -0.30), (0.83, -0.30), (0.83, 0.22), (0.78, 0.22)], "#7E632D"),
+            ]),
+    spesies("gulamah", "ramping", "#C4A98A", "#A1856A", "#7C6349",
+            sisik=True, mata=(0.90, -0.07, 0.046)),
+    spesies("manyung", "manyung", "#8C8272", "#6C6355", "#504A3F",
+            mata=(0.90, -0.13, 0.038),
+            kumis=[[(0.99, 0.00), (1.04, -0.12), (1.06, -0.20)],
+                   [(0.99, 0.02), (1.05, 0.10), (1.08, 0.18)]]),
+
+    # ---------- epik
+    spesies("pari_manta", "pari", "#3D4A5C", "#4E5F76", "#243040",
+            mata=(0.92, -0.13, 0.030), insang=False, warna_aksen="#3D4A5C",
+            aksen=[[(0.93, -0.11), (1.08, -0.18), (1.02, -0.05)],
+                   [(0.93, 0.11), (1.08, 0.18), (1.02, 0.05)]]),
+    spesies("hiu_tutul", "hiu", "#6F8FA6", "#8CA6B8", "#54738A",
+            mata=(0.90, -0.06, 0.030),
+            bintik=[(0.34, -0.10, 0.017, "#DCE8F0"), (0.45, -0.12, 0.015, "#DCE8F0"),
+                    (0.56, -0.08, 0.016, "#DCE8F0"), (0.66, -0.10, 0.014, "#DCE8F0"),
+                    (0.40, 0.02, 0.015, "#DCE8F0"), (0.52, 0.03, 0.014, "#DCE8F0"),
+                    (0.62, 0.01, 0.013, "#DCE8F0"), (0.72, -0.04, 0.013, "#DCE8F0"),
+                    (0.78, -0.09, 0.012, "#DCE8F0")], insang=False),
+    spesies("hiu_martil", "martil", "#8A9AA2", "#C6D0D4", "#6B7A82",
+            mata=(0.965, -0.15, 0.036), insang=False),
+    spesies("mola_mola", "bulat", "#B9C3C6", "#9AA6AA", "#7C888C",
+            mata=(0.90, -0.06, 0.045), insang=False,
+            bintik=[(0.34, -0.24, 0.016, "#8A969A"), (0.46, -0.30, 0.014, "#8A969A"),
+                    (0.58, -0.24, 0.015, "#8A969A"), (0.40, 0.10, 0.014, "#8A969A"),
+                    (0.54, 0.16, 0.013, "#8A969A")]),
+    spesies("napoleon", "napoleon", "#4E8C7A", "#376A5C", "#255046",
+            sisik=True, mata=(0.90, -0.10, 0.048),
+            corak=[([(0.86, -0.20), (1.02, -0.18), (1.02, -0.12), (0.86, -0.14)], "#255046")]),
+    spesies("pedang", "ramping", "#4A6E92", "#35526E", "#20364A",
+            mata=(0.86, -0.07, 0.042), insang=0.80,
+            moncong=[(1.00, -0.045), (1.34, -0.014), (1.40, 0.000), (1.34, 0.014), (1.00, 0.045)],
+            sirip={"punggung": [(0.34, -0.23), (0.44, -0.46), (0.56, -0.22)],
+                   "dubur": [(0.36, 0.18), (0.44, 0.36), (0.54, 0.18)],
+                   "dada": [(0.70, 0.02), (0.62, 0.16), (0.76, 0.11)]}),
+    spesies("marlin_hitam", "ramping", "#33475C", "#22323F", "#161F28",
+            mata=(0.86, -0.07, 0.042), insang=0.80,
+            moncong=[(1.00, -0.045), (1.36, -0.014), (1.42, 0.000), (1.36, 0.014), (1.00, 0.045)],
+            sirip={"punggung": [(0.24, -0.20), (0.30, -0.62), (0.44, -0.70), (0.56, -0.34), (0.58, -0.20)],
+                   "dubur": [(0.38, 0.18), (0.46, 0.32), (0.54, 0.18)],
+                   "dada": [(0.70, 0.02), (0.62, 0.18), (0.76, 0.12)]}),
+
+    # ---------- legenda
+    spesies("tuna_sirip_biru", "ramping", "#2F5D8C", "#C9D6DE", "#1F4265",
+            mata=(0.90, -0.07, 0.045), insang=False,
+            aksen=[[(0.16, -0.13), (0.22, -0.13), (0.22, -0.06), (0.16, -0.06)],
+                   [(0.16, 0.10), (0.22, 0.10), (0.22, 0.17), (0.16, 0.17)]]),
+    spesies("coelacanth", "dalam", "#4A5A6B", "#354250", "#232D38",
+            mata=(0.90, -0.08, 0.048),
+            bintik=[(0.34, -0.18, 0.020, "#D8E2E8"), (0.46, -0.10, 0.018, "#D8E2E8"),
+                    (0.40, 0.10, 0.018, "#D8E2E8"), (0.58, -0.20, 0.016, "#D8E2E8"),
+                    (0.60, 0.08, 0.017, "#D8E2E8"), (0.70, -0.06, 0.015, "#D8E2E8")],
+            sirip={"punggung": [(0.30, -0.36), (0.38, -0.56), (0.52, -0.36)],
+                   "dubur": [(0.34, 0.30), (0.40, 0.48), (0.52, 0.30)],
+                   "dada": [(0.72, 0.04), (0.64, 0.26), (0.80, 0.16)]}),
+    spesies("hiu_greenland", "hiu", "#6E7772", "#545C58", "#3E4542",
+            mata=(0.90, -0.06, 0.028), insang=False),
+
+    # ---------- mitos
+    spesies("oarfish", "belut", "#B9C4CB", "#DCE3E7", "#C0453F",
+            mata=(0.925, -0.045, 0.030), insang=False, rentang=1.9,
+            aksen=[[(0.74, -0.06), (0.78, -0.30), (0.84, -0.34), (0.90, -0.22), (0.92, -0.04)],
+                   [(0.62, 0.05), (0.58, 0.20), (0.64, 0.16)], [(0.58, 0.05), (0.52, 0.22), (0.58, 0.18)]]),
+    spesies("hiu_putih_raksasa", "hiu", "#8E9BA3", "#DDE3E6", "#6E7A82",
+            mata=(0.90, -0.06, 0.032), insang=False),
+]
+
+
+# --------------------------------------------------------------- render
+def gambar(spec, kunci=False):
+    bentuk = spec["bentuk"]
+    palet = spec["palet"]
+    rentang = spec.get("rentang", 1.0)
+    sirip = spec.get("sirip", SIRIP[bentuk])
+    ekor = spec.get("ekor", EKOR[bentuk])
+    p = PROFIL[bentuk]
+    insang = spec.get("insang", True)
+
+    def ubah(poly):
+        return [(x * rentang, y) for x, y in poly]
+
+    atas = spline(ubah(p["atas"]))
+    bawah = spline(ubah(p["bawah"]))
+    ekor = ubah(ekor)
+    sirip = {k: ubah(v) for k, v in sirip.items()}
+    moncong = ubah(spec.get("moncong", []))
+    aksen = [ubah(v) for v in spec.get("aksen", [])]
+    corak = [(ubah(v), w) for v, w in spec.get("corak", [])]
+    ujung = max(x for x, _ in atas)
+    pangkal = atas[0][0]
+
+    poligon = [atas + bawah[1:], ekor]
+    for poly in list(sirip.values()) + ([moncong] if moncong else []) + aksen:
+        if len(poly) > 2:
+            poligon.append(poly)
+    for poly, _ in corak:
+        poligon.append(poly)
+
+    # --- peta ke piksel
+    xs = [x for poly in poligon for x, _ in poly]
+    ys = [y for poly in poligon for _, y in poly]
+    lebar, tinggi = max(xs) - min(xs), max(ys) - min(ys)
+    skala = MAKS / max(lebar, tinggi)
+    kanvas_w = int(math.ceil(lebar * skala)) + MARGIN * 2
+    kanvas_h = int(math.ceil(tinggi * skala)) + MARGIN * 2
+
+    # Koordinat digambar pada kanvas 3x lalu diperkecil.
+    skala_dasar = skala
+    skala *= S
+    ox = (MARGIN - min(xs) * skala_dasar) * S
+    oy = (MARGIN - min(ys) * skala_dasar) * S
+
+    im = Image.new("RGBA", (kanvas_w * S, kanvas_h * S), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+
+    def titik(poly, dx=0.0, dy=0.0):
+        return [((x + dx) * skala + ox, (y + dy) * skala + oy) for x, y in poly]
+
+    def isi(poly, w):
+        if len(poly) > 2:
+            d.polygon(titik(poly), fill=w)
+
+    def garis(poly, w, tebal):
+        d.line(titik(poly), fill=w, width=max(1, int(tebal * skala)), joint="curve")
+
+    if kunci:
+        for poly in poligon:
+            isi(poly, KUNCI)
+        return im.resize((kanvas_w, kanvas_h), Image.LANCZOS)
+
+    # --- bayangan
+    for poly in poligon:
+        d.polygon(titik(poly, BAYANG_DX, BAYANG_DY), fill=BAYANG)
+
+    sirip_gelap = palet["sirip"]
+    # --- sirip belakang + ekor
+    for nama in ("punggung", "dubur"):
+        isi(sirip.get(nama, []), sirip_gelap)
+    isi(ekor, palet.get("ekor_warna") or sirip_gelap)
+
+    # --- badan
+    isi(atas + bawah[1:], palet["bawah"])
+    isi(atas + [(ujung, 0.00), (pangkal, 0.00)], palet["atas"])
+    isi(moncong, palet["bawah"])
+
+    # --- sirip dada (menimpa badan)
+    isi(sirip.get("dada", []), campur(sirip_gelap, palet["bawah"], 0.25))
+
+    # --- corak, aksen
+    for poly, w in corak:
+        isi(poly, warna(w) if isinstance(w, str) else w)
+    for poly in aksen:
+        isi(poly, palet.get("aksen", sirip_gelap))
+
+    # --- bintik
+    for bx, by, br, bw in spec.get("bintik", []):
+        bx *= rentang
+        d.ellipse([(bx - br) * skala + ox, (by - br) * skala + oy,
+                   (bx + br) * skala + ox, (by + br) * skala + oy], fill=warna(bw))
+
+    # --- sisik
+    if spec.get("sisik"):
+        lebar_sisik = max(2, int(0.016 * skala))
+        warna_sisik = gelap(palet["bawah"], 0.18)
+        for i in range(int(4 * rentang)):
+            cx = (0.34 + i * 0.13) * rentang
+            for cy in (-0.16, 0.10):
+                busur = [(cx - 0.010, cy - 0.055), (cx + 0.022, cy), (cx - 0.010, cy + 0.055)]
+                garis(spline(busur, 8), warna_sisik, 0.016)
+
+    # --- insang
+    if insang:
+        gx = insang if isinstance(insang, float) else 0.80
+        busur = [(gx, -0.20), (gx + 0.04, 0.0), (gx, 0.18)]
+        garis(spline([(x * rentang, y) for x, y in busur], 8),
+              gelap(palet["bawah"], 0.22), 0.008)
+
+    # --- kumis
+    for k in spec.get("kumis", []):
+        garis([(x * rentang, y) for x, y in spline(k, 8)],
+              gelap(palet["bawah"], 0.30), 0.010)
+
+    # --- mata
+    mx, my, r = spec["mata"]
+    mx *= rentang
+    d.ellipse([(mx - r) * skala + ox, (my - r) * skala + oy,
+               (mx + r) * skala + ox, (my + r) * skala + oy], fill=MATA_PUTIH)
+    rp = r * 0.62
+    px_, py_ = mx + r * 0.10, my + r * 0.06
+    d.ellipse([(px_ - rp) * skala + ox, (py_ - rp) * skala + oy,
+               (px_ + rp) * skala + ox, (py_ + rp) * skala + oy], fill=MATA_PUPIL)
+
+    return im.resize((kanvas_w, kanvas_h), Image.LANCZOS)
+
+
+def main() -> None:
+    os.makedirs(TUJUAN, exist_ok=True)
+    pilih = set(sys.argv[1:])
+    daftar = [s for s in DAFTAR if not pilih or s["slug"] in pilih]
+    if pilih:
+        tidak_ada = pilih - {s["slug"] for s in DAFTAR}
+        if tidak_ada:
+            print("Slug tidak dikenal:", ", ".join(sorted(tidak_ada)))
+    for spec in daftar:
+        im = gambar(spec)
+        im.save(os.path.join(TUJUAN, f"ikan_{spec['slug']}.png"))
+        k = gambar(spec, kunci=True)
+        k.save(os.path.join(TUJUAN, f"ikan_terkunci_{spec['slug']}.png"))
+        print(f"{spec['slug']:20s} {im.size[0]}x{im.size[1]}")
+    print(f"Selesai: {len(daftar)} spesies, {len(daftar) * 2} berkas di {os.path.relpath(TUJUAN, ROOT)}")
+
+
+if __name__ == "__main__":
+    main()
+
+

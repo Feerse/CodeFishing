@@ -202,10 +202,10 @@ private fun KartuIkan(ikan: KoleksiLengkapView, jumlahAkuarium: Int, onClick: ()
         )
         Text(
             if (dimiliki) {
-                val stat = if (ikan.syarat_unlock?.contains("Segera hadir") == true) "Segera hadir" else "×${ikan.jumlah} · ${"%.1f".format(ikan.bobot_terbesar)} kg"
+                val stat = "×${ikan.jumlah} · ${"%.1f".format(ikan.bobot_terbesar)} kg"
                 if (jumlahAkuarium > 0) "$stat · $jumlahAkuarium di akuarium" else stat
             } else {
-                if (ikan.syarat_unlock?.contains("Segera hadir") == true) "Segera hadir" else (ikan.syarat_unlock ?: "Belum ditemukan")
+                ikan.syarat_unlock ?: "Belum ditemukan"
             },
             style = MaterialTheme.typography.labelSmall,
             color = if (dimiliki) MaterialTheme.colorScheme.onSurfaceVariant else palet.petaTeksRedup.copy(alpha = 0.7f),
