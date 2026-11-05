@@ -53,6 +53,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -69,6 +70,7 @@ import com.example.codefishing.core.data.IkanAkuarium
 import com.example.codefishing.core.data.KAPASITAS_AKUARIUM
 import com.example.codefishing.core.data.MAKS_NAMA_AKUARIUM
 import com.example.codefishing.core.data.jumlahPerBaris
+import com.example.codefishing.core.data.namaTampilAkuarium
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.Gambar
@@ -80,6 +82,7 @@ import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.cos
+import kotlin.math.roundToInt
 import kotlin.math.sin
 
 /**
@@ -91,7 +94,7 @@ private val MakananHalo = Color(0x594A2E00)
 
 /**
  * 13 Akuarium: maksimal 10 ekor ikan berenang di atas latar kertas.
- * Nama custom tampil sebagai heading di atas ikan dan spesies selalu di bawahnya.
+ * Nama custom menggantikan nama spesies pada satu label di bawah ikan.
  * Ikan yang belum dimiliki tidak ditampilkan di sini.
  */
 @Composable
@@ -193,67 +196,63 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
 
             ikan.forEachIndexed { i, item ->
                 val k = item.ikan
-                val durasi = 2600 + (i % 5) * 350
-                val naikTurun by transisi.animateFloat(
-                    initialValue = -4f,
-                    targetValue = 4f,
-                    animationSpec = infiniteRepeatable(
-                        animation = tween(durasi, easing = LinearEasing),
-                        repeatMode = RepeatMode.Reverse,
-                    ),
-                    label = "ikan-$i",
-                )
-                // Goyang kecil di dalam selnya; ikan menghadap arah geraknya.
-                val keliling by transisi.animateFloat(
+                // Satu siklus jelajah mengelilingi lebar akuarium.
+                val durasiJelajah = 16000 + (i % 5) * 1600
+                val jelajah by transisi.animateFloat(
                     initialValue = 0f,
                     targetValue = 1f,
                     animationSpec = infiniteRepeatable(
-                        animation = tween(durasi * 4, easing = LinearEasing),
+                        animation = tween(durasiJelajah, easing = LinearEasing),
                     ),
-                    label = "keliling-$i",
+                    label = "jelajah-$i",
                 )
                 val (barisKe, kolom, jumlahKolom) = tataLetak[i]
                 val ukuran = if (k.tier == "mitos" || k.tier == "legenda") 84.dp else 68.dp
-                val namaCustom = item.nama
-                val namaTampil = namaCustom ?: k.nama
-                val deskripsi = if (namaCustom != null) "$namaCustom, ${k.nama}" else k.nama
-                // Perkiraan tinggi kolom: heading (bila ada) + ikan + label spesies.
-                val tinggiKonten = ukuran + 16.dp + if (namaCustom != null) 26.dp else 0.dp
+                val namaTampil = namaTampilAkuarium(item.nama, k.nama)
+                // Satu label di bawah ikan: nama custom menggantikan nama spesies.
+                val tinggiKonten = ukuran + 26.dp
+                // Fase berbeda per ikan agar tidak bergerak serempak.
+                val faseX = (i * 0.27f + kolom * 0.05f) % 1f
+                val faseY = (i * 0.41f + kolom * 0.09f) % 1f
+                val xNorm = ((sin(2.0 * PI * (jelajah + faseX)) + 1.0) / 2.0).toFloat()
+                val yNorm = ((sin(2.0 * PI * (jelajah * 2.0 + faseY)) + 1.0) / 2.0).toFloat()
+                // Lajur vertikal per baris: ikan menjelajah seluruh lebar,
+                // tetapi tetap berada di lajurnya agar label tidak bertumpuk.
+                val laneAtas = areaAtas + tinggiBaris * barisKe
+                val subLane = ((kolom - (jumlahKolom - 1) / 2f) * 7f).dp
+                val laneTengah = laneAtas + tinggiBaris / 2 + subLane
+                val amplitudoY = ((tinggiBaris - tinggiKonten) / 2 - 4.dp).coerceAtLeast(0.dp)
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(1.dp),
                     modifier = Modifier
                         .offset {
-                            val maks = (lebar - lebarLabel).roundToPx().coerceAtLeast(0)
-                            val geser = (sin(2.0 * PI * keliling) * 3.dp.toPx()).toInt()
-                            val xDasar = (lebar * ((kolom + 0.5f) / jumlahKolom)).toPx() - lebarLabel.toPx() / 2f
-                            val yDasar = areaAtas + tinggiBaris * barisKe +
-                                ((tinggiBaris - tinggiKonten) / 2).coerceAtLeast(0.dp)
+                            val maksX = (lebar - lebarLabel).toPx().coerceAtLeast(0f)
+                            val x = maksX * xNorm
+                            val yTengah = (laneTengah - tinggiKonten / 2).toPx()
+                            val y = yTengah + (yNorm - 0.5f) * 2f * amplitudoY.toPx()
+                            val maksY = (tinggi - tinggiKonten).toPx().coerceAtLeast(0f)
                             IntOffset(
-                                (xDasar.toInt() + geser).coerceIn(0, maks),
-                                (yDasar + naikTurun.dp).roundToPx().coerceAtLeast(0),
+                                x.roundToInt().coerceIn(0, maksX.roundToInt()),
+                                y.roundToInt().coerceIn(0, maksY.roundToInt()),
                             )
                         }
                         .width(lebarLabel)
                         .clickable(onClickLabel = "Lihat ikan $namaTampil") { dipilih = item },
                 ) {
-                    // Nama custom selalu jadi heading di atas ikan.
-                    if (namaCustom != null) {
-                        LabelIkan(namaCustom, heading = true)
-                    }
                     Gambar(
                         gambarIkan(k.gambar),
-                        deskripsi,
+                        namaTampil,
                         Modifier
                             .size(ukuran)
                             .graphicsLayer {
                                 // Aset ikan menghadap kanan; balik saat berenang ke kiri.
                                 // Hanya gambar yang dibalik, label tetap terbaca.
-                                scaleX = if (cos(2.0 * PI * keliling) >= 0.0) 1f else -1f
+                                scaleX = if (cos(2.0 * PI * (jelajah + faseX)) >= 0.0) 1f else -1f
+                                rotationZ = (sin(2.0 * PI * (jelajah * 2.0 + faseY)) * 2.5).toFloat()
                             },
                     )
-                    // Spesies selalu tampil di bawah ikan.
-                    LabelIkan(k.nama, heading = false)
+                    LabelIkan(namaTampil)
                 }
             }
 
@@ -372,6 +371,17 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
     }
 
     if (pilihan != null) {
+        val transisiDialog = rememberInfiniteTransition(label = "dialog-ikan")
+        val gerakDialog by transisiDialog.animateFloat(
+            initialValue = -1f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1800, easing = LinearEasing),
+                repeatMode = RepeatMode.Reverse,
+            ),
+            label = "gerak-dialog",
+        )
+        val px = LocalDensity.current.density
         Dialog(
             onDismissRequest = {
                 dipilih = null
@@ -385,7 +395,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
             ),
         ) {
             val panggilan = pilihan.nama
-            val namaTampil = panggilan ?: pilihan.ikan.nama
+            val namaTampil = namaTampilAkuarium(panggilan, pilihan.ikan.nama)
             val interaksiKartu = remember { MutableInteractionSource() }
             Box(
                 Modifier
@@ -418,7 +428,18 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(14.dp),
                         ) {
-                            Gambar(gambarIkan(pilihan.ikan.gambar), namaTampil, Modifier.size(64.dp))
+                            Gambar(
+                                gambarIkan(pilihan.ikan.gambar),
+                                namaTampil,
+                                Modifier
+                                    .size(64.dp)
+                                    .graphicsLayer {
+                                        translationX = gerakDialog * 3f * px
+                                        translationY = gerakDialog * 1.5f * px
+                                        rotationZ = gerakDialog * 2.5f
+                                        scaleX = if (gerakDialog >= 0f) 1f else -1f
+                                    },
+                            )
                             Column(
                                 Modifier.weight(1f),
                                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -429,13 +450,6 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                                     maxLines = 2,
                                     overflow = TextOverflow.Ellipsis,
                                 )
-                                if (panggilan != null) {
-                                    Text(
-                                        "Spesies: ${pilihan.ikan.nama}",
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
-                                }
                                 Text(
                                     "Jumlah ×${pilihan.ikan.jumlah} · ${"%.1f".format(pilihan.ikan.bobot_terbesar)} kg · kenyang ${pilihan.ikan.kenyang}%",
                                     style = MaterialTheme.typography.bodySmall,
@@ -482,7 +496,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
         val slotId = pilihan.slotId
         AlertDialog(
             onDismissRequest = { dialogNama = false },
-            title = { Text("Ganti nama ikan") },
+            title = { Text(if (pilihan.nama == null) "Beri nama ikan" else "Ganti nama ikan") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     OutlinedTextField(
@@ -490,7 +504,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                         onValueChange = { namaBaru = it.take(MAKS_NAMA_AKUARIUM) },
                         singleLine = true,
                         label = { Text("Nama di akuarium") },
-                        placeholder = { Text(pilihan.ikan.nama) },
+                        placeholder = { Text("Contoh: Si Kumis") },
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(
                             onDone = {
@@ -501,7 +515,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Text(
-                        "Nama ini hanya untuk ikan ini. Nama asli: ${pilihan.ikan.nama}.",
+                        "Nama ini akan menggantikan nama yang tampil di akuarium.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -560,24 +574,24 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
     }
 }
 
-/** Label kecil yang menempel pada ikan: nama custom di atas, spesies di bawah. */
+/** Label nama di bawah ikan; nama custom menggantikan nama spesies. */
 @Composable
-private fun LabelIkan(teks: String, heading: Boolean) {
+private fun LabelIkan(teks: String) {
     val warna = LocalWarna.current
     Text(
         teks,
         style = MaterialTheme.typography.labelSmall.copy(
-            fontSize = if (heading) 11.sp else 10.sp,
+            fontSize = 10.sp,
             lineHeight = 12.sp,
-            fontWeight = if (heading) FontWeight.Bold else FontWeight.Medium,
+            fontWeight = FontWeight.Bold,
         ),
-        color = if (heading) warna.teksDiAdegan else warna.teksDiAdeganRedup,
+        color = warna.teksDiAdegan,
         textAlign = TextAlign.Center,
-        maxLines = if (heading) 2 else 1,
+        maxLines = 2,
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier
             .background(
-                warna.kartu.copy(alpha = if (heading) 0.86f else 0.68f),
+                warna.kartu.copy(alpha = 0.80f),
                 RoundedCornerShape(50),
             )
             .padding(horizontal = 6.dp, vertical = 1.dp),

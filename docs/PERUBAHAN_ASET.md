@@ -18,7 +18,7 @@ Ringkasan penggantian visual dan audio. **Logika permainan, Room, repositori, da
 | Bottom nav dan Drawer | emoji ⌂ ⚓ ⌘ 🐟 / tanpa ikon | `ikon_home`, `ikon_mode_belajar`, `ikon_mode_expert`, `ikon_koleksi`, `ikon_akuarium`, `ikon_pengaturan` |
 | Indikator umpan | 1 ikon + angka | 5 cacing (`umpan_penuh` / `umpan_kosong`) + "n/5" |
 | Home | emoji 🎣 🪙 ⭐ | `umpan_penuh`, `lencana_plus_satu`, `bintang_penuh` |
-| Kuis: adegan | kanvas buatan kode (satu adegan untuk semua soal) | `adegan_*` per stage, `percikan_air`, `ledakan_kail_putus`, `kail_putus`, ikan target stage, hujan dan petir di Boss |
+| Kuis: adegan | kanvas buatan kode (satu adegan untuk semua soal) | `adegan_*` per stage dengan aksi berbeda: joran, jala, tombak, tali lubang es, tali bubu, dan pukat; plus `percikan_air`, `ledakan_kail_putus`, `kail_putus`, ikan target stage, hujan dan petir di Boss |
 | Kuis: tanda benar/salah | teks ✓ ✕ | `ikon_berhasil` / `ikon_error` |
 | Hasil Stage | lingkaran + teks ✓ ✕ | `medali_misi_selesai` / `trofi_boss` / `kail_putus` |
 | Hasil Program | lingkaran + teks ✓ ✕ | `medali_misi_selesai` / `ikon_error` |

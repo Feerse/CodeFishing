@@ -54,14 +54,18 @@ import com.example.codefishing.frontend.components.Gambar
 import com.example.codefishing.frontend.components.Kartu
 import com.example.codefishing.frontend.components.KodeBlok
 import com.example.codefishing.frontend.components.MemancingScene
+import com.example.codefishing.frontend.components.JenisAdegan
 import com.example.codefishing.frontend.components.adeganStage
+import com.example.codefishing.frontend.components.durasiLemparAdegan
 import com.example.codefishing.frontend.components.gambarIkan
+import com.example.codefishing.frontend.components.jenisAdeganStage
 import com.example.codefishing.core.db.IkanEntity
 import com.example.codefishing.frontend.components.Memuat
 import com.example.codefishing.ui.theme.LocalWarna
 import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
 import com.example.codefishing.pemula.PilihanKuis
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -123,6 +127,7 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
     }
     var jawabanBenar by remember(d) { mutableStateOf(sesiTersimpan?.jawabanBenar ?: false) }
     var menyimpan by remember(d) { mutableStateOf(false) }
+    var menungguAksi by remember(d) { mutableStateOf(false) }
     var menyelesaikan by remember(d) { mutableStateOf(false) }
 
     /** Menyimpan stage terakhir + seluruh isi sesi agar bisa dilanjutkan nanti. */
@@ -157,11 +162,18 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
     BackHandler(enabled = menyimpan || menyelesaikan) { }
 
     val soal = daftarSoal[indeks]
-    val selesaiSoal = terpilih != null
+    val terkunci = terpilih != null
+    val selesaiSoal = terkunci && !menungguAksi
+    val jenisAdegan = jenisAdeganStage(d.stage.nomor, d.stage.tipe == "boss")
 
-    // Suara cipratan saat kail dilempar, sebelum jawaban dikunci.
+    // Suara aksi sesuai adegan: cipratan hanya untuk aksi di permukaan air.
     LaunchedEffect(fase) {
-        if (fase == FasePancing.Lempar) c.audio.play(Sfx.Cipratan)
+        if (fase == FasePancing.Lempar) {
+            when (jenisAdegan) {
+                JenisAdegan.Selam, JenisAdegan.Bubu -> Unit
+                else -> c.audio.play(Sfx.Cipratan)
+            }
+        }
     }
 
     /**
@@ -173,29 +185,38 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
         terpilih = posisi
         jawabanBenar = pilihan.benar
         menyimpan = true
-        fase = if (pilihan.benar) FasePancing.Dapat else FasePancing.Lepas
+        menungguAksi = true
+        // Animasi aksi baru dimulai setelah jawaban benar-benar dikunci.
+        fase = FasePancing.Lempar
         if (pengaturan?.haptik != 0) {
             haptik.performHapticFeedback(
                 if (pilihan.benar) HapticFeedbackType.LongPress else HapticFeedbackType.TextHandleMove,
             )
         }
+        val faseHasil = if (pilihan.benar) FasePancing.Dapat else FasePancing.Lepas
         if (pilihan.benar) {
             benar++
             combo++
             comboMaks = maxOf(comboMaks, combo)
             xp += soal.poin
-            c.audio.play(Sfx.Benar)
             scope.launch {
                 c.game.catatJawaban(soal.id, pilihan.id, true, combo)
                 menyimpan = false
+                delay(durasiLemparAdegan(jenisAdegan).toLong())
+                c.audio.play(Sfx.Benar)
+                fase = faseHasil
+                menungguAksi = false
             }
         } else {
             salah++
             combo = 0
-            c.audio.play(Sfx.Salah)
             scope.launch {
                 c.game.catatJawaban(soal.id, pilihan.id, false, 0)
                 menyimpan = false
+                delay(durasiLemparAdegan(jenisAdegan).toLong())
+                c.audio.play(Sfx.Salah)
+                fase = faseHasil
+                menungguAksi = false
             }
         }
         // Simpan jawaban terkunci + skor berjalan agar sesi bisa dilanjutkan.
@@ -290,15 +311,15 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                 val kandidatIni = kandidat == i
                 val benarIni = p.benar
                 val warnaOpsi = when {
-                    !selesaiSoal && kandidatIni -> warna.kartuTinggi
-                    !selesaiSoal -> warna.kartu
+                    !terkunci && kandidatIni -> warna.kartuTinggi
+                    !terkunci -> warna.kartu
                     benarIni -> warna.suksesLatar
                     dipilih -> warna.bahayaLatar
                     else -> warna.kartu
                 }
                 val border = when {
-                    !selesaiSoal && kandidatIni -> MaterialTheme.colorScheme.primary
-                    !selesaiSoal -> warna.garis
+                    !terkunci && kandidatIni -> MaterialTheme.colorScheme.primary
+                    !terkunci -> warna.garis
                     benarIni -> warna.suksesTeks
                     dipilih -> warna.bahayaTeks
                     else -> warna.garis
@@ -308,14 +329,14 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                         .fillMaxWidth()
                         .background(warnaOpsi, RoundedCornerShape(14.dp))
                         .border(1.dp, border, RoundedCornerShape(14.dp))
-                        .clickable(enabled = !selesaiSoal && kandidat == null) {
+                        .clickable(enabled = !terkunci && kandidat == null) {
                             c.audio.play(Sfx.Klik)
                             if (pengaturan?.haptik != 0) {
                                 haptik.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                             }
-                            // Belum dikunci: hanya membuka lembar konfirmasi.
+                            // Belum dikunci: hanya membuka lembar konfirmasi,
+                            // animasi aksi baru berjalan saat jawaban dikunci.
                             kandidat = i
-                            fase = FasePancing.Lempar
                         }
                         .padding(14.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -330,8 +351,8 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                         Text(huruf, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                     }
                     Text(p.teks, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
-                    if (selesaiSoal && benarIni) Gambar(Art.ikon_berhasil, "Jawaban benar", Modifier.size(26.dp))
-                    if (selesaiSoal && dipilih && !benarIni) Gambar(Art.ikon_error, "Jawaban salah", Modifier.size(26.dp))
+                    if (terkunci && benarIni) Gambar(Art.ikon_berhasil, "Jawaban benar", Modifier.size(26.dp))
+                    if (terkunci && dipilih && !benarIni) Gambar(Art.ikon_error, "Jawaban salah", Modifier.size(26.dp))
                 }
             }
 

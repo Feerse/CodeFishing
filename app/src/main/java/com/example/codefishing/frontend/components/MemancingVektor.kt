@@ -71,27 +71,6 @@ internal fun DrawScope.gambarKilauAir(
     }
 }
 
-internal fun DrawScope.gambarJoran(
-    ujung: Offset,
-    tekuk: Float,
-    warnaKayu: Color,
-    warnaPegangan: Color,
-) {
-    val pangkal = Offset(size.width * 1.04f, -size.height * 0.06f)
-    val kendali = Offset(
-        pangkal.x - size.width * 0.14f,
-        pangkal.y + size.height * 0.16f - tekuk * size.height * 0.06f,
-    )
-    val path = Path().apply {
-        moveTo(pangkal.x, pangkal.y)
-        quadraticTo(kendali.x, kendali.y, ujung.x, ujung.y)
-    }
-    drawPath(path, warnaKayu, style = Stroke(width = 7.dp.toPx(), cap = StrokeCap.Round))
-    drawPath(path, warnaKayu.copy(alpha = 0.55f), style = Stroke(width = 2.2.dp.toPx(), cap = StrokeCap.Round))
-    drawCircle(warnaPegangan, radius = 4.2.dp.toPx(), center = ujung)
-    drawCircle(warnaPegangan.copy(alpha = 0.65f), radius = 2.2.dp.toPx(), center = ujung)
-}
-
 internal fun DrawScope.gambarTali(
     mulai: Offset,
     selesai: Offset,
@@ -305,12 +284,13 @@ internal fun DrawScope.gambarBayanganIkan(
     pusat: Offset,
     progres: Float,
     warna: Color,
+    intensitas: Float = 1f,
 ) {
-    if (progres <= 0f || progres >= 1f) return
+    if (progres <= 0f || progres >= 1f || intensitas <= 0f) return
     val lebar = (54f + progres * 32f).dp.toPx()
     val tinggi = lebar * 0.28f
     drawOval(
-        color = warna.copy(alpha = (1f - progres) * 0.35f),
+        color = warna.copy(alpha = (1f - progres) * 0.35f * intensitas),
         topLeft = Offset(pusat.x - lebar / 2f, pusat.y - tinggi / 2f),
         size = Size(lebar, tinggi),
     )
@@ -320,5 +300,133 @@ internal fun DrawScope.gambarBayanganIkan(
         lineTo(pusat.x + lebar / 2f + tinggi * 0.8f, pusat.y + tinggi * 0.55f)
         close()
     }
-    drawPath(ekor, warna.copy(alpha = (1f - progres) * 0.28f))
+    drawPath(ekor, warna.copy(alpha = (1f - progres) * 0.28f * intensitas))
+}
+
+/** Tombak penyelam: batang lurus dengan mata tombak di ujungnya. */
+internal fun DrawScope.gambarTombak(
+    mulai: Offset,
+    selesai: Offset,
+    progres: Float,
+    warna: Color,
+    alpha: Float = 1f,
+) {
+    if (progres <= 0f || alpha <= 0f) return
+    val t = progres.coerceIn(0f, 1f)
+    val ujung = Offset(
+        mulai.x + (selesai.x - mulai.x) * t,
+        mulai.y + (selesai.y - mulai.y) * t,
+    )
+    val arah = kotlin.math.atan2(
+        (selesai.y - mulai.y).toDouble(),
+        (selesai.x - mulai.x).toDouble(),
+    ).toFloat()
+    drawLine(
+        color = warna.copy(alpha = alpha * 0.9f),
+        start = mulai,
+        end = ujung,
+        strokeWidth = 2.dp.toPx(),
+        cap = StrokeCap.Round,
+    )
+    val dasar = Offset(
+        ujung.x - cos(arah.toDouble()).toFloat() * 10.dp.toPx(),
+        ujung.y - sin(arah.toDouble()).toFloat() * 10.dp.toPx(),
+    )
+    val tegakX = cos((arah + PI.toFloat() / 2f).toDouble()).toFloat() * 4.dp.toPx()
+    val tegakY = sin((arah + PI.toFloat() / 2f).toDouble()).toFloat() * 4.dp.toPx()
+    val mata = Path().apply {
+        moveTo(ujung.x, ujung.y)
+        lineTo(dasar.x + tegakX, dasar.y + tegakY)
+        lineTo(dasar.x - tegakX, dasar.y - tegakY)
+        close()
+    }
+    drawPath(mata, warna.copy(alpha = alpha))
+}
+
+/** Garis bidik tipis dan putus-putus, dipakai penyelam sebelum menembak. */
+internal fun DrawScope.gambarGarisBidik(
+    mulai: Offset,
+    selesai: Offset,
+    alpha: Float,
+    warna: Color,
+) {
+    if (alpha <= 0.01f) return
+    val dx = selesai.x - mulai.x
+    val dy = selesai.y - mulai.y
+    val jarak = kotlin.math.hypot(dx.toDouble(), dy.toDouble()).toFloat()
+    if (jarak <= 1f) return
+    val langkah = 7.dp.toPx()
+    val celah = 5.dp.toPx()
+    var d = 0f
+    while (d < jarak) {
+        val akhir = minOf(d + langkah, jarak)
+        val t1 = d / jarak
+        val t2 = akhir / jarak
+        drawLine(
+            color = warna.copy(alpha = alpha),
+            start = Offset(mulai.x + dx * t1, mulai.y + dy * t1),
+            end = Offset(mulai.x + dx * t2, mulai.y + dy * t2),
+            strokeWidth = 1.2.dp.toPx(),
+            cap = StrokeCap.Round,
+        )
+        d += langkah + celah
+    }
+    drawCircle(
+        color = warna.copy(alpha = alpha),
+        radius = 3.dp.toPx(),
+        center = selesai,
+        style = Stroke(width = 1.2.dp.toPx()),
+    )
+}
+
+/** Jejak gelembung di belakang tombak atau ikan yang bergerak cepat. */
+internal fun DrawScope.gambarGelembungJejak(
+    mulai: Offset,
+    selesai: Offset,
+    progres: Float,
+    warna: Color,
+    jumlah: Int = 7,
+) {
+    if (progres <= 0f) return
+    repeat(jumlah) { i ->
+        val t = (progres * 1.25f - i * 0.11f)
+        if (t in 0.02f..1f) {
+            val x = mulai.x + (selesai.x - mulai.x) * t
+            val y = mulai.y + (selesai.y - mulai.y) * t +
+                sin((progres * 9f + i).toDouble()).toFloat() * 3.dp.toPx()
+            val radius = (1.3f + (i % 3) * 0.9f).dp.toPx()
+            drawCircle(
+                color = warna.copy(alpha = (1f - t) * 0.55f),
+                radius = radius,
+                center = Offset(x, y),
+                style = Stroke(width = 1.dp.toPx()),
+            )
+        }
+    }
+}
+
+/** Pecahan es yang terlempar saat ikan keluar dari lubang. */
+internal fun DrawScope.gambarSerpihanEs(
+    pusat: Offset,
+    progres: Float,
+    warna: Color,
+    jumlah: Int = 12,
+) {
+    if (progres <= 0f || progres >= 1f) return
+    repeat(jumlah) { i ->
+        val sudut = -PI.toFloat() * 0.92f + (i / jumlah.toFloat()) * PI.toFloat() * 0.84f
+        val jarak = (12f + (i * 9 % 30)) * progres * 2.1f
+        val x = pusat.x + cos(sudut.toDouble()).toFloat() * jarak
+        val y = pusat.y + sin(sudut.toDouble()).toFloat() * jarak -
+            22f * progres * progres
+        val s = (1.6f + (i % 3) * 0.9f).dp.toPx()
+        val keping = Path().apply {
+            moveTo(x, y - s)
+            lineTo(x + s, y)
+            lineTo(x, y + s)
+            lineTo(x - s, y)
+            close()
+        }
+        drawPath(keping, warna.copy(alpha = (1f - progres) * 0.9f))
+    }
 }

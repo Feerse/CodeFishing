@@ -8,7 +8,7 @@ Semua permainan berjalan **offline** di perangkat; aplikasi tidak meminta izin i
 - 20 stage dalam dua peta: **Samudra Pasifik** (stage 1-10, stage 10 = Boss) dan **Antartika** (stage 11-20, stage 20 = Boss). Antartika terbuka setelah seluruh stage 1-10 selesai; belum ada perairan lain.
 - Tiap stage: Materi (satu kalimat, contoh kode, keluaran) lalu Kuis 5 soal pilihan ganda.
 - **Konfirmasi jawaban**: mengetuk opsi hanya menandai pilihan (kail dilempar), jawaban belum tersubmit. Pemain harus menekan **Ya, kunci jawaban** pada lembar konfirmasi; **Periksa lagi** membatalkan tanpa mengunci jawaban atau mengubah umpan.
-- **Animasi memancing**: di atas soal ada adegan vector (perahu, nelayan, kail, ikan). Kail terlempar saat opsi dipilih, ikan terangkat saat jawaban benar, dan tali putus saat jawaban salah.
+- **Animasi memancing**: di atas soal ada adegan vektor yang mengikuti studi kasus stage. Kapal/dermaga memakai joran yang sudah ada di ilustrasi dengan tali dan pelampung beranimasi, perahu cadik melempar jala, penyelam membidik lalu menembak tombak setelah ikan berenang masuk, lubang es memakai tali vertikal, bubu memakai tali pengangkat, dan boss trawler memakai pukat. Animasi aksi baru berjalan saat jawaban dikunci (bukan saat memilih opsi). Ikan tidak tampil saat adegan tenang dan menghilang setelah ditarik.
 - **Umpan (nyawa)**: maksimum 5 dan pulih 1 umpan tiap 15 menit. Jawaban salah tidak langsung mengurangi umpan; umpan berkurang **1 sekali** saat stage selesai jika terdapat **minimal 3 jawaban salah**. Umpan 0 membuka layar 11 (hitung mundur) saat mencoba memulai stage berikutnya.
 - **Lulus stage**: skor benar/5 × 100 ≥ 70 untuk stage biasa. **Boss Stage 10 dan Stage 20 lulus di 4 dari 5 (80%)**.
 - Lulus membuka stage berikutnya. Skor terbaik, combo tertinggi, dan percobaan disimpan di `progres_stage`.
@@ -39,7 +39,7 @@ Karena satu stage hanya 5 soal, ambang combo bonus adalah 3/4/5 dan semua bonus 
 
 Ikan yang sama boleh ditangkap berulang; jumlah, bobot terbesar, tier terbaik, dan level/kenyang disimpan di `koleksi_ikan`.
 
-- **Nama panggilan Akuarium**: nama bisa diubah saat ikan diketuk di Akuarium dan disimpan **per ekor**, jadi beberapa ikan sejenis bisa punya nama berbeda. Nama custom tampil sebagai heading di atas ikan, sedangkan nama spesies selalu tampil di bawah ikan. Nama menempel pada baris ikan di akuarium sehingga tidak berubah saat ikan lain ditambah/dikeluarkan.
+- **Nama panggilan Akuarium**: nama bisa diubah saat ikan diketuk di Akuarium dan disimpan **per ekor**, jadi beberapa ikan sejenis bisa punya nama berbeda. Nama custom **menggantikan** nama spesies pada satu label di bawah ikan; jika nama dikosongkan, nama spesies yang tampil. Nama menempel pada baris ikan di akuarium sehingga tidak berubah saat ikan lain ditambah/dikeluarkan.
 - **Kapasitas dan isi Akuarium**: akuarium menampung maksimal 10 ekor. Pemain menambah atau mengurangi ikan dari detail ikan di Koleksi, lalu bisa mengeluarkan ikan tertentu dari detail ikan di Akuarium. Mengeluarkan ikan **tidak mengurangi koleksi**. Setelah pembaruan aplikasi, akuarium mulai kosong dan diisi ulang oleh pemain.
 - **Kenyang di Akuarium**: status kenyang tetap disimpan per spesies. Memberi makan satu ekor memengaruhi seluruh ekor spesies yang sama, termasuk yang belum dipajang.
 
