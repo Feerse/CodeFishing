@@ -97,6 +97,10 @@ Status: selesai. `frontend/components/Pembuka.kt` dipasang di cabang boot `MainA
 (bukan layar baru). Logo fade + skala, tiga riak mengembang, delapan gelembung naik
 (memakai `Art.logo_codefishing`, `Art.gelembung`, `Art.ombak_pola`), selesai dalam
 1,9 detik, dan satu ketukan melewati animasi. Warna mengikuti `LocalWarna` (terang/gelap).
+Animasi tidak lagi terpotong saat seed cepat: `Pembuka` memanggil `onSelesai`, dan
+`MainActivity` baru membuka `App()` setelah animasi selesai/dilewati DAN data siap.
+Nilai animasi dibaca di draw scope/layer agar tiap frame hanya menggambar ulang
+tanpa recompose (terukur ±60 fps di perangkat uji).
 
 Jika pengguna menjawab "bebas": logo CodeFishing + riak/gelembung dengan aset yang sudah ada (`Art.logo_codefishing`, `Art.gelembung`, `Art.ombak_pola`), maksimal ±2 detik, bisa dilewati dengan ketukan.
 Pasang di layar boot dari T3 (bukan layar baru). Gunakan animasi Compose (`rememberInfiniteTransition`/`animate*AsState`), tanpa library baru, tanpa aset baru. Hormati tema terang/gelap.

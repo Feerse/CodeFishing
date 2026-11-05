@@ -12,6 +12,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
@@ -54,6 +57,10 @@ class MainActivity : ComponentActivity() {
             CompositionLocalProvider(LocalContainer provides container) {
                 val mode by container.theme.mode.collectAsState()
                 val siap by container.siap.collectAsState()
+                // Pembuka ditampilkan sekali tiap aplikasi dibuka dan tidak
+                // dipotong oleh cepatnya proses seed. Layar utama baru muncul
+                // setelah animasi selesai (atau dilewati) DAN data siap.
+                var pembukaSelesai by rememberSaveable { mutableStateOf(false) }
                 
                 LaunchedEffect(Unit) {
                     withContext(Dispatchers.IO) {
@@ -63,10 +70,10 @@ class MainActivity : ComponentActivity() {
                 
                 CodeFishingTheme(mode) {
                     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                        if (siap) {
+                        if (siap && pembukaSelesai) {
                             App()
                         } else {
-                            Pembuka()
+                            Pembuka(onSelesai = { pembukaSelesai = true })
                         }
                     }
                 }

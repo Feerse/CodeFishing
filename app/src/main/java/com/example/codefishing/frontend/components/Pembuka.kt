@@ -54,24 +54,29 @@ private val GELEMBUNG = listOf(
     GelembungPembuka(0.58f, 0.54f, 0.060f, 0.4f),
 )
 
+private val TUNDA_RIAK = listOf(0.00f, 0.16f, 0.32f)
+
 /**
  * Animasi pembuka di layar boot: logo muncul, riak mengembang, dan gelembung
- * naik. Selesai dalam ±1,9 detik dan bisa dilewati dengan satu ketukan.
+ * naik. Berjalan penuh selama ±1,9 detik dan bisa dilewati dengan satu ketukan.
  * Hanya memakai aset yang sudah ada: logo, gelembung, dan pola ombak.
+ *
+ * [onSelesai] dipanggil sekali saat animasi selesai atau dilewati, sehingga
+ * layar utama baru dibuka setelah pembuka benar-benar terlihat.
  */
 @Composable
-fun Pembuka(modifier: Modifier = Modifier) {
+fun Pembuka(modifier: Modifier = Modifier, onSelesai: () -> Unit = {}) {
     val warna = LocalWarna.current
     val progres = remember { Animatable(0f) }
     var dilewati by remember { mutableStateOf(false) }
 
     LaunchedEffect(dilewati) {
-        if (!dilewati) progres.animateTo(1f, tween(durationMillis = 1900, easing = LinearEasing))
+        if (!dilewati) {
+            progres.animateTo(1f, tween(durationMillis = 1900, easing = LinearEasing))
+            onSelesai()
+        }
     }
 
-    val p = if (dilewati) 1f else progres.value
-    val masuk = (p / 0.32f).coerceIn(0f, 1f)
-    val skalaLogo = 0.88f + 0.12f * FastOutSlowInEasing.transform(masuk)
     val gambarGelembung = painterResource(Art.gelembung)
 
     Box(
@@ -81,7 +86,10 @@ fun Pembuka(modifier: Modifier = Modifier) {
                 onClickLabel = "Lewati animasi pembuka",
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
-            ) { dilewati = true },
+            ) {
+                dilewati = true
+                onSelesai()
+            },
         contentAlignment = Alignment.Center,
     ) {
         Image(
@@ -94,6 +102,10 @@ fun Pembuka(modifier: Modifier = Modifier) {
         )
 
         Canvas(Modifier.fillMaxSize()) {
+            // Nilai animasi dibaca di dalam draw scope supaya setiap frame
+            // hanya menggambar ulang kanvas, tanpa recompose seluruh layar.
+            val p = if (dilewati) 1f else progres.value
+            val masuk = (p / 0.32f).coerceIn(0f, 1f)
             val pusat = Offset(size.width / 2f, size.height / 2f)
             val sisi = min(size.width, size.height)
 
@@ -109,7 +121,7 @@ fun Pembuka(modifier: Modifier = Modifier) {
             )
 
             // Tiga riak yang mengembang bergantian.
-            listOf(0.00f, 0.16f, 0.32f).forEach { tunda ->
+            TUNDA_RIAK.forEach { tunda ->
                 val r = ((p - tunda) / 0.72f).coerceIn(0f, 1f)
                 if (r > 0f && r < 1f) {
                     drawCircle(
@@ -148,9 +160,14 @@ fun Pembuka(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxSize(0.42f)
                 .graphicsLayer {
+                    // Sama seperti kanvas, alpha dan skala diperbarui di layer
+                    // agar animasi tidak memicu recompose.
+                    val p = if (dilewati) 1f else progres.value
+                    val masuk = (p / 0.32f).coerceIn(0f, 1f)
                     alpha = masuk
-                    scaleX = skalaLogo
-                    scaleY = skalaLogo
+                    val skala = 0.88f + 0.12f * FastOutSlowInEasing.transform(masuk)
+                    scaleX = skala
+                    scaleY = skala
                 },
             contentScale = ContentScale.Fit,
         )
