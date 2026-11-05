@@ -28,6 +28,7 @@ import com.example.codefishing.pemula.LevelRules
 import com.example.codefishing.pemula.PilihanKuis
 import com.example.codefishing.pemula.ProgresPeta
 import com.example.codefishing.pemula.SoalKuis
+import com.example.codefishing.pemula.TangkapanSampingan
 import com.example.codefishing.pemula.urutanSoal
 import com.example.codefishing.expert.Scoring
 import kotlinx.coroutines.flow.Flow
@@ -70,6 +71,8 @@ data class HasilStageData(
     /** Stage berikutnya adalah boss, sehingga layar hasil membuka layar Boss. */
     val stageBerikutBoss: Boolean,
     val umpanBerkurang: Boolean,
+    /** Ikan tanpa stage yang ikut tertangkap pada stage ini (0 atau 1 ekor). */
+    val sampingan: List<TangkapanData> = emptyList(),
 )
 
 data class TantanganData(
@@ -332,6 +335,28 @@ class GameRepository(
             }
         }
 
+        val sampingan = mutableListOf<TangkapanData>()
+        if (lulus && Random.nextDouble() < TangkapanSampingan.PELUANG) {
+            val dalam = TangkapanSampingan.lautDalam(stage.nomor)
+            val kandidat = contentDao.semuaIkan().filter {
+                TangkapanSampingan.kandidat(
+                    asalStageId = it.asal_stage_id,
+                    tier = it.tier,
+                    syaratUnlock = it.syarat_unlock,
+                    gambar = it.gambar,
+                    lautDalam = dalam,
+                )
+            }
+            if (kandidat.isNotEmpty()) {
+                val totalBobot = kandidat.sumOf { TangkapanSampingan.bobot(it.tier) }
+                TangkapanSampingan.pilih(
+                    kandidat,
+                    { TangkapanSampingan.bobot(it.tier) },
+                    Random.nextInt(totalBobot),
+                )?.let { ikan -> sampingan.add(beriIkan(ikan, ikan.tier, now)) }
+            }
+        }
+
         val jumlahStage = contentDao.jumlahStage()
         val nomorBerikut = if (lulus) ProgresPeta.nomorLanjut(stage.nomor, jumlahStage) else null
         val stageBerikut = nomorBerikut?.let { stageDao.berdasarkanNomor(it) }
@@ -355,6 +380,7 @@ class GameRepository(
             stageBerikut = stageBerikut?.nomor,
             stageBerikutBoss = stageBerikut?.tipe == "boss",
             umpanBerkurang = umpanBerkurang,
+            sampingan = sampingan,
         )
         hasilStageTerakhir = data
         return data

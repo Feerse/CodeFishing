@@ -1,6 +1,7 @@
 package com.example.codefishing.data
 
 import com.example.codefishing.core.art.Art
+import com.example.codefishing.pemula.TangkapanSampingan
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
@@ -95,6 +96,21 @@ class SeedValidationTest {
                 "Lumba-lumba", "Gurita", "Naga Laut", "Paus Biru"),
             belumBergambar,
         )
+    }
+
+    @Test
+    fun ikanSampinganCocokDenganWilayahnya() {
+        val semua = baca("ikan.json").objects()
+        val sampingan = semua.filter {
+            it.isNull("asal_stage_id") && it.getString("syarat_unlock") != TangkapanSampingan.SYARAT_KHUSUS
+        }
+        assertEquals(33, sampingan.size)
+        val pasifik = sampingan.filter { it.getString("tier") in setOf("biasa", "langka") }
+        val lautDalam = sampingan.filter { it.getString("tier") in setOf("epik", "legenda", "mitos") }
+        assertEquals(21, pasifik.size)
+        assertEquals(12, lautDalam.size)
+        assertTrue(pasifik.all { it.getString("syarat_unlock").contains("Pasifik") })
+        assertTrue(lautDalam.all { it.getString("syarat_unlock").contains("laut dalam") })
     }
 
     @Test

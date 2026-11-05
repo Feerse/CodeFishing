@@ -158,6 +158,28 @@ fun HasilStageScreen(nav: AppNavigator, padding: PaddingValues) {
                     }
                 }
 
+                if (hasil.sampingan.isNotEmpty()) {
+                    Kartu(Modifier.fillMaxWidth(), warna = warna.kartuLembut) {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(
+                                "Tangkapan sampingan",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.tertiary,
+                            )
+                            hasil.sampingan.forEach { s ->
+                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    Gambar(gambarIkan(s.ikan.gambar), s.ikan.nama, Modifier.size(44.dp))
+                                    Text(
+                                        if (s.baru) "${s.ikan.nama} · ikan baru" else s.ikan.nama,
+                                        modifier = Modifier.weight(1f),
+                                    )
+                                    ChipTier(s.tier)
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if (hasil.rekorBaru) {
                     Text("Rekor baru!", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
                 }
