@@ -56,7 +56,6 @@ import com.example.codefishing.frontend.components.KodeBlok
 import com.example.codefishing.frontend.components.MemancingScene
 import com.example.codefishing.frontend.components.JenisAdegan
 import com.example.codefishing.frontend.components.adeganStage
-import com.example.codefishing.frontend.components.durasiLemparAdegan
 import com.example.codefishing.frontend.components.gambarIkan
 import com.example.codefishing.frontend.components.jenisAdeganStage
 import com.example.codefishing.core.db.IkanEntity
@@ -65,7 +64,6 @@ import com.example.codefishing.ui.theme.LocalWarna
 import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
 import com.example.codefishing.pemula.PilihanKuis
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -127,7 +125,6 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
     }
     var jawabanBenar by remember(d) { mutableStateOf(sesiTersimpan?.jawabanBenar ?: false) }
     var menyimpan by remember(d) { mutableStateOf(false) }
-    var menungguAksi by remember(d) { mutableStateOf(false) }
     var menyelesaikan by remember(d) { mutableStateOf(false) }
 
     /** Menyimpan stage terakhir + seluruh isi sesi agar bisa dilanjutkan nanti. */
@@ -163,7 +160,7 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
 
     val soal = daftarSoal[indeks]
     val terkunci = terpilih != null
-    val selesaiSoal = terkunci && !menungguAksi
+    val selesaiSoal = terkunci
     val jenisAdegan = jenisAdeganStage(d.stage.nomor, d.stage.tipe == "boss")
 
     // Suara aksi sesuai adegan: cipratan hanya untuk aksi di permukaan air.
@@ -179,45 +176,33 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
     /**
      * Mengunci jawaban SETELAH dikonfirmasi pemain. Hanya di sini skor, combo, XP,
      * umpan, dan riwayat Room berubah — menekan opsi saja tidak menyentuh apa pun.
+     * Hasil benar/salah tampil seketika; animasi hasil berjalan tanpa menahan UI.
      */
     fun kunciJawaban(pilihan: PilihanKuis, posisi: Int) {
         if (menyimpan || terpilih != null) return
         terpilih = posisi
         jawabanBenar = pilihan.benar
         menyimpan = true
-        menungguAksi = true
-        // Animasi aksi baru dimulai setelah jawaban benar-benar dikunci.
-        fase = FasePancing.Lempar
+        // Kail sudah melayang sejak opsi disentuh, jadi kunci langsung memutuskan hasil.
+        fase = if (pilihan.benar) FasePancing.Dapat else FasePancing.Lepas
         if (pengaturan?.haptik != 0) {
             haptik.performHapticFeedback(
                 if (pilihan.benar) HapticFeedbackType.LongPress else HapticFeedbackType.TextHandleMove,
             )
         }
-        val faseHasil = if (pilihan.benar) FasePancing.Dapat else FasePancing.Lepas
         if (pilihan.benar) {
             benar++
             combo++
             comboMaks = maxOf(comboMaks, combo)
             xp += soal.poin
-            scope.launch {
-                c.game.catatJawaban(soal.id, pilihan.id, true, combo)
-                menyimpan = false
-                delay(durasiLemparAdegan(jenisAdegan).toLong())
-                c.audio.play(Sfx.Benar)
-                fase = faseHasil
-                menungguAksi = false
-            }
         } else {
             salah++
             combo = 0
-            scope.launch {
-                c.game.catatJawaban(soal.id, pilihan.id, false, 0)
-                menyimpan = false
-                delay(durasiLemparAdegan(jenisAdegan).toLong())
-                c.audio.play(Sfx.Salah)
-                fase = faseHasil
-                menungguAksi = false
-            }
+        }
+        scope.launch {
+            c.game.catatJawaban(soal.id, pilihan.id, pilihan.benar, if (pilihan.benar) combo else 0)
+            c.audio.play(if (pilihan.benar) Sfx.Benar else Sfx.Salah)
+            menyimpan = false
         }
         // Simpan jawaban terkunci + skor berjalan agar sesi bisa dilanjutkan.
         simpanSesi()
@@ -334,9 +319,10 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                             if (pengaturan?.haptik != 0) {
                                 haptik.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                             }
-                            // Belum dikunci: hanya membuka lembar konfirmasi,
-                            // animasi aksi baru berjalan saat jawaban dikunci.
+                            // Opsi disentuh: kail langsung dilempar. Lembar konfirmasi
+                            // hanya meminta pemain mengunci jawaban.
                             kandidat = i
+                            fase = FasePancing.Lempar
                         }
                         .padding(14.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -400,7 +386,7 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                     Text("Benar $benar · Salah $salah · Combo $combo", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Text(
-                    "Ketuk jawaban, lalu konfirmasi untuk menguncinya.",
+                    "Ketuk jawaban untuk melempar kail, lalu konfirmasi untuk menguncinya.",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

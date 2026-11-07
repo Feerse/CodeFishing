@@ -154,12 +154,16 @@ fun MemancingScene(
         BoxWithConstraints(Modifier.fillMaxSize()) {
             val w = constraints.maxWidth.toFloat()
             val h = constraints.maxHeight.toFloat()
-            val pangkal = titikGambar(titik.pangkal.x, titik.pangkal.y, w, h)
-            val ujung = titikGambar(titik.ujung.x, titik.ujung.y, w, h)
-            val target = titikGambar(titik.target.x, titik.target.y, w, h)
-            val ikanTujuan = titikGambar(titik.ikanTujuan.x, titik.ikanTujuan.y, w, h)
+            // Adegan Bubu menaruh bubu di dasar ilustrasi; ratakan gambar ke bawah
+            // agar bubu tetap masuk kotak saat rasio layar memotong bagian atas/bawah.
+            val ratakanBawah = jenis == JenisAdegan.Bubu
+            val pangkal = titikGambar(titik.pangkal.x, titik.pangkal.y, w, h, ratakanBawah)
+            val ujung = titikGambar(titik.ujung.x, titik.ujung.y, w, h, ratakanBawah)
+            val istirahat = titikGambar(titik.istirahat.x, titik.istirahat.y, w, h, ratakanBawah)
+            val target = titikGambar(titik.target.x, titik.target.y, w, h, ratakanBawah)
+            val ikanTujuan = titikGambar(titik.ikanTujuan.x, titik.ikanTujuan.y, w, h, ratakanBawah)
             val dasarAir = if (titik.dasarAir > 0f) {
-                titikGambar(0f, titik.dasarAir, w, h).y
+                titikGambar(0f, titik.dasarAir, w, h, ratakanBawah).y
             } else {
                 h * 0.62f
             }
@@ -193,10 +197,13 @@ fun MemancingScene(
             val memakaiRod = memakaiJoran(jenis)
             val bobber: Offset? = when {
                 !memakaiRod -> null
-                fase == FasePancing.Diam -> Offset(ujung.x, ujung.y + 26f * px)
+                // Saat tenang tali sudah terpasang dan pelampung mengapung.
+                fase == FasePancing.Diam -> istirahat
                 fase == FasePancing.Lempar -> {
-                    val x = lerpF(ujung.x, target.x, easedLempar)
-                    val y = lerpF(ujung.y, target.y, easedLempar) -
+                    // Lempar dimulai dari posisi istirahat, bukan dari ujung joran,
+                    // supaya kail terlihat terangkat lalu melesat ke target.
+                    val x = lerpF(istirahat.x, target.x, easedLempar)
+                    val y = lerpF(istirahat.y, target.y, easedLempar) -
                         h * 0.18f * 4f * easedLempar * (1f - easedLempar)
                     if (tLempar >= 0.999f) Offset(target.x, target.y + bobPx) else Offset(x, y)
                 }
@@ -211,7 +218,7 @@ fun MemancingScene(
                 )
             }
             val bobberAlpha = when {
-                !memakaiRod || fase == FasePancing.Diam -> 0f
+                !memakaiRod -> 0f
                 fase == FasePancing.Lepas -> (1f - tLepas).coerceIn(0f, 1f)
                 else -> 1f
             }
@@ -251,10 +258,13 @@ fun MemancingScene(
             } else {
                 0f
             }
-            val tombakUjung = if (fase == FasePancing.Lepas) {
-                target + (target - pangkal) * (0.55f * tLepas)
-            } else {
-                target
+            val tombakUjung = when (fase) {
+                // Meleset: tombak meluncur melewati ikan lalu memudar.
+                FasePancing.Lepas -> target + (target - pangkal) * (0.55f * tLepas)
+                // Berhasil: tombak ikut ditarik bersama ikan ke arah penyelam,
+                // jadi tidak ada tombak menggantung di air setelah ikan diangkat.
+                FasePancing.Dapat -> if (tIkan > 0.04f) Offset(fishX, fishY) else target
+                else -> target
             }
 
             // --- Aksi tali lubang es ----------------------------------------------
@@ -426,7 +436,13 @@ fun MemancingScene(
                         translationY = napasPx + gy * 0.5f
                     },
             ) {
-                Gambar(adegan, null, Modifier.fillMaxSize(), ContentScale.Crop)
+                Gambar(
+                    adegan,
+                    null,
+                    Modifier.fillMaxSize(),
+                    ContentScale.Crop,
+                    perataan = if (ratakanBawah) Alignment.BottomCenter else Alignment.Center,
+                )
 
                 if (varianBoss) {
                     Gambar(Art.hujan_badai, null, Modifier.fillMaxSize().alpha(0.30f), ContentScale.Crop)
@@ -542,7 +558,7 @@ fun MemancingScene(
                                 if (tembakT > 0.02f || fase == FasePancing.Lepas) {
                                     gambarGelembungJejak(
                                         mulai = mulaiTombak,
-                                        selesai = if (fase == FasePancing.Lepas) tombakUjung else target,
+                                        selesai = tombakUjung,
                                         progres = if (fase == FasePancing.Lepas) tLepas else tembakT,
                                         warna = warna.ombak,
                                     )

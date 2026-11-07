@@ -37,12 +37,14 @@ fun Gambar(
     skala: ContentScale = ContentScale.Fit,
     warna: Color? = null,
     blendMode: BlendMode = BlendMode.SrcIn,
+    perataan: Alignment = Alignment.Center,
 ) {
     Image(
         painterResource(id),
         contentDescription = deskripsi,
         modifier = modifier,
         contentScale = skala,
+        alignment = perataan,
         colorFilter = warna?.let { ColorFilter.tint(it, blendMode) },
     )
 }
