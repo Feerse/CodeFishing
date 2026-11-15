@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.expert.MisiPeta
 import com.example.codefishing.expert.PanduanExpert
 import com.example.codefishing.expert.PanduanPerintah
@@ -83,9 +84,9 @@ fun PanduanExpertSheet(
                 .fillMaxHeight(0.92f)
                 .padding(horizontal = 20.dp),
         ) {
-            Text("Panduan Expert", style = MaterialTheme.typography.titleLarge)
+            Text(t("Panduan Expert"), style = MaterialTheme.typography.titleLarge)
             Text(
-                "Referensi perintah, sintaks Python, dan petunjuk semua misi. Kamu tidak perlu keluar dari editor.",
+                t("Referensi perintah, sintaks Python, dan petunjuk semua misi. Kamu tidak perlu keluar dari editor."),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -95,7 +96,7 @@ fun PanduanExpertSheet(
                     FilterChip(
                         selected = tab == pilihan,
                         onClick = { tab = pilihan },
-                        label = { Text(pilihan.label) },
+                        label = { Text(t(pilihan.label)) },
                     )
                 }
             }
@@ -117,7 +118,7 @@ fun PanduanExpertSheet(
                         items(PanduanExpert.sintaks, key = { it.judul }) { item ->
                             KartuSintaks(item, onSisip)
                         }
-                        item { JudulBagian("Error umum") }
+                        item { JudulBagian(t("Error umum")) }
                         items(PanduanExpert.masalah, key = { it.masalah }) { masalah ->
                             Kartu(Modifier.fillMaxWidth(), warna = warna.peringatanLatar) {
                                 Text(
@@ -135,7 +136,7 @@ fun PanduanExpertSheet(
                     TabPanduan.Misi -> {
                         item {
                             Text(
-                                "Pilih misi untuk membukanya. Draf kode tiap misi tetap tersimpan.",
+                                t("Pilih misi untuk membukanya. Draf kode tiap misi tetap tersimpan."),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -159,7 +160,7 @@ fun PanduanExpertSheet(
 private fun KartuPetunjukPapan() {
     val warna = LocalWarna.current
     Kartu(Modifier.fillMaxWidth(), warna = warna.kartuLembut) {
-        Text("Cara kerja papan", style = MaterialTheme.typography.titleMedium)
+        Text(t("Cara kerja papan"), style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(6.dp))
         PanduanExpert.petunjukPapan.forEach { baris ->
             Text(
@@ -196,14 +197,14 @@ private fun KartuPerintah(item: PanduanPerintah, onSisip: ((String, Int) -> Unit
         if (!item.hasil.isNullOrBlank()) {
             Spacer(Modifier.height(4.dp))
             Text(
-                "Hasil: ${item.hasil}",
+                t("Hasil: {}", item.hasil),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
         if (!item.contoh.isNullOrBlank()) {
             Spacer(Modifier.height(8.dp))
-            KodeBlok(item.contoh, judul = "CONTOH")
+            KodeBlok(item.contoh, judul = t("CONTOH"))
         }
         val aksi = onSisip
         val sisip = item.sisip
@@ -213,7 +214,7 @@ private fun KartuPerintah(item: PanduanPerintah, onSisip: ((String, Int) -> Unit
                 TextButton(
                     onClick = { aksi(sisip, item.kursorMundur) },
                     contentPadding = PaddingValues(horizontal = 8.dp),
-                ) { Text("Sisipkan") }
+                ) { Text(t("Sisipkan")) }
             }
         }
     }
@@ -228,7 +229,7 @@ private fun KartuSintaks(item: PanduanSintaks, onSisip: ((String, Int) -> Unit)?
         Text(item.ringkas, style = MaterialTheme.typography.bodyMedium)
         if (!item.contoh.isNullOrBlank()) {
             Spacer(Modifier.height(8.dp))
-            KodeBlok(item.contoh, judul = "CONTOH")
+            KodeBlok(item.contoh, judul = t("CONTOH"))
         }
         val aksi = onSisip
         val sisip = item.sisip
@@ -238,7 +239,7 @@ private fun KartuSintaks(item: PanduanSintaks, onSisip: ((String, Int) -> Unit)?
                 TextButton(
                     onClick = { aksi(sisip, item.kursorMundur) },
                     contentPadding = PaddingValues(horizontal = 8.dp),
-                ) { Text("Sisipkan") }
+                ) { Text(t("Sisipkan")) }
             }
         }
     }
@@ -248,7 +249,7 @@ private fun KartuSintaks(item: PanduanSintaks, onSisip: ((String, Int) -> Unit)?
 private fun KartuBelumDidukung() {
     val warna = LocalWarna.current
     Kartu(Modifier.fillMaxWidth(), warna = warna.bahayaLatar) {
-        Text("Belum didukung", style = MaterialTheme.typography.titleMedium, color = warna.bahayaTeks)
+        Text(t("Belum didukung"), style = MaterialTheme.typography.titleMedium, color = warna.bahayaTeks)
         Spacer(Modifier.height(6.dp))
         PanduanExpert.belumDidukung.forEach { baris ->
             Text(
@@ -286,7 +287,7 @@ private fun KartuMisi(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
-                Text("Misi ${misi.nomor} · ${misi.judul}", style = MaterialTheme.typography.titleMedium)
+                Text(t("Misi {} · {}", misi.nomor, misi.judul), style = MaterialTheme.typography.titleMedium)
                 Text(
                     misi.deskripsi,
                     style = MaterialTheme.typography.bodySmall,
@@ -298,13 +299,13 @@ private fun KartuMisi(
         Spacer(Modifier.height(6.dp))
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
-                if (misi.par != null) "Par ${misi.par} tick" else "Tanpa par",
+                t(if (misi.par != null) "Par {} tick" else "Tanpa par", misi.par ?: 0),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.tertiary,
             )
             if (aktif) {
                 Text(
-                    "SEDANG DIBUKA",
+                    t("SEDANG DIBUKA"),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold,
@@ -316,7 +317,7 @@ private fun KartuMisi(
         }
         Spacer(Modifier.height(6.dp))
         Text(
-            "Petunjuk: ${misi.hint}",
+            t("Petunjuk: {}", misi.hint),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -332,7 +333,7 @@ fun BarisPintasanKode(
 ) {
     Column(modifier.fillMaxWidth()) {
         Text(
-            "Sisip cepat",
+            t("Sisip cepat"),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

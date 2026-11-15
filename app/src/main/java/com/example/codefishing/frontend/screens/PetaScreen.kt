@@ -92,6 +92,8 @@ import com.example.codefishing.core.art.Art
 import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.db.IkanEntity
 import com.example.codefishing.core.db.StageStatusRow
+import com.example.codefishing.core.i18n.LocalTeks
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.gambarIkanKecil
@@ -135,6 +137,8 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
     val ikan by produceState<List<IkanEntity>>(emptyList()) { value = c.game.semuaIkan() }
     val petaIkan = remember(ikan) { ikan.associateBy { it.id } }
     val context = LocalContext.current
+    // Untuk teks di dalam lambda non-@Composable (semantics, clickable).
+    val tr = LocalTeks.current
 
     // Pilihan manual pemain; null = ikut peta stage terakhir / stage yang sedang aktif.
     var petaPilihan by rememberSaveable { mutableStateOf<PetaAktif?>(null) }
@@ -296,9 +300,9 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                         .height(tinggi)
                         .semantics {
                             contentDescription = if (petaAktif == PetaAktif.ANTARTIKA) {
-                                "Peta perairan Antartika, stage 11 sampai 20"
+                                tr("Peta perairan Antartika, stage 11 sampai 20")
                             } else {
-                                "Peta perairan Samudra Pasifik, stage 1 sampai 10"
+                                tr("Peta perairan Samudra Pasifik, stage 1 sampai 10")
                             }
                         },
                 ) {
@@ -347,7 +351,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Text(
-                                    "BOSS",
+                                    t("BOSS"),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = warna.bahayaTeks,
                                     fontWeight = FontWeight.Bold,
@@ -401,14 +405,14 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text(
-                                    "ANTARTIKA",
+                                    t("ANTARTIKA"),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = warna.petaTeks,
                                     fontWeight = FontWeight.Bold,
                                     letterSpacing = 1.4.sp,
                                 )
                                 Text(
-                                    if (antartikaTerbuka) "rute terbuka" else "terkunci",
+                                    t(if (antartikaTerbuka) "rute terbuka" else "terkunci"),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = warna.petaTeksRedup.copy(alpha = 0.75f),
                                 )
@@ -439,14 +443,14 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text(
-                                    "SEGITIGA BERMUDA",
+                                    t("SEGITIGA BERMUDA"),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = warna.petaTeks,
                                     fontWeight = FontWeight.Bold,
                                     letterSpacing = 1.2.sp,
                                 )
                                 Text(
-                                    "segera hadir · ketuk untuk pratinjau",
+                                    t("segera hadir · ketuk untuk pratinjau"),
                                     style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
                                     color = warna.petaTeksRedup,
                                     textAlign = TextAlign.Center,
@@ -465,7 +469,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            if (petaAktif == PetaAktif.PASIFIK) "PERAIRAN ANTARTIKA" else "PERAIRAN BERIKUTNYA",
+                            t(if (petaAktif == PetaAktif.PASIFIK) "PERAIRAN ANTARTIKA" else "PERAIRAN BERIKUTNYA"),
                             style = MaterialTheme.typography.labelSmall,
                             color = warna.petaTeks.copy(alpha = 0.55f),
                             textAlign = TextAlign.Center,
@@ -478,7 +482,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                     titikMulai.let { awal ->
                         Gambar(
                             Art.bendera_start,
-                            "Titik awal pelayaran",
+                            t("Titik awal pelayaran"),
                             Modifier
                                 .offset(
                                     x = lebar * (awal.x / PetaGeometri.LEBAR_DUNIA) + 22.dp,
@@ -537,7 +541,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                     toolbarTampil = true
                 },
             )
-            ChipPeta("$jumlahSelesaiTotal/$totalStage", "stage selesai", alignEnd = true)
+            ChipPeta("$jumlahSelesaiTotal/$totalStage", t("stage selesai"), alignEnd = true)
         }
         Box(
             Modifier
@@ -545,11 +549,11 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                 .padding(end = 8.dp, bottom = 8.dp)
                 .size(48.dp)
                 .clip(CircleShape)
-                .clickable(role = Role.Button, onClickLabel = "Geser ke soal terakhir") {
+                .clickable(role = Role.Button, onClickLabel = t("Geser ke soal terakhir")) {
                     c.audio.play(Sfx.Klik)
                     mintaGeser++
                 }
-                .semantics { contentDescription = "Geser peta ke soal terakhir dikerjakan" },
+                .semantics { contentDescription = tr("Geser peta ke soal terakhir dikerjakan") },
             contentAlignment = Alignment.Center,
         ) {
             Gambar(
@@ -599,7 +603,7 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
 
         berlayarKe?.let { tujuan ->
             TransisiBerlayar(
-                tujuan = namaPeta(tujuan),
+                tujuan = tr(namaPeta(tujuan)),
                 suasana = if (tujuan == PetaAktif.ANTARTIKA) SuasanaLaut.ES else SuasanaLaut.TROPIS,
                 kekanan = tujuan == PetaAktif.ANTARTIKA,
                 onGanti = { petaPilihan = tujuan },
@@ -713,6 +717,7 @@ private fun ToolbarPeta(
     onSembunyikan: () -> Unit,
 ) {
     val warna = LocalWarna.current
+    val tr = LocalTeks.current
     val bentuk = RoundedCornerShape(14.dp)
     Column(
         Modifier
@@ -727,14 +732,17 @@ private fun ToolbarPeta(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                "DAFTAR PETA",
+                t("DAFTAR PETA"),
                 style = MaterialTheme.typography.labelSmall,
                 color = warna.petaTeksRedup,
                 letterSpacing = 1.4.sp,
                 modifier = Modifier
                     .weight(1f)
                     .semantics {
-                        contentDescription = "Daftar peta. Peta aktif: ${namaPeta(aktif)}"
+                        contentDescription = tr.format(
+                            "Daftar peta. Peta aktif: {}",
+                            tr[namaPeta(aktif)],
+                        )
                     },
             )
             Box(
@@ -743,10 +751,10 @@ private fun ToolbarPeta(
                     .clip(CircleShape)
                     .clickable(
                         role = Role.Button,
-                        onClickLabel = "Sembunyikan toolbar peta",
+                        onClickLabel = t("Sembunyikan toolbar peta"),
                         onClick = onSembunyikan,
                     )
-                    .semantics { contentDescription = "Sembunyikan toolbar peta" },
+                    .semantics { contentDescription = tr("Sembunyikan toolbar peta") },
                 contentAlignment = Alignment.Center,
             ) {
                 Text("▴", color = warna.petaTeksRedup, fontSize = 15.sp)
@@ -767,21 +775,21 @@ private fun ToolbarPeta(
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             BarisPeta(
-                teks = "Samudra Pasifik",
-                keterangan = rentangPeta(PetaAktif.PASIFIK),
+                teks = t("Samudra Pasifik"),
+                keterangan = t(rentangPeta(PetaAktif.PASIFIK)),
                 ikon = Art.ikon_air_tenang,
                 aktif = aktif == PetaAktif.PASIFIK,
             ) { onPilih(PetaAktif.PASIFIK) }
             BarisPeta(
-                teks = "Lautan Antartika",
-                keterangan = if (antartikaTerbuka) rentangPeta(PetaAktif.ANTARTIKA) else "Terkunci",
+                teks = t("Lautan Antartika"),
+                keterangan = t(if (antartikaTerbuka) rentangPeta(PetaAktif.ANTARTIKA) else "Terkunci"),
                 ikon = Art.ikon_air_dingin,
                 aktif = aktif == PetaAktif.ANTARTIKA,
                 terkunci = !antartikaTerbuka,
             ) { onPilih(PetaAktif.ANTARTIKA) }
             BarisPeta(
-                teks = "Segitiga Bermuda",
-                keterangan = "Segera hadir",
+                teks = t("Segitiga Bermuda"),
+                keterangan = t("Segera hadir"),
                 ikon = Art.gerbang_bermuda,
                 aktif = false,
                 terkunci = true,
@@ -798,6 +806,7 @@ private fun ToolbarPeta(
 @Composable
 private fun PenandaToolbar(aktif: PetaAktif, onClick: () -> Unit) {
     val warna = LocalWarna.current
+    val tr = LocalTeks.current
     val bentuk = RoundedCornerShape(50)
     Row(
         Modifier
@@ -806,10 +815,15 @@ private fun PenandaToolbar(aktif: PetaAktif, onClick: () -> Unit) {
             .border(1.dp, warna.petaTeks.copy(alpha = 0.18f), bentuk)
             .clickable(
                 role = Role.Button,
-                onClickLabel = "Tampilkan daftar peta",
+                onClickLabel = t("Tampilkan daftar peta"),
                 onClick = onClick,
             )
-            .semantics { contentDescription = "Tampilkan daftar peta. Peta aktif: ${namaPeta(aktif)}" }
+            .semantics {
+                contentDescription = tr.format(
+                    "Tampilkan daftar peta. Peta aktif: {}",
+                    tr[namaPeta(aktif)],
+                )
+            }
             .defaultMinSize(minHeight = 36.dp)
             .padding(horizontal = 12.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -824,7 +838,7 @@ private fun PenandaToolbar(aktif: PetaAktif, onClick: () -> Unit) {
         // sehingga pemain bisa mengira peta yang terbuka masih peta sebelumnya. Ikonnya memakai aset
         // yang sama dengan baris di daftar peta, jadi chip dan daftar tidak pernah beda lambang.
         Text(
-            namaPeta(aktif),
+            t(namaPeta(aktif)),
             color = warna.petaTeks,
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Medium,
@@ -851,11 +865,12 @@ private fun BarisPeta(
     val warna = LocalWarna.current
     val primer = MaterialTheme.colorScheme.primary
     val bentuk = RoundedCornerShape(10.dp)
+    val tr = LocalTeks.current
     val status = when {
-        segeraHadir -> "segera hadir, belum bisa dimainkan"
-        terkunci -> "terkunci"
-        aktif -> "sedang dibuka"
-        else -> "ketuk untuk berlayar"
+        segeraHadir -> tr("segera hadir, belum bisa dimainkan")
+        terkunci -> tr("terkunci")
+        aktif -> tr("sedang dibuka")
+        else -> tr("ketuk untuk berlayar")
     }
     Row(
         Modifier
@@ -876,14 +891,17 @@ private fun BarisPeta(
                     Modifier
                         .clickable(
                             role = Role.Tab,
-                            onClickLabel = if (terkunci) "Lihat info peta $teks" else "Berlayar ke peta $teks",
+                            onClickLabel = tr.format(
+                                if (terkunci) "Lihat info peta {}" else "Berlayar ke peta {}",
+                                teks,
+                            ),
                             onClick = onClick,
                         )
                 },
             )
             .semantics {
                 selected = aktif
-                contentDescription = "Peta $teks, $status"
+                contentDescription = tr.format("Peta {}, {}", teks, status)
             }
             .padding(horizontal = 8.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -926,6 +944,7 @@ private fun NodeBermuda(
     modifier: Modifier = Modifier,
 ) {
     val warna = LocalWarna.current
+    val tr = LocalTeks.current
     val kurangiGerak = remember { !ValueAnimator.areAnimatorsEnabled() }
     val transisi = rememberInfiniteTransition(label = "bermuda")
     val kabut by transisi.animateFloat(
@@ -950,7 +969,7 @@ private fun NodeBermuda(
                 .clip(CircleShape)
                 .clickable(onClick = onClick)
                 .semantics {
-                    contentDescription = "Segitiga Bermuda, segera hadir. Ketuk untuk melihat pratinjau"
+                    contentDescription = tr("Segitiga Bermuda, segera hadir. Ketuk untuk melihat pratinjau")
                 },
             contentAlignment = Alignment.Center,
         ) {
@@ -978,6 +997,7 @@ private fun NodeBermuda(
 @Composable
 private fun LembarBermuda(jumlahSelesai: Int, onTutup: () -> Unit) {
     val warna = LocalWarna.current
+    val tr = LocalTeks.current
     Kartu(
         Modifier
             .fillMaxWidth()
@@ -988,12 +1008,12 @@ private fun LembarBermuda(jumlahSelesai: Int, onTutup: () -> Unit) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        "PERAIRAN BERIKUTNYA",
+                        t("PERAIRAN BERIKUTNYA"),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         letterSpacing = 1.sp,
                     )
-                    Text("Segitiga Bermuda", style = MaterialTheme.typography.titleLarge)
+                    Text(t("Segitiga Bermuda"), style = MaterialTheme.typography.titleLarge)
                 }
                 Text(
                     "✕",
@@ -1001,7 +1021,7 @@ private fun LembarBermuda(jumlahSelesai: Int, onTutup: () -> Unit) {
                         .clip(CircleShape)
                         .clickable(onClick = onTutup)
                         .padding(8.dp)
-                        .semantics { contentDescription = "Tutup pratinjau Segitiga Bermuda" },
+                        .semantics { contentDescription = tr("Tutup pratinjau Segitiga Bermuda") },
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 16.sp,
                 )
@@ -1014,12 +1034,12 @@ private fun LembarBermuda(jumlahSelesai: Int, onTutup: () -> Unit) {
             ) {
                 Gambar(
                     Art.preview_bermuda,
-                    "Pratinjau Segitiga Bermuda: laut berkabut dengan segitiga bercahaya dan kapal hantu",
+                    t("Pratinjau Segitiga Bermuda: laut berkabut dengan segitiga bercahaya dan kapal hantu"),
                     Modifier.fillMaxSize(),
                     ContentScale.Crop,
                 )
                 Text(
-                    "SEGERA HADIR",
+                    t("SEGERA HADIR"),
                     Modifier
                         .align(Alignment.TopStart)
                         .padding(10.dp)
@@ -1033,21 +1053,27 @@ private fun LembarBermuda(jumlahSelesai: Int, onTutup: () -> Unit) {
                 )
             }
             Text(
-                "Perairan paling misterius: kompas berputar tanpa arah, kabut menelan kapal, dan arus sulit ditebak. " +
-                    "Di sinilah pelayaranmu setelah Antartika berlanjut.",
+                t(
+                    "Perairan paling misterius: kompas berputar tanpa arah, kabut menelan kapal, dan arus sulit ditebak. " +
+                        "Di sinilah pelayaranmu setelah Antartika berlanjut.",
+                ),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
                 if (jumlahSelesai >= PetaGeometri.JUMLAH_STAGE) {
-                    "Pelayaran Antartika selesai. Nantikan pembaruan berikutnya."
+                    t("Pelayaran Antartika selesai. Nantikan pembaruan berikutnya.")
                 } else {
-                    "Kemajuan Antartika: $jumlahSelesai/${PetaGeometri.JUMLAH_STAGE} stage. Selesaikan semuanya sebelum peta ini dibuka."
+                    t(
+                        "Kemajuan Antartika: {}/{} stage. Selesaikan semuanya sebelum peta ini dibuka.",
+                        jumlahSelesai,
+                        PetaGeometri.JUMLAH_STAGE,
+                    )
                 },
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.tertiary,
             )
-            TombolUtama(teks = "Mengerti", onClick = onTutup)
+            TombolUtama(teks = t("Mengerti"), onClick = onTutup)
         }
     }
 }
@@ -1097,6 +1123,7 @@ private fun NodePeta(
     modifier: Modifier = Modifier,
 ) {
     val warna = LocalWarna.current
+    val tr = LocalTeks.current
     val warnaProgres = MaterialTheme.colorScheme.tertiary
     val buka = stage.terbuka == 1
     val selesai = stage.status == "selesai"
@@ -1110,9 +1137,9 @@ private fun NodePeta(
         else -> Art.node_aktif
     }
     val status = when {
-        !buka -> "terkunci"
-        selesai -> "selesai"
-        else -> "aktif"
+        !buka -> tr("terkunci")
+        selesai -> tr("selesai")
+        else -> tr("aktif")
     }
 
     Box(
@@ -1121,7 +1148,13 @@ private fun NodePeta(
             .clip(CircleShape)
             .clickable(onClick = onClick)
             .semantics {
-                contentDescription = "Stage ${stage.nomor}, ${stage.nama}, $status, skor ${stage.skor_terbaik} persen"
+                contentDescription = tr.format(
+                    "Stage {}, {}, {}, skor {} persen",
+                    stage.nomor,
+                    stage.nama,
+                    status,
+                    stage.skor_terbaik,
+                )
             },
         contentAlignment = Alignment.Center,
     ) {
@@ -1184,17 +1217,16 @@ private fun NodeGerbang(
     modifier: Modifier = Modifier,
 ) {
     val warna = LocalWarna.current
+    val tr = LocalTeks.current
     Box(
         modifier
             .size(58.dp)
             .clip(CircleShape)
             .clickable(onClick = onClick)
             .semantics {
-                contentDescription = if (terbuka) {
-                    "Gerbang Antartika, rute terbuka"
-                } else {
-                    "Gerbang Antartika, terkunci"
-                }
+                contentDescription = tr(
+                    if (terbuka) "Gerbang Antartika, rute terbuka" else "Gerbang Antartika, terkunci",
+                )
             },
         contentAlignment = Alignment.Center,
     ) {
@@ -1247,7 +1279,7 @@ private fun KapalPeta(
             .size(68.dp),
         contentAlignment = Alignment.Center,
     ) {
-        Gambar(Art.kapal_peta, "Kapal pemain", Modifier.size(68.dp))
+        Gambar(Art.kapal_peta, t("Kapal pemain"), Modifier.size(68.dp))
     }
 }
 
@@ -1259,6 +1291,7 @@ private fun LembarStage(
     onBerlayar: () -> Unit,
 ) {
     val warna = LocalWarna.current
+    val tr = LocalTeks.current
     val buka = stage.terbuka == 1
     val selesai = stage.status == "selesai"
     Kartu(
@@ -1271,7 +1304,7 @@ private fun LembarStage(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        if (stage.tipe == "boss") "STAGE ${stage.nomor} · BOSS" else "STAGE ${stage.nomor}",
+                        t(if (stage.tipe == "boss") "STAGE {} · BOSS" else "STAGE {}", stage.nomor),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.tertiary,
                         letterSpacing = 1.sp,
@@ -1284,7 +1317,7 @@ private fun LembarStage(
                         .clip(CircleShape)
                         .clickable(onClick = onTutup)
                         .padding(8.dp)
-                        .semantics { contentDescription = "Tutup info stage" },
+                        .semantics { contentDescription = tr("Tutup info stage") },
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 16.sp,
                 )
@@ -1308,12 +1341,14 @@ private fun LembarStage(
                 }
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        when {
-                            !buka -> "Terkunci"
-                            selesai -> "Selesai"
-                            stage.skor_terbaik > 0 -> "Skor terbaik"
-                            else -> "Belum dimulai"
-                        },
+                        t(
+                            when {
+                                !buka -> "Terkunci"
+                                selesai -> "Selesai"
+                                stage.skor_terbaik > 0 -> "Skor terbaik"
+                                else -> "Belum dimulai"
+                            },
+                        ),
                         style = MaterialTheme.typography.labelMedium,
                         color = if (buka) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -1333,19 +1368,21 @@ private fun LembarStage(
                 )
             } else {
                 Text(
-                    "Selesaikan Stage ${stage.nomor - 1} untuk membuka rute ini.",
+                    t("Selesaikan Stage {} untuk membuka rute ini.", stage.nomor - 1),
                     style = MaterialTheme.typography.bodySmall,
                     color = warna.bahayaTeks,
                 )
             }
             Spacer(Modifier.height(2.dp))
             TombolUtama(
-                teks = when {
-                    !buka -> "Terkunci"
-                    selesai -> "Coba Tantang Ulang"
-                    stage.tipe == "boss" -> "Hadapi Boss"
-                    else -> "Berlayar"
-                },
+                teks = t(
+                    when {
+                        !buka -> "Terkunci"
+                        selesai -> "Coba Tantang Ulang"
+                        stage.tipe == "boss" -> "Hadapi Boss"
+                        else -> "Berlayar"
+                    },
+                ),
                 onClick = onBerlayar,
                 enabled = buka,
             )
@@ -1356,6 +1393,7 @@ private fun LembarStage(
 @Composable
 private fun LembarGerbang(terbuka: Boolean, onTutup: () -> Unit, onMasuk: () -> Unit) {
     val warna = LocalWarna.current
+    val tr = LocalTeks.current
     Kartu(
         Modifier
             .fillMaxWidth()
@@ -1365,8 +1403,8 @@ private fun LembarGerbang(terbuka: Boolean, onTutup: () -> Unit, onMasuk: () -> 
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("PERAIRAN BERIKUTNYA", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, letterSpacing = 1.sp)
-                    Text("Antartika", style = MaterialTheme.typography.titleLarge)
+                    Text(t("PERAIRAN BERIKUTNYA"), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, letterSpacing = 1.sp)
+                    Text(t("Antartika"), style = MaterialTheme.typography.titleLarge)
                 }
                 Text(
                     "✕",
@@ -1374,25 +1412,25 @@ private fun LembarGerbang(terbuka: Boolean, onTutup: () -> Unit, onMasuk: () -> 
                         .clip(CircleShape)
                         .clickable(onClick = onTutup)
                         .padding(8.dp)
-                        .semantics { contentDescription = "Tutup info gerbang" },
+                        .semantics { contentDescription = tr("Tutup info gerbang") },
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 16.sp,
                 )
             }
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                GambarKontras(Art.gunung_es, "Gunung es", Modifier.size(62.dp))
+                GambarKontras(Art.gunung_es, t("Gunung es"), Modifier.size(62.dp))
                 Text(
                     if (terbuka) {
-                        "Dingin, es mengapung. Seluruh Samudra Pasifik selesai — rute ke 10 stage Antartika sudah terbuka."
+                        t("Dingin, es mengapung. Seluruh Samudra Pasifik selesai — rute ke 10 stage Antartika sudah terbuka.")
                     } else {
-                        "Dingin, es mengapung. Selesaikan seluruh stage 1-10 di Samudra Pasifik untuk membuka rute ini."
+                        t("Dingin, es mengapung. Selesaikan seluruh stage 1-10 di Samudra Pasifik untuk membuka rute ini.")
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             TombolUtama(
-                teks = if (terbuka) "Berlayar ke Antartika" else "Terkunci",
+                teks = t(if (terbuka) "Berlayar ke Antartika" else "Terkunci"),
                 onClick = onMasuk,
                 enabled = terbuka,
             )

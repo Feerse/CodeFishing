@@ -36,6 +36,7 @@ import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.TantanganData
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.gambarIkanKecil
@@ -78,7 +79,7 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
         stageAktifBoss = stageAktif?.tipe == "boss",
     )
     val sasaranLanjut = posisi ?: stageAktif
-    val judulLanjut = sasaranLanjut?.nama ?: "Petualangan Baru"
+    val judulLanjut = sasaranLanjut?.nama ?: t("Petualangan Baru")
     val xp = player?.xp ?: 0
     val level = player?.level ?: 1
     val terkumpul = statistik?.ikan_terkumpul ?: 0
@@ -109,10 +110,10 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Gambar(Art.logo_codefishing, "Logo CodeFishing", Modifier.size(52.dp))
+                Gambar(Art.logo_codefishing, t("Logo CodeFishing"), Modifier.size(52.dp))
                 Column(Modifier.weight(1f)) {
-                    Text("CodeFishing", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.onBackground)
-                    Text("Belajar Python sambil memancing", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(t("CodeFishing"), style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.onBackground)
+                    Text(t("Belajar Python sambil memancing"), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
 
@@ -120,24 +121,24 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
-                            Text("Nakhoda Python", style = MaterialTheme.typography.titleMedium)
-                            Text("Level $level · ${LevelRules.rank(level)}", color = MaterialTheme.colorScheme.tertiary, style = MaterialTheme.typography.labelLarge)
+                            Text(t("Nakhoda Python"), style = MaterialTheme.typography.titleMedium)
+                            Text(t("Level {} · {}", level, t(LevelRules.rank(level))), color = MaterialTheme.colorScheme.tertiary, style = MaterialTheme.typography.labelLarge)
                         }
-                        Text("$xp XP", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+                        Text(t("{} XP", xp), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
                     }
                     BarProgres(LevelRules.progresLevel(xp))
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Gambar(Art.umpan_penuh, "Umpan", Modifier.size(22.dp))
-                            Text("$umpan umpan", style = MaterialTheme.typography.labelMedium)
+                            Gambar(Art.umpan_penuh, t("Umpan"), Modifier.size(22.dp))
+                            Text(t("{} umpan", umpan), style = MaterialTheme.typography.labelMedium)
                         }
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Gambar(Art.lencana_plus_satu, "Umpan emas", Modifier.size(20.dp))
-                            Text("${player?.umpan_emas ?: 0} emas", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Gambar(Art.lencana_plus_satu, t("Umpan emas"), Modifier.size(20.dp))
+                            Text(t("{} emas", player?.umpan_emas ?: 0), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Gambar(Art.bintang_penuh, "Stage selesai", Modifier.size(20.dp))
-                            Text("${stageList.count { it.status == "selesai" }} stage", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Gambar(Art.bintang_penuh, t("Stage selesai"), Modifier.size(20.dp))
+                            Text(t("{} stage", stageList.count { it.status == "selesai" }), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     }
                 }
@@ -148,13 +149,13 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         GambarKontras(gambarIkanKecil(harian!!.ikan.gambar), harian!!.ikan.nama, Modifier.size(52.dp))
                         Column(Modifier.weight(1f)) {
-                            Text("Tantangan Harian", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
-                            Text("Tangkap ${harian!!.ikan.nama}", style = MaterialTheme.typography.titleMedium)
+                            Text(t("Tantangan Harian"), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+                            Text(t("Tangkap {}", harian!!.ikan.nama), style = MaterialTheme.typography.titleMedium)
                             Text(
                                 when (harian!!.row.status) {
-                                    "selesai" -> "Selesai! Klaim 1 umpan emas."
-                                    "diklaim" -> "Hadiah hari ini sudah diklaim."
-                                    else -> "Selesaikan stage atau tangkap di Sandbox."
+                                    "selesai" -> t("Selesai! Klaim 1 umpan emas.")
+                                    "diklaim" -> t("Hadiah hari ini sudah diklaim.")
+                                    else -> t("Selesaikan stage atau tangkap di Sandbox.")
                                 },
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -162,7 +163,7 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                         }
                         if (harian!!.row.status == "selesai") {
                             TombolSekunder(
-                                teks = "Klaim",
+                                teks = t("Klaim"),
                                 onClick = {
                                     c.audio.play(Sfx.Klik)
                                     scope.launch {
@@ -184,15 +185,19 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
 
             Kartu(Modifier.fillMaxWidth(), warna = warna.kartu) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("Lanjutkan perjalanan", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
+                    Text(t("Lanjutkan perjalanan"), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
                     Text(judulLanjut, style = MaterialTheme.typography.titleLarge)
                     Text(
-                        "Stage ${sasaranLanjut?.nomor ?: 1} · ${sasaranLanjut?.konsep ?: "Pilih mode untuk mulai"}",
+                        t(
+                            "Stage {} · {}",
+                            sasaranLanjut?.nomor ?: 1,
+                            sasaranLanjut?.konsep ?: t("Pilih mode untuk mulai"),
+                        ),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     TombolUtama(
-                        teks = "Mulai Main",
+                        teks = t("Mulai Main"),
                         onClick = {
                             c.audio.play(Sfx.KlikUtama)
                             // "Mulai Main" = pilih cara bermain; "Lanjutkan" = langsung ke stage.
@@ -200,7 +205,7 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                         },
                     )
                     TombolSekunder(
-                        teks = "Lanjutkan",
+                        teks = t("Lanjutkan"),
                         onClick = {
                             c.audio.play(Sfx.Klik)
                             when (tujuanLanjut.jenis) {
@@ -225,10 +230,10 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
 
             Kartu(Modifier.fillMaxWidth()) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Gambar(Art.ikan_hiu_merah, "Hiu Merah", Modifier.size(56.dp))
+                    Gambar(Art.ikan_hiu_merah, t("Hiu Merah"), Modifier.size(56.dp))
                     Column(Modifier.weight(1f)) {
-                        Text("Koleksi $terkumpul/${totalIkan ?: "…"} ikan", style = MaterialTheme.typography.titleMedium)
-                        Text("Semua ikan sudah berilustrasi. Lengkapi koleksimu!", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(t("Koleksi {}/{} ikan", terkumpul, totalIkan ?: "…"), style = MaterialTheme.typography.titleMedium)
+                        Text(t("Semua ikan sudah berilustrasi. Lengkapi koleksimu!"), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     CircularProgressIndicator(
                         progress = { totalIkan?.let { terkumpul / it.toFloat() } ?: 0f },

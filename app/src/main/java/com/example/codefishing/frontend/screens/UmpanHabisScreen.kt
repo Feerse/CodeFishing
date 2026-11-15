@@ -36,6 +36,7 @@ import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.UmpanUi
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.Gambar
@@ -84,12 +85,15 @@ fun UmpanHabisScreen(nav: AppNavigator, padding: PaddingValues) {
                     .background(warna.kartuTinggi, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
-                Gambar(Art.ikon_umpan_habis, "Umpan habis", Modifier.size(92.dp))
+                Gambar(Art.ikon_umpan_habis, t("Umpan habis"), Modifier.size(92.dp))
             }
             Spacer(Modifier.height(18.dp))
-            Text("Umpan Habis", style = MaterialTheme.typography.headlineMedium)
+            Text(t("Umpan Habis"), style = MaterialTheme.typography.headlineMedium)
             Text(
-                "Umpan berkurang saat stage selesai dengan minimal 3 jawaban salah. Umpan pulih satu setiap ${u?.intervalMenit ?: 15} menit.",
+                t(
+                    "Umpan berkurang saat stage selesai dengan minimal 3 jawaban salah. Umpan pulih satu setiap {} menit.",
+                    u?.intervalMenit ?: 15,
+                ),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
@@ -97,9 +101,9 @@ fun UmpanHabisScreen(nav: AppNavigator, padding: PaddingValues) {
             Spacer(Modifier.height(20.dp))
             Kartu(Modifier.fillMaxWidth(), warna = warna.kartuLembut) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Gambar(Art.jam_hitung_mundur, "Hitung mundur pemulihan umpan", Modifier.size(56.dp))
+                    Gambar(Art.jam_hitung_mundur, t("Hitung mundur pemulihan umpan"), Modifier.size(56.dp))
                     Text(
-                        if ((u?.sisa ?: 0) > 0) "Umpan tersedia: ${u?.sisa}" else formatWaktu(u?.sisaMs ?: 0),
+                        if ((u?.sisa ?: 0) > 0) t("Umpan tersedia: {}", u?.sisa) else formatWaktu(u?.sisaMs ?: 0),
                         fontFamily = FontFamily.Monospace,
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
@@ -107,8 +111,8 @@ fun UmpanHabisScreen(nav: AppNavigator, padding: PaddingValues) {
                     )
                     IndikatorUmpan(u?.sisa ?: 0, u?.maks ?: 5)
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Gambar(Art.lencana_plus_satu, "Umpan emas", Modifier.size(20.dp))
-                        Text("$emas umpan emas", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Gambar(Art.lencana_plus_satu, t("Umpan emas"), Modifier.size(20.dp))
+                        Text(t("{} umpan emas", emas), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
             }
@@ -120,27 +124,27 @@ fun UmpanHabisScreen(nav: AppNavigator, padding: PaddingValues) {
                 },
                 enabled = (u?.sisa ?: 0) > 0,
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text("Lanjutkan Kuis") }
+            ) { Text(t("Lanjutkan Kuis")) }
             if ((u?.sisa ?: 0) < (u?.maks ?: 5) && emas > 0) {
-                TombolSekunder("Tukar 1 umpan emas", {
+                TombolSekunder(t("Tukar 1 umpan emas"), {
                     c.audio.play(Sfx.Benar)
                     scope.launch {
                         if (c.game.tukarUmpanEmas()) versi++
                     }
                 })
             }
-            TombolSekunder("Baca Materi", {
+            TombolSekunder(t("Baca Materi"), {
                 c.audio.play(Sfx.Klik)
                 nav.replace(Screen.Materi, stageId)
             })
-            TombolSekunder("Kembali ke Peta", {
+            TombolSekunder(t("Kembali ke Peta"), {
                 c.audio.play(Sfx.Klik)
                 nav.resetTo(Screen.Peta)
             })
             Spacer(Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
                 Gambar(Art.chip_umpan_kode, null, Modifier.size(20.dp))
-                Text("Umpan emas didapat dari tantangan harian.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(t("Umpan emas didapat dari tantangan harian."), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }

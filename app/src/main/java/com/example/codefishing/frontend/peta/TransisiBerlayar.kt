@@ -43,6 +43,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.codefishing.core.art.Art
+import com.example.codefishing.core.i18n.LocalTeks
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.frontend.components.Gambar
 import kotlinx.coroutines.delay
 import kotlin.math.PI
@@ -75,6 +77,7 @@ fun TransisiBerlayar(
     modifier: Modifier = Modifier,
 ) {
     val kurangiGerak = remember { !ValueAnimator.areAnimatorsEnabled() }
+    val tr = LocalTeks.current
     val progres = remember { Animatable(0f) }
     LaunchedEffect(Unit) {
         if (kurangiGerak) {
@@ -114,7 +117,7 @@ fun TransisiBerlayar(
             .graphicsLayer { alpha = tirai }
             // Menyerap ketukan selama pelayaran supaya peta di bawahnya tidak ikut tersentuh.
             .clickable(enabled = true, indication = null, interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }) {}
-            .semantics { contentDescription = "Berlayar menuju $tujuan" },
+            .semantics { contentDescription = tr.format("Berlayar menuju {}", tujuan) },
     ) {
         Canvas(Modifier.fillMaxSize()) {
             val garis = size.height * 0.46f
@@ -140,7 +143,7 @@ fun TransisiBerlayar(
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
-                "BERLAYAR MENUJU",
+                t("BERLAYAR MENUJU"),
                 color = pal.teks.copy(alpha = 0.85f),
                 style = MaterialTheme.typography.labelMedium,
                 letterSpacing = 3.sp,
@@ -170,7 +173,7 @@ fun TransisiBerlayar(
                 )
             }
             Text(
-                if (suasana == SuasanaLaut.ES) "Menembus perairan dingin…" else "Kembali ke perairan hangat…",
+                t(if (suasana == SuasanaLaut.ES) "Menembus perairan dingin…" else "Kembali ke perairan hangat…"),
                 color = pal.teks.copy(alpha = 0.85f),
                 style = MaterialTheme.typography.bodySmall,
             )

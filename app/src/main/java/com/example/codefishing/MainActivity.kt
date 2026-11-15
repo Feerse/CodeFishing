@@ -23,6 +23,9 @@ import com.example.codefishing.core.AppContainer
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.data.LocalEfekVisual
 import com.example.codefishing.core.data.ThemeStore
+import com.example.codefishing.core.i18n.LocalTeks
+import com.example.codefishing.core.i18n.Teks
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.frontend.App
 import com.example.codefishing.frontend.components.PemuatAset
 import com.example.codefishing.frontend.components.Pembuka
@@ -66,9 +69,13 @@ class MainActivity : ComponentActivity() {
                 val siap by container.siap.collectAsState()
                 val muat by PemuatAset.status.collectAsState()
                 val pilihanEfek by container.efekVisual.pilihan.collectAsState()
+                val bahasa by container.bahasa.pilihan.collectAsState()
                 // "Otomatis" sudah diterjemahkan ke Penuh/Hemat di store, jadi komponen gambar
                 // cukup membaca satu nilai pasti tanpa tahu jenis perangkatnya.
                 val efekAktif = remember(pilihanEfek) { container.efekVisual.aktif(pilihanEfek) }
+                val teksAktif = remember(bahasa) {
+                    if (bahasa == com.example.codefishing.core.i18n.Bahasa.Inggris) Teks.Inggris else Teks.Indonesia
+                }
                 // Pembuka ditampilkan sekali tiap aplikasi dibuka dan tidak
                 // dipotong oleh cepatnya proses seed. Layar utama baru muncul
                 // setelah animasi selesai, data siap, DAN semua aset termuat.
@@ -80,7 +87,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                CompositionLocalProvider(LocalEfekVisual provides efekAktif) {
+                CompositionLocalProvider(LocalEfekVisual provides efekAktif, LocalTeks provides teksAktif) {
                     CodeFishingTheme(mode) {
                         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                             if (siap && muat.selesaiSemua && pembukaSelesai) {
@@ -90,9 +97,9 @@ class MainActivity : ComponentActivity() {
                                 // 98% agar tidak terlihat "selesai" sebelum aplikasi benar-benar siap.
                                 val progres = if (siap) muat.progres else muat.progres.coerceAtMost(0.98f)
                                 val teks = when {
-                                    siap -> muat.teks
-                                    muat.selesaiSemua -> "Menyiapkan data permainan..."
-                                    else -> muat.teks
+                                    siap -> t(muat.teks)
+                                    muat.selesaiSemua -> t("Menyiapkan data permainan...")
+                                    else -> t(muat.teks)
                                 }
                                 Pembuka(
                                     progresMuat = progres,

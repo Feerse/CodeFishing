@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.art.Art
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.delay
 import kotlin.math.PI
@@ -122,7 +123,7 @@ fun Pembuka(
         modifier
             .fillMaxSize()
             .clickable(
-                onClickLabel = "Lewati animasi pembuka",
+                onClickLabel = t("Lewati animasi pembuka"),
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
             ) {

@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.art.Art
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.frontend.components.Gambar
 import com.example.codefishing.frontend.components.GambarKontras
 import com.example.codefishing.frontend.components.TombolSekunder
@@ -111,9 +112,9 @@ fun PengenalanScreen(onSelesai: () -> Unit) {
                 PratinjauAkuarium(Modifier.fillMaxWidth().aspectRatio(4f / 3f))
             }
         }
-        Text(h.judul, style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center)
+        Text(t(h.judul), style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center)
         Text(
-            h.isi,
+            t(h.isi),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
@@ -130,9 +131,9 @@ fun PengenalanScreen(onSelesai: () -> Unit) {
         }
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             if (!terakhir) {
-                TombolSekunder("Lewati", onSelesai, Modifier.weight(1f))
+                TombolSekunder(t("Lewati"), onSelesai, Modifier.weight(1f))
             }
-            TombolUtama(if (terakhir) "Mulai" else "Lanjut", { if (terakhir) onSelesai() else i++ }, Modifier.weight(1f))
+            TombolUtama(t(if (terakhir) "Mulai" else "Lanjut"), { if (terakhir) onSelesai() else i++ }, Modifier.weight(1f))
         }
     }
 }

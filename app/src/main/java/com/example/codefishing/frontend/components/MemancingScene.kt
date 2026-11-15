@@ -49,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.core.data.LocalEfekVisual
+import com.example.codefishing.core.i18n.LocalTeks
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.data.hemat
 import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.delay
@@ -111,6 +113,7 @@ fun MemancingScene(
     tier: String = "biasa",
 ) {
     val warna = LocalWarna.current
+    val tr = LocalTeks.current
     val density = LocalDensity.current
     val px = density.density
     val kurangiGerak = remember { !ValueAnimator.areAnimatorsEnabled() }
@@ -180,7 +183,7 @@ fun MemancingScene(
             .fillMaxWidth()
             .height(210.dp)
             .clip(RoundedCornerShape(20.dp))
-            .semantics { contentDescription = deskripsiFase(jenis, fase) },
+            .semantics { contentDescription = tr(deskripsiFase(jenis, fase)) },
         contentAlignment = Alignment.Center,
     ) {
         BoxWithConstraints(Modifier.fillMaxSize()) {
@@ -327,11 +330,13 @@ fun MemancingScene(
                     }
                     val lebar = st.alatLebar
                     val tinggi = lebar * aspek
-                    val nama = when (jenis) {
-                        JenisAdegan.Badai -> "Pukat"
-                        JenisAdegan.Bubu -> "Bubu"
-                        else -> "Jala"
-                    }
+                    val nama = t(
+                        when (jenis) {
+                            JenisAdegan.Badai -> "Pukat"
+                            JenisAdegan.Bubu -> "Bubu"
+                            else -> "Jala"
+                        },
+                    )
                     // Kotak luar diratakan (perspektif jala di permukaan air), gambar di dalamnya
                     // berputar saat jala dilempar.
                     Box(
@@ -434,7 +439,7 @@ fun MemancingScene(
                     val ukuranIkan = (if (diBawahAir(jenis)) 76.dp else 84.dp) * st.ikanSkala
                     Gambar(
                         ikan,
-                        if (fase == FasePancing.Dapat) "Ikan tertangkap" else "Ikan",
+                        t(if (fase == FasePancing.Dapat) "Ikan tertangkap" else "Ikan"),
                         Modifier
                             .offset {
                                 IntOffset(
@@ -512,7 +517,7 @@ fun MemancingScene(
             if (fase == FasePancing.Lepas) {
                 val muncul = ((a - 0.42f) / 0.28f).coerceIn(0f, 1f)
                 Text(
-                    "Salah",
+                    t("Salah"),
                     color = warna.bahayaTeks,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,

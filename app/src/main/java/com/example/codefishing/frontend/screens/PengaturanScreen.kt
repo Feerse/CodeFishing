@@ -39,6 +39,9 @@ import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.EfekVisual
 import com.example.codefishing.core.data.ThemeMode
 import com.example.codefishing.core.db.PengaturanEntity
+import com.example.codefishing.core.i18n.Bahasa
+import com.example.codefishing.core.i18n.LocalTeks
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.Gambar
@@ -58,7 +61,10 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
     val statistik by c.game.observeStatistik().collectAsState(null)
     val tema by c.theme.mode.collectAsState()
     val efekPilihan by c.efekVisual.pilihan.collectAsState()
+    val bahasa by c.bahasa.pilihan.collectAsState()
     val warna = LocalWarna.current
+    // Untuk teks yang disusun di dalam lambda (bukan di posisi @Composable).
+    val teks = LocalTeks.current
     val totalIkan by produceState<Int?>(null) { value = c.game.jumlahIkan() }
     val totalStage by produceState<Int?>(null) { value = c.game.jumlahStage() }
     var konfirmasi by remember { mutableStateOf(false) }
@@ -82,21 +88,21 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
     ) {
         Kartu(Modifier.fillMaxWidth(), warna = warna.kartuLembut) {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text("Nakhoda", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
+                Text(t("Nakhoda"), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
                 statistik?.let { s ->
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        LabelNilai("Level", "${s.level}")
+                        LabelNilai(t("Level"), "${s.level}")
                         LabelNilai("XP", "${s.xp}")
-                        LabelNilai("Stage", "${s.stage_selesai}/${totalStage ?: "…"}")
-                        LabelNilai("Ikan", "${s.ikan_terkumpul}/${totalIkan ?: "…"}")
+                        LabelNilai(t("Stage"), "${s.stage_selesai}/${totalStage ?: "…"}")
+                        LabelNilai(t("Ikan"), "${s.ikan_terkumpul}/${totalIkan ?: "…"}")
                     }
-                } ?: Text("Memuat statistik...", style = MaterialTheme.typography.bodySmall)
+                } ?: Text(t("Memuat statistik..."), style = MaterialTheme.typography.bodySmall)
             }
         }
 
-        Text("Tampilan", style = MaterialTheme.typography.titleMedium)
+        Text(t("Tampilan"), style = MaterialTheme.typography.titleMedium)
         Text(
-            "Pilih tema terang, gelap, atau ikuti pengaturan perangkat.",
+            t("Pilih tema terang, gelap, atau ikuti pengaturan perangkat."),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -109,14 +115,14 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
                         c.theme.pilih(mode)
                     },
                     shape = SegmentedButtonDefaults.itemShape(index, ThemeMode.entries.size),
-                    label = { Text(mode.label) },
+                    label = { Text(t(mode.label)) },
                 )
             }
         }
 
-        Text("Efek visual", style = MaterialTheme.typography.titleMedium)
+        Text(t("Efek visual"), style = MaterialTheme.typography.titleMedium)
         Text(
-            efekPilihan.keterangan,
+            t(efekPilihan.keterangan),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -129,53 +135,74 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
                         c.efekVisual.pilih(mode)
                     },
                     shape = SegmentedButtonDefaults.itemShape(index, EfekVisual.entries.size),
-                    label = { Text(mode.label) },
+                    label = { Text(t(mode.label)) },
                 )
             }
         }
         // Ketajaman tidak pernah diturunkan oleh pilihan di atas; hanya jumlah efeknya.
         Text(
-            "Ketajaman gambar tetap sama di semua pilihan. Yang berkurang hanya jumlah animasi " +
-                "dan partikel.",
+            t("Ketajaman gambar tetap sama di semua pilihan. Yang berkurang hanya jumlah animasi dan partikel."),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
-        Text("Preferensi", style = MaterialTheme.typography.titleMedium)
-        BarisSaklar(Art.ikon_suara, Art.ikon_suara_terang, "Efek suara", pengaturan.efek_suara == 1) {
+        Text(t("Bahasa"), style = MaterialTheme.typography.titleMedium)
+        Text(
+            t("Bahasa antarmuka. Soal kuis dan materi pelajaran masih berbahasa Indonesia."),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+            Bahasa.entries.forEachIndexed { index, pilihan ->
+                SegmentedButton(
+                    selected = bahasa == pilihan,
+                    onClick = {
+                        c.audio.play(Sfx.Klik)
+                        c.bahasa.pilih(pilihan)
+                    },
+                    shape = SegmentedButtonDefaults.itemShape(index, Bahasa.entries.size),
+                    // Nama bahasa tidak diterjemahkan: pemain harus tetap bisa menemukan bahasanya
+                    // walau antarmuka sedang memakai bahasa yang tidak ia mengerti.
+                    label = { Text(pilihan.label) },
+                )
+            }
+        }
+
+        Text(t("Preferensi"), style = MaterialTheme.typography.titleMedium)
+        BarisSaklar(Art.ikon_suara, Art.ikon_suara_terang, t("Efek suara"), pengaturan.efek_suara == 1) {
             c.progress.sfxOn = it
             if (it) c.audio.play(Sfx.Klik)
             ubah(pengaturan.copy(efek_suara = if (it) 1 else 0))
         }
-        BarisSaklar(Art.ikon_musik, Art.ikon_musik_terang, "Musik", pengaturan.musik == 1) {
+        BarisSaklar(Art.ikon_musik, Art.ikon_musik_terang, t("Musik"), pengaturan.musik == 1) {
             c.progress.musicOn = it
             c.audio.onMusicSettingChanged()
             ubah(pengaturan.copy(musik = if (it) 1 else 0))
         }
-        BarisSaklar(Art.ikon_suara, Art.ikon_suara_terang, "Getar (haptik)", pengaturan.haptik == 1) {
+        BarisSaklar(Art.ikon_suara, Art.ikon_suara_terang, t("Getar (haptik)"), pengaturan.haptik == 1) {
             ubah(pengaturan.copy(haptik = if (it) 1 else 0))
         }
-        BarisSaklar(Art.ikon_mode_expert, Art.ikon_mode_expert_terang, "Pewarnaan sintaks", pengaturan.pewarnaan_sintaks == 1) {
+        BarisSaklar(Art.ikon_mode_expert, Art.ikon_mode_expert_terang, t("Pewarnaan sintaks"), pengaturan.pewarnaan_sintaks == 1) {
             ubah(pengaturan.copy(pewarnaan_sintaks = if (it) 1 else 0))
         }
 
-        Text("Tentang", style = MaterialTheme.typography.titleMedium)
-        TombolSekunder("Lihat Pengenalan", {
+        Text(t("Tentang"), style = MaterialTheme.typography.titleMedium)
+        TombolSekunder(t("Lihat Pengenalan"), {
             c.audio.play(Sfx.Klik)
             nav.go(Screen.Pengenalan)
         })
-        TombolSekunder("Reset progres", {
+        TombolSekunder(t("Reset progres"), {
             c.audio.play(Sfx.Klik)
             konfirmasi = true
         })
         if (debug) {
-            Text("Pengembang", style = MaterialTheme.typography.titleMedium)
+            Text(t("Pengembang"), style = MaterialTheme.typography.titleMedium)
             Text(
-                "Alat bantu pengembangan; tidak muncul di build rilis.",
+                t("Alat bantu pengembangan; tidak muncul di build rilis."),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            TombolSekunder("Buka semua progres (debug)", {
+            TombolSekunder(t("Buka semua progres (debug)"), {
                 c.audio.play(Sfx.Klik)
                 konfirmasiBuka = true
             })
@@ -186,13 +213,13 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
                     color = MaterialTheme.colorScheme.tertiary,
                 )
             }
-            TombolSekunder("Galeri Aset (debug)", {
+            TombolSekunder(t("Galeri Aset (debug)"), {
                 c.audio.play(Sfx.Klik)
                 nav.go(Screen.GaleriAset)
             })
         }
         Text(
-            "CodeFishing · offline · data tersimpan di perangkat",
+            t("CodeFishing · offline · data tersimpan di perangkat"),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -201,8 +228,8 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
     if (konfirmasi) {
         AlertDialog(
             onDismissRequest = { konfirmasi = false },
-            title = { Text("Reset progres?") },
-            text = { Text("Semua progres stage, ikan, hasil program, tantangan harian, dan nama ikan akan dihapus. Pengaturan tetap disimpan.") },
+            title = { Text(t("Reset progres?")) },
+            text = { Text(t("Semua progres stage, ikan, hasil program, tantangan harian, dan nama ikan akan dihapus. Pengaturan tetap disimpan.")) },
             confirmButton = {
                 TextButton({
                     konfirmasi = false
@@ -212,22 +239,24 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
                         c.audio.play(Sfx.Salah)
                         nav.resetTo(Screen.Home)
                     }
-                }) { Text("Reset") }
+                }) { Text(t("Reset")) }
             },
-            dismissButton = { TextButton({ konfirmasi = false }) { Text("Batal") } },
+            dismissButton = { TextButton({ konfirmasi = false }) { Text(t("Batal")) } },
         )
     }
 
     if (konfirmasiBuka) {
         AlertDialog(
             onDismissRequest = { konfirmasiBuka = false },
-            title = { Text("Buka semua progres?") },
+            title = { Text(t("Buka semua progres?")) },
             text = {
                 Text(
-                    "Semua stage akan ditandai selesai sehingga peta Antartika terbuka dan pratinjau " +
-                        "Bermuda menampilkan progres penuh. Semua ikan juga masuk koleksi dan umpan " +
-                        "diisi penuh. Skor terbaik yang sudah lebih tinggi tetap disimpan; gunakan " +
-                        "\"Reset progres\" untuk mengembalikannya.",
+                    t(
+                        "Semua stage akan ditandai selesai sehingga peta Antartika terbuka dan pratinjau Bermuda " +
+                            "menampilkan progres penuh. Semua ikan juga masuk koleksi dan umpan diisi penuh. Skor " +
+                            "terbaik yang sudah lebih tinggi tetap disimpan; gunakan \"Reset progres\" untuk " +
+                            "mengembalikannya.",
+                    ),
                 )
             },
             confirmButton = {
@@ -236,12 +265,16 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
                     scope.launch {
                         val hasil = c.game.bukaSemuaProgres()
                         c.audio.play(Sfx.Benar)
-                        hasilBuka = "Terbuka: ${hasil.jumlahStage} stage, " +
-                            "${hasil.jumlahIkanBaru} ikan baru, +${hasil.tambahanXp} XP."
+                        hasilBuka = teks.format(
+                            "Terbuka: {} stage, {} ikan baru, +{} XP.",
+                            hasil.jumlahStage,
+                            hasil.jumlahIkanBaru,
+                            hasil.tambahanXp,
+                        )
                     }
-                }) { Text("Buka semua") }
+                }) { Text(t("Buka semua")) }
             },
-            dismissButton = { TextButton({ konfirmasiBuka = false }) { Text("Batal") } },
+            dismissButton = { TextButton({ konfirmasiBuka = false }) { Text(t("Batal")) } },
         )
     }
 }

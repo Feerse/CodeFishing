@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.HasilProgramData
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.expert.SandboxDraft
@@ -58,7 +59,7 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
     }
     val d = data
     if (d == null) {
-        Memuat(padding, "Memuat hasil program...")
+        Memuat(padding, t("Memuat hasil program..."))
         return
     }
     val sukses = d.hasil.status == "sukses"
@@ -85,14 +86,14 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
         ) {
             Gambar(
                 if (sukses) Art.medali_misi_selesai else Art.ikon_error,
-                if (sukses) "Misi selesai" else "Program belum berhasil",
+                t(if (sukses) "Misi selesai" else "Program belum berhasil"),
                 Modifier.size(88.dp),
             )
-            Text(if (sukses) "Program Berhasil" else "Program Belum Berhasil", style = MaterialTheme.typography.headlineSmall)
+            Text(t(if (sukses) "Program Berhasil" else "Program Belum Berhasil"), style = MaterialTheme.typography.headlineSmall)
             Bintang(d.hasil.bintang, ukuran = 24)
             Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                LabelNilai("Tick", "${d.hasil.ticks}")
-                LabelNilai("Ikan", "${d.tangkapan.sumOf { it.jumlah }}")
+                LabelNilai(t("Tick"), "${d.hasil.ticks}")
+                LabelNilai(t("Ikan"), "${d.tangkapan.sumOf { it.jumlah }}")
                 LabelNilai("XP", "+$xpTotal")
             }
 
@@ -105,7 +106,7 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
             if (d.tangkapan.isNotEmpty()) {
                 Kartu(Modifier.fillMaxWidth(), warna = warna.kartuLembut) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Hasil tangkapan", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
+                        Text(t("Hasil tangkapan"), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
                         d.tangkapan.forEach { t ->
                             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                                 GambarKontras(gambarIkanKecil(t.ikan.gambar), t.ikan.nama, Modifier.size(48.dp))
@@ -121,13 +122,13 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
             }
 
             if (d.hasil.output.isNotBlank()) {
-                KodeBlok(d.hasil.output, judul = "OUTPUT")
+                KodeBlok(d.hasil.output, judul = t("OUTPUT"))
             }
 
             if (d.hasil.kode.isNotBlank()) {
                 Kartu(Modifier.fillMaxWidth()) {
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Text("Kode terakhir", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(t("Kode terakhir"), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Text(
                             d.hasil.kode,
                             fontFamily = FontFamily.Monospace,
@@ -139,7 +140,7 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
             }
 
             TombolUtama(
-                teks = "Ubah Kode",
+                teks = t("Ubah Kode"),
                 onClick = {
                     c.audio.play(Sfx.Klik)
                     SandboxDraft.simpan(nav.current.misi, d.hasil.kode)
@@ -148,7 +149,7 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
             )
             if (nav.current.misi in 1..6) {
                 TombolSekunder(
-                    teks = "Misi Berikutnya",
+                    teks = t("Misi Berikutnya"),
                     onClick = {
                         c.audio.play(Sfx.Klik)
                         nav.replace(Screen.Sandbox, misi = nav.current.misi + 1)
@@ -156,21 +157,21 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
                 )
             }
             TombolSekunder(
-                teks = "Daftar Misi",
+                teks = t("Daftar Misi"),
                 onClick = {
                     c.audio.play(Sfx.Klik)
                     nav.resetTo(Screen.Sandbox)
                 },
             )
             TombolSekunder(
-                teks = "Buka Akuarium",
+                teks = t("Buka Akuarium"),
                 onClick = {
                     c.audio.play(Sfx.Klik)
                     nav.resetTo(Screen.Akuarium)
                 },
             )
             Text(
-                if (sukses) "Ikan hasil tangkapan sudah masuk koleksi." else "Perbaiki kode lalu jalankan lagi.",
+                t(if (sukses) "Ikan hasil tangkapan sudah masuk koleksi." else "Perbaiki kode lalu jalankan lagi."),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,

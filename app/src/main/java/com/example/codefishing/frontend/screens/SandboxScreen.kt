@@ -72,6 +72,8 @@ import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.TangkapanMasuk
 import com.example.codefishing.core.db.IkanEntity
+import com.example.codefishing.core.i18n.LocalTeks
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.expert.EditorKode
 import com.example.codefishing.expert.MisiPeta
 import com.example.codefishing.expert.SandboxContent
@@ -169,9 +171,9 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 item {
-                    Text("Mode Expert", style = MaterialTheme.typography.headlineMedium)
+                    Text(t("Mode Expert"), style = MaterialTheme.typography.headlineMedium)
                     Text(
-                        "Tulis Python, gerakkan kapal, tangkap ikan. Batas 1000 tick.",
+                        t("Tulis Python, gerakkan kapal, tangkap ikan. Batas 1000 tick."),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -193,15 +195,15 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
                         ) {
                             Gambar(Art.ikon_kode, null, Modifier.size(40.dp))
                             Column(Modifier.weight(1f)) {
-                                Text("Panduan Expert", style = MaterialTheme.typography.titleMedium)
+                                Text(t("Panduan Expert"), style = MaterialTheme.typography.titleMedium)
                                 Text(
-                                    "Perintah, sintaks Python, dan petunjuk semua misi",
+                                    t("Perintah, sintaks Python, dan petunjuk semua misi"),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                             }
                             Text(
-                                "Buka",
+                                t("Buka"),
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.primary,
                             )
@@ -219,13 +221,13 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
                             },
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            Gambar(lencanaMisi(item.nomor), "Misi ${item.nomor}", Modifier.size(52.dp))
+                            Gambar(lencanaMisi(item.nomor), t("Misi {}", item.nomor), Modifier.size(52.dp))
                             Column(Modifier.weight(1f)) {
                                 Text(item.judul, style = MaterialTheme.typography.titleMedium)
                                 Text(item.deskripsi, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     Bintang(b?.bintang ?: 0, ukuran = 14)
-                                    if (item.par != null) Text("Par ${item.par} tick", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.tertiary)
+                                    if (item.par != null) Text(t("Par {} tick", item.par), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.tertiary)
                                 }
                             }
                         }
@@ -233,7 +235,7 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
                 }
                 item {
                     Text(
-                        "Semua program berjalan offline di perangkat. Tidak ada koneksi internet.",
+                        t("Semua program berjalan offline di perangkat. Tidak ada koneksi internet."),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -277,6 +279,8 @@ private fun EditorMisi(
     val scope = rememberCoroutineScope()
     val engine = remember { SandboxEngine() }
     val warna = LocalWarna.current
+    // Untuk teks di dalam lambda non-@Composable (onClick, scope.launch).
+    val tr = LocalTeks.current
     val semuaIkan by produceState<List<IkanEntity>>(emptyList()) { value = c.game.semuaIkan() }
     val pengaturan by c.game.observeSettings().collectAsState(null)
     val petaIkan = semuaIkan.associateBy { it.nama.lowercase() }
@@ -362,7 +366,7 @@ private fun EditorMisi(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(Modifier.weight(1f)) {
-                Text("Misi ${misi.nomor}", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
+                Text(t("Misi {}", misi.nomor), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
                 Text(
                     misi.judul,
                     style = MaterialTheme.typography.headlineSmall,
@@ -372,7 +376,7 @@ private fun EditorMisi(
             }
             Spacer(Modifier.width(12.dp))
             TombolSekunder(
-                teks = "Daftar",
+                teks = t("Daftar"),
                 onClick = onKembali,
                 modifier = Modifier.width(110.dp),
                 enabled = !berjalan,
@@ -393,14 +397,14 @@ private fun EditorMisi(
             Kartu(Modifier.fillMaxWidth(), warna = warna.suksesLatar) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        if (misi.nomor < 7) "Lanjut ke misi berikutnya" else "Semua misi selesai",
+                        t(if (misi.nomor < 7) "Lanjut ke misi berikutnya" else "Semua misi selesai"),
                         style = MaterialTheme.typography.titleMedium,
                         color = warna.suksesTeks,
                     )
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         if (misi.nomor < 7) {
                             TombolUtama(
-                                teks = "Misi Berikutnya",
+                                teks = t("Misi Berikutnya"),
                                 onClick = {
                                     c.audio.play(Sfx.KlikUtama)
                                     onLanjut(misi.nomor + 1)
@@ -409,7 +413,7 @@ private fun EditorMisi(
                             )
                         }
                         TombolSekunder(
-                            teks = if (misi.nomor < 7) "Daftar" else "Kembali ke Daftar",
+                            teks = t(if (misi.nomor < 7) "Daftar" else "Kembali ke Daftar"),
                             onClick = {
                                 c.audio.play(Sfx.Klik)
                                 onKembali()
@@ -424,7 +428,7 @@ private fun EditorMisi(
         Kartu(Modifier.fillMaxWidth(), warna = warna.peringatanLatar) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    "Petunjuk",
+                    t("Petunjuk"),
                     style = MaterialTheme.typography.labelLarge,
                     color = warna.peringatanTeks,
                     modifier = Modifier.weight(1f),
@@ -438,7 +442,7 @@ private fun EditorMisi(
                     },
                     enabled = !berjalan,
                     contentPadding = PaddingValues(horizontal = 8.dp),
-                ) { Text("Panduan") }
+                ) { Text(t("Panduan")) }
             }
             Spacer(Modifier.height(4.dp))
             Text(misi.hint, style = MaterialTheme.typography.bodySmall)
@@ -500,7 +504,7 @@ private fun EditorMisi(
 
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             TombolUtama(
-                teks = if (berjalan) "Menjalankan..." else "Jalankan",
+                teks = t(if (berjalan) "Menjalankan..." else "Jalankan"),
                 onClick = {
                     if (berjalan || semuaIkan.isEmpty()) return@TombolUtama
                     berjalan = true
@@ -541,14 +545,20 @@ private fun EditorMisi(
                                 if (simpan != null) {
                                     xpDidapat = simpan.hasil.xp + simpan.tangkapan.sumOf { it.xpDidapat }
                                 } else {
-                                    pesanSimpan = "Program berjalan, tetapi hasil tidak dapat dibaca kembali dari penyimpanan."
+                                    pesanSimpan = tr("Program berjalan, tetapi hasil tidak dapat dibaca kembali dari penyimpanan.")
                                 }
                             } catch (e: Exception) {
-                                pesanSimpan = "Program berjalan, tetapi hasil gagal disimpan: ${e.message ?: "kesalahan penyimpanan"}"
+                                pesanSimpan = tr.format(
+                                    "Program berjalan, tetapi hasil gagal disimpan: {}",
+                                    e.message ?: "kesalahan penyimpanan",
+                                )
                             }
                             c.audio.play(if (status == "sukses") Sfx.Benar else Sfx.Salah)
                         } catch (e: Exception) {
-                            pesanSimpan = "Gagal menjalankan program: ${e.message ?: "kesalahan tidak dikenal"}"
+                            pesanSimpan = tr.format(
+                                "Gagal menjalankan program: {}",
+                                e.message ?: "kesalahan tidak dikenal",
+                            )
                             c.audio.play(Sfx.Salah)
                         } finally {
                             berjalan = false
@@ -559,14 +569,14 @@ private fun EditorMisi(
                 enabled = semuaIkan.isNotEmpty() && !berjalan,
             )
             TombolSekunder(
-                teks = "Kode Awal",
+                teks = t("Kode Awal"),
                 onClick = {
                     val sudahAwal = kode.text == misi.kodeAwal
                     terapkanKode(TextFieldValue(misi.kodeAwal, TextRange(0)))
                     pesanKodeAwal = if (sudahAwal) {
-                        "Kode memang sudah memakai contoh awal."
+                        tr("Kode memang sudah memakai contoh awal.")
                     } else {
-                        "Kode awal dimuat."
+                        tr("Kode awal dimuat.")
                     }
                 },
                 modifier = Modifier.width(110.dp),
@@ -601,18 +611,20 @@ private fun EditorMisi(
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(
-                        when {
-                            !r.hasil.berhasil -> "Kode error"
-                            r.evaluasi.sukses -> "Misi berhasil!"
-                            else -> "Target belum tercapai"
-                        },
+                        t(
+                            when {
+                                !r.hasil.berhasil -> "Kode error"
+                                r.evaluasi.sukses -> "Misi berhasil!"
+                                else -> "Target belum tercapai"
+                            },
+                        ),
                         style = MaterialTheme.typography.titleMedium,
                     )
                     Text(r.hasil.pesanError ?: r.evaluasi.alasan, style = MaterialTheme.typography.bodySmall)
                     Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        Text("Tick ${r.hasil.ticks}", style = MaterialTheme.typography.labelMedium)
-                        Text("Tangkap ${r.hasil.tertangkap}", style = MaterialTheme.typography.labelMedium)
-                        Text("Sampah ${r.hasil.sampah}", style = MaterialTheme.typography.labelMedium)
+                        Text(t("Tick {}", r.hasil.ticks), style = MaterialTheme.typography.labelMedium)
+                        Text(t("Tangkap {}", r.hasil.tertangkap), style = MaterialTheme.typography.labelMedium)
+                        Text(t("Sampah {}", r.hasil.sampah), style = MaterialTheme.typography.labelMedium)
                         if (xpDidapat > 0) {
                             Text("+$xpDidapat XP", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.tertiary)
                         }
@@ -628,22 +640,22 @@ private fun EditorMisi(
                             },
                             contentPadding = PaddingValues(),
                             modifier = Modifier.align(Alignment.End),
-                        ) { Text("Cari solusi di panduan") }
+                        ) { Text(t("Cari solusi di panduan")) }
                     }
                 }
             }
 
             if (r.hasil.keluaran.isNotEmpty()) {
-                KodeBlok(r.hasil.keluaran.joinToString("\n"), judul = "OUTPUT")
+                KodeBlok(r.hasil.keluaran.joinToString("\n"), judul = t("OUTPUT"))
             }
 
             if (r.hasil.trace.isNotEmpty()) {
-                Text("Jejak gerak", style = MaterialTheme.typography.labelLarge)
+                Text(t("Jejak gerak"), style = MaterialTheme.typography.labelLarge)
                 JejakRingkas(r.hasil.trace)
             }
         } else if (r == null) {
             Text(
-                "Tekan Jalankan untuk melihat hasil. Kamu bisa mengubah kode sesukanya.",
+                t("Tekan Jalankan untuk melihat hasil. Kamu bisa mengubah kode sesukanya."),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -688,7 +700,7 @@ private fun JejakRingkas(trace: List<Langkah>) {
     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
         tampil.forEach { l ->
             Text(
-                "baris ${l.baris} · ${l.aksi}${l.pesan?.let { " · $it" } ?: ""} · tick ${l.tick}",
+                t("baris {} · {}{} · tick {}", l.baris, l.aksi, l.pesan?.let { " · $it" } ?: "", l.tick),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontFamily = FontFamily.Monospace,

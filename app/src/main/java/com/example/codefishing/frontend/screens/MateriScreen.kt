@@ -30,6 +30,7 @@ import com.example.codefishing.frontend.components.CacheGambar
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.core.audio.Sfx
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.db.IkanEntity
 import com.example.codefishing.core.db.MateriEntity
 import com.example.codefishing.core.db.StageEntity
@@ -124,20 +125,20 @@ fun MateriScreen(nav: AppNavigator, padding: PaddingValues) {
 
             Kartu(Modifier.fillMaxWidth(), warna = warna.kartuLembut) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("Materi", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
-                    Text(d.materi?.isi_markdown ?: "Siapkan dirimu. Stage ini adalah ujian akhir perairan.", style = MaterialTheme.typography.bodyLarge)
+                    Text(t("Materi"), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
+                    Text(d.materi?.isi_markdown ?: t("Siapkan dirimu. Stage ini adalah ujian akhir perairan."), style = MaterialTheme.typography.bodyLarge)
                     d.materi?.contoh_kode?.takeIf { it.isNotBlank() }?.let {
                         KodeBlok(it)
                     }
                     d.materi?.output_contoh?.takeIf { it.isNotBlank() }?.let {
-                        Text("Output: $it", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                        Text(t("Output: {}", it), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                     }
                 }
             }
 
             if (!d.materi?.trik_nelayan.isNullOrBlank()) {
                 Kartu(Modifier.fillMaxWidth(), warna = warna.peringatanLatar) {
-                    Text("Trik Nelayan", style = MaterialTheme.typography.labelLarge, color = warna.peringatanTeks)
+                    Text(t("Trik Nelayan"), style = MaterialTheme.typography.labelLarge, color = warna.peringatanTeks)
                     Spacer(Modifier.height(6.dp))
                     Text(d.materi!!.trik_nelayan!!, style = MaterialTheme.typography.bodyMedium)
                 }
@@ -145,9 +146,15 @@ fun MateriScreen(nav: AppNavigator, padding: PaddingValues) {
 
             Kartu(Modifier.fillMaxWidth()) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Gambar(Art.umpan_penuh, "Umpan", Modifier.size(30.dp))
+                    Gambar(Art.umpan_penuh, t("Umpan"), Modifier.size(30.dp))
                     Text(
-                        "${d.jumlahSoal} soal · lulus min. ${minimalBenar(d.jumlahSoal, if (d.stage.tipe == "boss") 80 else d.stage.skor_lulus)}/${d.jumlahSoal} · +${d.stage.xp_reward} XP",
+                        t(
+                            "{} soal · lulus min. {}/{} · +{} XP",
+                            d.jumlahSoal,
+                            minimalBenar(d.jumlahSoal, if (d.stage.tipe == "boss") 80 else d.stage.skor_lulus),
+                            d.jumlahSoal,
+                            d.stage.xp_reward,
+                        ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -155,7 +162,7 @@ fun MateriScreen(nav: AppNavigator, padding: PaddingValues) {
             }
 
             TombolUtama(
-                teks = if (d.stage.tipe == "boss") "Mulai Ujian Boss" else "Mulai Kuis",
+                teks = if (d.stage.tipe == "boss") t("Mulai Ujian Boss") else t("Mulai Kuis"),
                 onClick = {
                     c.audio.play(Sfx.KlikUtama)
                     nav.go(if (d.stage.tipe == "boss") Screen.Boss else Screen.Kuis, d.stage.id)

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.SolidColor
 import com.example.codefishing.core.art.Art
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.ui.theme.LocalWarna
 
 @Composable
@@ -140,7 +141,7 @@ fun ChipTier(tier: String, modifier: Modifier = Modifier) {
     ) {
         LambangTier(tier, 12.dp)
         Text(
-            text = tierLabel(tier),
+            text = t(tierLabel(tier)),
             color = warna,
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
@@ -159,7 +160,7 @@ fun Bintang(jumlah: Int, modifier: Modifier = Modifier, ukuran: Int = 20) {
                     gelap -> Art.bintang_kosong
                     else -> Art.bintang_kosong_terang
                 },
-                if (i < jumlah) "Bintang terisi" else "Bintang kosong",
+                t(if (i < jumlah) "Bintang terisi" else "Bintang kosong"),
                 Modifier.size((ukuran * 1.3f).dp),
             )
         }
@@ -193,7 +194,7 @@ fun Memuat(padding: androidx.compose.foundation.layout.PaddingValues, teks: Stri
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
             CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-            Text(teks, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(t(teks), color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

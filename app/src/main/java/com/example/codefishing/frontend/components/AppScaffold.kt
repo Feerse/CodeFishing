@@ -30,6 +30,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.audio.Sfx
+import com.example.codefishing.core.i18n.LocalTeks
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.nav.DrawerItem
 import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.launch
@@ -53,6 +55,8 @@ fun AppScaffold(
     val scope = rememberCoroutineScope()
     val audio = LocalContainer.current.audio
     val gelap = LocalWarna.current.gelap
+    // Untuk teks di dalam lambda non-@Composable (semantics).
+    val tr = LocalTeks.current
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -66,7 +70,7 @@ fun AppScaffold(
                 )
                 DrawerItem.entries.forEach { item ->
                     NavigationDrawerItem(
-                        label = { Text(item.label) },
+                        label = { Text(t(item.label)) },
                         icon = { Gambar(if (gelap) item.ikon else item.ikonTerang, null, Modifier.size(28.dp)) },
                         selected = item == aktif,
                         onClick = {
@@ -98,7 +102,7 @@ fun AppScaffold(
                             audio.play(Sfx.KlikUtama)
                             scope.launch { drawerState.open() }
                         },
-                        modifier = Modifier.semantics { contentDescription = "Buka menu" },
+                        modifier = Modifier.semantics { contentDescription = tr("Buka menu") },
                     ) { HamburgerIcon() }
                     Text(
                         text = judul,

@@ -6,6 +6,7 @@ import com.example.codefishing.core.audio.AudioManager
 import com.example.codefishing.core.content.ContentRepository
 import com.example.codefishing.core.data.EfekVisualStore
 import com.example.codefishing.core.data.GameRepository
+import com.example.codefishing.core.i18n.BahasaStore
 import com.example.codefishing.core.data.ProgressRepository
 import com.example.codefishing.core.data.ThemeStore
 import com.example.codefishing.core.db.CodeFishingDatabase
@@ -28,6 +29,8 @@ class AppContainer(
     val audio = AudioManager(appContext, progress)
     /** Kepadatan efek visual; dibaca sebelum database siap, seperti tema. */
     val efekVisual = EfekVisualStore(appContext)
+    /** Bahasa antarmuka; juga dibaca sebelum database siap. */
+    val bahasa = BahasaStore(appContext)
 
     private val _siap = MutableStateFlow(false)
     val siap = _siap.asStateFlow()

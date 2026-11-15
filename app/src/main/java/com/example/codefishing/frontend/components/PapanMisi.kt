@@ -56,6 +56,7 @@ import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.LocalEfekVisual
 import com.example.codefishing.core.data.hemat
 import com.example.codefishing.core.db.IkanEntity
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.expert.Arah
 import com.example.codefishing.expert.MisiPeta
 import com.example.codefishing.expert.SandboxRun
@@ -350,14 +351,16 @@ fun PapanMisi(
         (ikanAwal - tangkapKini).coerceAtLeast(0)
     }
 
-    val statusTeks = when {
-        memuat -> "MEMUAT"
-        hasil == null -> "SIAP"
-        memutar -> "MEMUTAR"
-        !hasil.hasil.berhasil -> "ERROR"
-        hasil.evaluasi.sukses -> "BERHASIL"
-        else -> "BELUM TERCAPAI"
-    }
+    val statusTeks = t(
+        when {
+            memuat -> "MEMUAT"
+            hasil == null -> "SIAP"
+            memutar -> "MEMUTAR"
+            !hasil.hasil.berhasil -> "ERROR"
+            hasil.evaluasi.sukses -> "BERHASIL"
+            else -> "BELUM TERCAPAI"
+        },
+    )
     val statusWarna = when {
         memuat -> warna.petaTeksRedup
         hasil == null -> warna.petaTeksRedup
@@ -366,11 +369,13 @@ fun PapanMisi(
         hasil.evaluasi.sukses -> warna.suksesTeks
         else -> warna.peringatanTeks
     }
-    val judulPapan = when {
-        hasil == null -> "Peta Misi"
-        memutar -> "Simulasi"
-        else -> "Posisi Akhir"
-    }
+    val judulPapan = t(
+        when {
+            hasil == null -> "Peta Misi"
+            memutar -> "Simulasi"
+            else -> "Posisi Akhir"
+        },
+    )
 
     Column(
         modifier.fillMaxWidth(),
@@ -384,7 +389,7 @@ fun PapanMisi(
                     color = MaterialTheme.colorScheme.tertiary,
                 )
                 Text(
-                    "${misi.grid} × ${misi.grid} petak · $tickKini tick",
+                    t("{} × {} petak · {} tick", misi.grid, misi.grid, tickKini),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -401,7 +406,7 @@ fun PapanMisi(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    "Memuat peta misi...",
+                    t("Memuat peta misi..."),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -427,16 +432,21 @@ fun PapanMisi(
 
         Text(
             when {
-                memuat -> "Menyiapkan petak laut..."
-                hasil == null -> "Kapal mulai di (0, 0). Baris bawah = start."
-                memutar -> "Memutar simulasi program... tekan Lewati untuk langsung ke hasil."
-                else -> "Kapal berakhir di (${hasil.dunia.x}, ${hasil.dunia.y}) · $sisaIkan ikan tersisa."
+                memuat -> t("Menyiapkan petak laut...")
+                hasil == null -> t("Kapal mulai di (0, 0). Baris bawah = start.")
+                memutar -> t("Memutar simulasi program... tekan Lewati untuk langsung ke hasil.")
+                else -> t(
+                    "Kapal berakhir di ({}, {}) · {} ikan tersisa.",
+                    hasil.dunia.x,
+                    hasil.dunia.y,
+                    sisaIkan,
+                )
             },
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Text(
-            "Bingkai oranye = kapal · Petak berisi ikan = tangkapan · Sepatu bot = sampah",
+            t("Bingkai oranye = kapal · Petak berisi ikan = tangkapan · Sepatu bot = sampah"),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
         )
@@ -444,14 +454,14 @@ fun PapanMisi(
         if (memutar) {
             if (aksi.size > 200) {
                 Text(
-                    "Program panjang: animasi dipercepat. Tekan Lewati untuk langsung ke hasil.",
+                    t("Program panjang: animasi dipercepat. Tekan Lewati untuk langsung ke hasil."),
                     style = MaterialTheme.typography.labelSmall,
                     color = warna.peringatanTeks,
                 )
             }
             Spacer(Modifier.height(2.dp))
             TombolSekunder(
-                teks = "Lewati animasi",
+                teks = t("Lewati animasi"),
                 onClick = { lewati = true },
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -640,7 +650,7 @@ private fun PapanGrid(
 
             Gambar(
                 kapalArah(arah),
-                "Kapal di (${posisiX.roundToInt()}, ${posisiY.roundToInt()})",
+                t("Kapal di ({}, {})", posisiX.roundToInt(), posisiY.roundToInt()),
                 Modifier
                     .offset {
                         // Ayunan kapal dihitung di fase layout: tidak memicu recompose.
@@ -666,7 +676,7 @@ private fun PapanGrid(
                     val ikan = e.namaIkan?.lowercase()?.let { petaIkan[it] }
                     GambarKontras(
                         gambarIkanKecil(ikan?.gambar),
-                        "Ikan ${e.namaIkan ?: ""} tertangkap",
+                        t("Ikan {} tertangkap", e.namaIkan ?: ""),
                         Modifier
                             .offset {
                                 IntOffset(
@@ -685,7 +695,7 @@ private fun PapanGrid(
                 } else if (e.jenis == JenisLempar.Sampah) {
                     Gambar(
                         Art.petak_sampah,
-                        "Sampah terangkat",
+                        t("Sampah terangkat"),
                         Modifier
                             .offset {
                                 IntOffset(
@@ -703,7 +713,9 @@ private fun PapanGrid(
                 val badgeAlpha = ((p - 0.35f) / 0.65f).coerceIn(0f, 1f)
                 if (badgeAlpha > 0.01f) {
                     Text(
-                        if (e.jenis == JenisLempar.Sampah) "sampah" else if (e.jenis == JenisLempar.Ikan) "+1" else "kosong",
+                        t(
+                            if (e.jenis == JenisLempar.Sampah) "sampah" else if (e.jenis == JenisLempar.Ikan) "+1" else "kosong",
+                        ),
                         color = if (e.jenis == JenisLempar.Sampah) warna.bahayaTeks else warna.suksesTeks,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,

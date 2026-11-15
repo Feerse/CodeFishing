@@ -71,6 +71,7 @@ import com.example.codefishing.core.data.KAPASITAS_AKUARIUM
 import com.example.codefishing.core.data.MAKS_NAMA_AKUARIUM
 import com.example.codefishing.core.data.jumlahPerBaris
 import com.example.codefishing.core.data.namaTampilAkuarium
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.gambarIkanKecil
@@ -129,7 +130,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
     ) {
         Gambar(
             if (warna.gelap) Art.latar_akuarium else Art.latar_akuarium_terang,
-            "Akuarium",
+            t("Akuarium"),
             Modifier.fillMaxSize(),
             ContentScale.Crop,
         )
@@ -241,7 +242,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                             )
                         }
                         .width(lebarLabel)
-                        .clickable(onClickLabel = "Lihat ikan $namaTampil") { dipilih = item },
+                        .clickable(onClickLabel = t("Lihat ikan {}", namaTampil)) { dipilih = item },
                 ) {
                     // Aura sesuai kelangkaan ikut berenang bersama ikan (tidak ikut dibalik).
                     AuraIkan(k.tier, Modifier.size(ukuran)) {
@@ -316,18 +317,18 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
-                    "Akuarium",
+                    t("Akuarium"),
                     style = MaterialTheme.typography.headlineMedium,
                     color = warna.teksDiAdegan,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
                     if (ikan.isEmpty()) {
-                        "0/$KAPASITAS_AKUARIUM ikan · tambah dari Koleksi"
+                        t("0/{} ikan · tambah dari Koleksi", KAPASITAS_AKUARIUM)
                     } else if (ikan.size >= KAPASITAS_AKUARIUM) {
-                        "${ikan.size}/$KAPASITAS_AKUARIUM ikan · akuarium penuh"
+                        t("{}/{} ikan · akuarium penuh", ikan.size, KAPASITAS_AKUARIUM)
                     } else {
-                        "${ikan.size}/$KAPASITAS_AKUARIUM ikan berenang di sini"
+                        t("{}/{} ikan berenang di sini", ikan.size, KAPASITAS_AKUARIUM)
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = warna.teksDiAdeganRedup,
@@ -344,10 +345,10 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                 if (ikan.isEmpty()) {
                     Kartu(Modifier.fillMaxWidth(), warna = warna.kartu.copy(alpha = 0.95f)) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text("Akuarium masih kosong", color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.titleMedium)
-                            Text("Tambahkan ikan dari koleksimu, maksimal $KAPASITAS_AKUARIUM ekor.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+                            Text(t("Akuarium masih kosong"), color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.titleMedium)
+                            Text(t("Tambahkan ikan dari koleksimu, maksimal {} ekor.", KAPASITAS_AKUARIUM), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
                             TombolUtama(
-                                teks = "Pilih dari Koleksi",
+                                teks = t("Pilih dari Koleksi"),
                                 onClick = {
                                     c.audio.play(Sfx.Klik)
                                     nav.resetTo(Screen.Koleksi)
@@ -407,7 +408,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                 Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.22f))
-                    .clickable(onClickLabel = "Tutup informasi ikan") {
+                    .clickable(onClickLabel = t("Tutup informasi ikan")) {
                         dipilih = null
                         dialogNama = false
                         dialogKeluarkan = false
@@ -459,14 +460,19 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                                     overflow = TextOverflow.Ellipsis,
                                 )
                                 Text(
-                                    "Jumlah ×${pilihan.ikan.jumlah} · ${"%.1f".format(pilihan.ikan.bobot_terbesar)} kg · kenyang ${pilihan.ikan.kenyang}%",
+                                    t(
+                                        "Jumlah ×{} · {} kg · kenyang {}%",
+                                        pilihan.ikan.jumlah,
+                                        "%.1f".format(pilihan.ikan.bobot_terbesar),
+                                        pilihan.ikan.kenyang,
+                                    ),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                             }
                         }
                         TombolSekunder(
-                            teks = if (panggilan == null) "Beri Nama" else "Ganti Nama",
+                            teks = t(if (panggilan == null) "Beri Nama" else "Ganti Nama"),
                             onClick = {
                                 namaBaru = panggilan.orEmpty()
                                 dialogNama = true
@@ -474,7 +480,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                             modifier = Modifier.height(48.dp),
                         )
                         TombolSekunder(
-                            teks = "Beri Makan",
+                            teks = t("Beri Makan"),
                             onClick = {
                                 c.audio.play(Sfx.Benar)
                                 makanKe++
@@ -484,13 +490,17 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                         )
                         if (pilihan.ikan.jumlah > 1) {
                             Text(
-                                "Kenyang berlaku untuk seluruh ${pilihan.ikan.jumlah} ekor ${pilihan.ikan.nama}.",
+                                t(
+                                    "Kenyang berlaku untuk seluruh {} ekor {}.",
+                                    pilihan.ikan.jumlah,
+                                    pilihan.ikan.nama,
+                                ),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                         TombolSekunder(
-                            teks = "Keluarkan dari Akuarium",
+                            teks = t("Keluarkan dari Akuarium"),
                             onClick = { dialogKeluarkan = true },
                             modifier = Modifier.height(48.dp),
                         )
@@ -504,15 +514,15 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
         val slotId = pilihan.slotId
         AlertDialog(
             onDismissRequest = { dialogNama = false },
-            title = { Text(if (pilihan.nama == null) "Beri nama ikan" else "Ganti nama ikan") },
+            title = { Text(t(if (pilihan.nama == null) "Beri nama ikan" else "Ganti nama ikan")) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     OutlinedTextField(
                         value = namaBaru,
                         onValueChange = { namaBaru = it.take(MAKS_NAMA_AKUARIUM) },
                         singleLine = true,
-                        label = { Text("Nama di akuarium") },
-                        placeholder = { Text("Contoh: Si Kumis") },
+                        label = { Text(t("Nama di akuarium")) },
+                        placeholder = { Text(t("Contoh: Si Kumis")) },
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(
                             onDone = {
@@ -523,7 +533,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                         modifier = Modifier.fillMaxWidth(),
                     )
                     Text(
-                        "Nama ini akan menggantikan nama yang tampil di akuarium.",
+                        t("Nama ini akan menggantikan nama yang tampil di akuarium."),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -535,7 +545,7 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                             },
                             contentPadding = PaddingValues(0.dp),
                         ) {
-                            Text("Kembalikan nama asli")
+                            Text(t("Kembalikan nama asli"))
                         }
                     }
                 }
@@ -546,10 +556,10 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                         scope.launch { c.game.gantiNamaAkuarium(slotId, namaBaru) }
                         dialogNama = false
                     },
-                ) { Text("Simpan") }
+                ) { Text(t("Simpan")) }
             },
             dismissButton = {
-                TextButton(onClick = { dialogNama = false }) { Text("Batal") }
+                TextButton(onClick = { dialogNama = false }) { Text(t("Batal")) }
             },
         )
     }
@@ -557,11 +567,13 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
     if (dialogKeluarkan && pilihan != null) {
         AlertDialog(
             onDismissRequest = { dialogKeluarkan = false },
-            title = { Text("Keluarkan ikan?") },
+            title = { Text(t("Keluarkan ikan?")) },
             text = {
                 Text(
-                    "${pilihan.nama ?: pilihan.ikan.nama} akan dikeluarkan dari akuarium. " +
-                        "Ikan tetap tersimpan di Koleksi.",
+                    t(
+                        "{} akan dikeluarkan dari akuarium. Ikan tetap tersimpan di Koleksi.",
+                        pilihan.nama ?: pilihan.ikan.nama,
+                    ),
                 )
             },
             confirmButton = {
@@ -573,10 +585,10 @@ fun AkuariumScreen(nav: AppNavigator, padding: PaddingValues) {
                         dialogNama = false
                         scope.launch { c.game.keluarkanDariAkuarium(slotId) }
                     },
-                ) { Text("Keluarkan") }
+                ) { Text(t("Keluarkan")) }
             },
             dismissButton = {
-                TextButton(onClick = { dialogKeluarkan = false }) { Text("Batal") }
+                TextButton(onClick = { dialogKeluarkan = false }) { Text(t("Batal")) }
             },
         )
     }
@@ -636,7 +648,7 @@ private fun PanelAksiAkuarium(
             )
             Spacer(Modifier.width(6.dp))
             Text(
-                "Beri Makan Semua",
+                t("Beri Makan Semua"),
                 style = MaterialTheme.typography.labelLarge.copy(fontSize = 13.sp),
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
@@ -661,7 +673,7 @@ private fun PanelAksiAkuarium(
             )
             Spacer(Modifier.width(6.dp))
             Text(
-                "Koleksi",
+                t("Koleksi"),
                 style = MaterialTheme.typography.labelLarge.copy(fontSize = 13.sp),
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,

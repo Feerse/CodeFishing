@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.audio.Bgm
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.BottomItem
 import com.example.codefishing.core.nav.DrawerItem
@@ -107,7 +108,7 @@ fun App() {
     }
 
     AppScaffold(
-        judul = saatIni.screen.judul,
+        judul = t(saatIni.screen.judul),
         aktif = aktifDrawer(saatIni.screen),
         onDrawerItem = { nav.resetTo(it.target) },
         kanan = { if (saatIni.screen in layarUmpan) IndikatorUmpan(umpan?.sisa ?: 0) },
@@ -126,7 +127,7 @@ fun App() {
                                     Modifier.size(28.dp).alpha(if (aktif == item) 1f else 0.7f),
                                 )
                             },
-                            label = { Text(item.label) },
+                            label = { Text(t(item.label)) },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = MaterialTheme.colorScheme.primary,
                                 selectedTextColor = MaterialTheme.colorScheme.primary,

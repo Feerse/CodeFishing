@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.core.audio.Sfx
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.Gambar
@@ -110,13 +111,13 @@ fun PilihModeScreen(nav: AppNavigator, padding: PaddingValues) {
             ) {
                 Column(Modifier.padding(bottom = 2.dp)) {
                     Text(
-                        "PILIH PERAN",
+                        t("PILIH PERAN"),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.tertiary,
                         letterSpacing = 2.sp,
                     )
                     Text(
-                        "Mau memancing bagaimana?",
+                        t("Mau memancing bagaimana?"),
                         style = MaterialTheme.typography.headlineMedium.copy(
                             fontSize = 22.sp,
                             lineHeight = 28.sp,
@@ -127,14 +128,14 @@ fun PilihModeScreen(nav: AppNavigator, padding: PaddingValues) {
 
                 Masuk(tampil, 0) {
                     KartuMode(
-                        judul = "Belajar",
-                        tag = "Pemula",
-                        fakta = "2 peta · 20 stage · kuis pilihan ganda",
+                        judul = t("Belajar"),
+                        tag = t("Pemula"),
+                        fakta = t("2 peta · 20 stage · kuis pilihan ganda"),
                         ikon = if (warna.gelap) Art.ikon_mode_belajar else Art.ikon_mode_belajar_terang,
                         aksen = MaterialTheme.colorScheme.primary,
                         onAksen = MaterialTheme.colorScheme.onPrimary,
                         tinggi = tinggiKartu,
-                        onClickLabel = "Pilih mode Belajar",
+                        onClickLabel = t("Pilih mode Belajar"),
                         onClick = {
                             c.audio.play(Sfx.Klik)
                             scope.launch {
@@ -155,14 +156,14 @@ fun PilihModeScreen(nav: AppNavigator, padding: PaddingValues) {
 
                 Masuk(tampil, 90) {
                     KartuMode(
-                        judul = "Sandbox",
-                        tag = "Expert",
-                        fakta = "6 misi · mode bebas",
+                        judul = t("Sandbox"),
+                        tag = t("Expert"),
+                        fakta = t("6 misi · mode bebas"),
                         ikon = if (warna.gelap) Art.ikon_mode_expert else Art.ikon_mode_expert_terang,
                         aksen = MaterialTheme.colorScheme.tertiary,
                         onAksen = MaterialTheme.colorScheme.onTertiary,
                         tinggi = tinggiKartu,
-                        onClickLabel = "Pilih mode Sandbox",
+                        onClickLabel = t("Pilih mode Sandbox"),
                         onClick = {
                             c.audio.play(Sfx.Klik)
                             scope.launch {

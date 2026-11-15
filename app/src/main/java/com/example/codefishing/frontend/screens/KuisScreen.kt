@@ -45,6 +45,7 @@ import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.QuizData
 import com.example.codefishing.core.data.SesiKuis
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.gambarIkanKecil
@@ -280,7 +281,7 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text(d.stage.nama, style = MaterialTheme.typography.titleLarge)
-                    Text("Soal ${indeks + 1} dari ${daftarSoal.size} · ${d.stage.tipe.uppercase()}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(t("Soal {} dari {} · {}", indeks + 1, daftarSoal.size, d.stage.tipe.uppercase()), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Text("$xp XP", color = MaterialTheme.colorScheme.tertiary, style = MaterialTheme.typography.labelLarge)
             }
@@ -304,12 +305,19 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         com.example.codefishing.frontend.components.Gambar(
                             com.example.codefishing.core.art.Art.ikan_boss_gabus,
-                            "Boss Gabus",
+                            t("Boss Gabus"),
                             Modifier.size(72.dp),
                         )
                         Column {
-                            Text("Ujian Boss", style = MaterialTheme.typography.titleMedium, color = warna.bahayaTeks)
-                            Text("Lulus dengan minimal ${minimalBenar(daftarSoal.size, 80)} dari ${daftarSoal.size} jawaban benar.", style = MaterialTheme.typography.bodySmall)
+                            Text(t("Ujian Boss"), style = MaterialTheme.typography.titleMedium, color = warna.bahayaTeks)
+                            Text(
+                                t(
+                                    "Lulus dengan minimal {} dari {} jawaban benar.",
+                                    minimalBenar(daftarSoal.size, 80),
+                                    daftarSoal.size,
+                                ),
+                                style = MaterialTheme.typography.bodySmall,
+                            )
                         }
                     }
                 }
@@ -368,8 +376,8 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                         Text(huruf, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                     }
                     Text(p.teks, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
-                    if (terkunci && benarIni) Gambar(Art.ikon_berhasil, "Jawaban benar", Modifier.size(26.dp))
-                    if (terkunci && dipilih && !benarIni) Gambar(Art.ikon_error, "Jawaban salah", Modifier.size(26.dp))
+                    if (terkunci && benarIni) Gambar(Art.ikon_berhasil, t("Jawaban benar"), Modifier.size(26.dp))
+                    if (terkunci && dipilih && !benarIni) Gambar(Art.ikon_error, t("Jawaban salah"), Modifier.size(26.dp))
                 }
             }
 
@@ -380,7 +388,7 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text(
-                            if (jawabanBenar) "Tepat!" else "Belum tepat",
+                            if (jawabanBenar) t("Tepat!") else t("Belum tepat"),
                             style = MaterialTheme.typography.titleMedium,
                             color = if (jawabanBenar) warna.suksesTeks else warna.bahayaTeks,
                         )
@@ -390,13 +398,13 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
 
                 if (menyimpan) {
                     Text(
-                        "Menyimpan jawaban...",
+                        t("Menyimpan jawaban..."),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 } else {
                     TombolUtama(
-                        teks = if (indeks == daftarSoal.size - 1) "Lihat Hasil" else "Soal Berikutnya",
+                        teks = if (indeks == daftarSoal.size - 1) t("Lihat Hasil") else t("Soal Berikutnya"),
                         onClick = {
                             c.audio.play(Sfx.Klik)
                             if (indeks == daftarSoal.size - 1) {
@@ -414,10 +422,10 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                 }
             } else {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Benar $benar · Salah $salah · Combo $combo", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(t("Benar {} · Salah {} · Combo {}", benar, salah, combo), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Text(
-                    "Ketuk jawaban, lalu konfirmasi untuk menguncinya.",
+                    t("Ketuk jawaban, lalu konfirmasi untuk menguncinya."),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -443,7 +451,7 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                     .padding(bottom = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                Text("Kunci jawaban ini?", style = MaterialTheme.typography.titleLarge)
+                Text(t("Kunci jawaban ini?"), style = MaterialTheme.typography.titleLarge)
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -467,16 +475,16 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                     Text(opsi.teks, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
                 }
                 Text(
-                    "Jawaban yang sudah dikunci tidak dapat diubah. Umpan hanya berkurang 1 jika stage selesai dengan minimal 3 jawaban salah.",
+                    t("Jawaban yang sudah dikunci tidak dapat diubah. Umpan hanya berkurang 1 jika stage selesai dengan minimal 3 jawaban salah."),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                TombolUtama("Ya, kunci jawaban", onClick = {
+                TombolUtama(t("Ya, kunci jawaban"), onClick = {
                     c.audio.play(Sfx.Klik)
                     kandidat = null
                     kunciJawaban(opsi, pilihanKandidat)
                 })
-                TombolSekunder("Periksa lagi", onClick = {
+                TombolSekunder(t("Periksa lagi"), onClick = {
                     c.audio.play(Sfx.Klik)
                     batalPilih()
                 })

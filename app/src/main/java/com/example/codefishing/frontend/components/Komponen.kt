@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.getValue
 import com.example.codefishing.core.art.Art
+import com.example.codefishing.core.i18n.t
 import com.example.codefishing.ui.theme.LocalWarna
 
 /**
@@ -127,7 +128,7 @@ fun IndikatorUmpan(jumlah: Int, maks: Int = 5) {
                 } else {
                     if (gelap) Art.umpan_kosong else Art.umpan_kosong_terang
                 },
-                if (i < jumlah) "Umpan terisi" else "Umpan kosong",
+                t(if (i < jumlah) "Umpan terisi" else "Umpan kosong"),
                 Modifier.size(18.dp),
             )
         }
