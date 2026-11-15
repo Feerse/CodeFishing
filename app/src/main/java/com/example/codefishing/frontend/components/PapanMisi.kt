@@ -28,6 +28,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -51,6 +53,8 @@ import androidx.compose.ui.unit.sp
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.audio.Sfx
+import com.example.codefishing.core.data.LocalEfekVisual
+import com.example.codefishing.core.data.hemat
 import com.example.codefishing.core.db.IkanEntity
 import com.example.codefishing.expert.Arah
 import com.example.codefishing.expert.MisiPeta
@@ -59,6 +63,7 @@ import com.example.codefishing.expert.py.Langkah
 import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.delay
 import kotlin.math.PI
+import kotlin.math.floor
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
@@ -499,13 +504,8 @@ private fun PapanGrid(
 ) {
     val warna = LocalWarna.current
     val density = LocalDensity.current
-    val transisi = rememberInfiniteTransition(label = "papan-misi")
-    val ombak by transisi.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(6200, easing = LinearEasing)),
-        label = "ombak-papan",
-    )
+    // Hemat: papan tidak diayun sama sekali (satu-satunya efek yang terus-menerus menggambar).
+    val ombak = rememberJamOmbakPapan(aktif = !LocalEfekVisual.current.hemat)
     val gap = 3.dp
     val kapalX = posisiX.roundToInt().coerceIn(0, ukuran - 1)
     val kapalY = posisiY.roundToInt().coerceIn(0, ukuran - 1)
@@ -526,7 +526,6 @@ private fun PapanGrid(
         val boatPx = with(density) { boatSize.toPx() }
         val boatX = posisiX * (selPx + gapPx) + selPx / 2f
         val boatY = (ukuran - 1 - posisiY) * (selPx + gapPx) + selPx / 2f
-        val bob = sin(ombak * 2f * PI.toFloat()) * 1.3f * with(density) { 1.dp.toPx() }
         val guncangPx = sin(guncang * PI.toFloat() * 10f) * with(density) { 4.dp.toPx() } * guncang
         val arahX = when (arah) {
             Arah.Timur -> 1f
@@ -571,7 +570,6 @@ private fun PapanGrid(
                                 )
                                 if (isi.isNotEmpty() && isi != "sampah" && index !in terangkat) {
                                     val ikan = petaIkan[isi.lowercase()]
-                                    val goyang = sin(ombak * 2f * PI.toFloat() + (x + y * 3) * 0.7f)
                                     GambarKontras(
                                         gambarIkanKecil(ikan?.gambar),
                                         ikan?.nama ?: isi,
@@ -579,6 +577,11 @@ private fun PapanGrid(
                                             .size(if (adaKapal) sel * 0.40f else sel * 0.70f)
                                             .align(if (adaKapal) Alignment.TopStart else Alignment.Center)
                                             .graphicsLayer {
+                                                // Dibaca di fase gambar, bukan komposisi: ikan bergoyang
+                                                // tanpa memicu recompose seluruh papan.
+                                                val goyang = sin(
+                                                    ombak.value * 2f * PI.toFloat() + (x + y * 3) * 0.7f,
+                                                )
                                                 translationY = goyang * 1.4.dp.toPx()
                                                 rotationZ = goyang * 2.5f
                                             },
@@ -592,7 +595,7 @@ private fun PapanGrid(
 
             // Kilau air tipis di atas petak.
             Canvas(Modifier.matchParentSize()) {
-                gambarKilauPapan(warna.ombak, ombak)
+                gambarKilauPapan(warna.ombak, ombak.value)
             }
 
             // Efek lempar/lihat berada di koordinat papan, bukan di dalam satu petak.
@@ -640,6 +643,8 @@ private fun PapanGrid(
                 "Kapal di (${posisiX.roundToInt()}, ${posisiY.roundToInt()})",
                 Modifier
                     .offset {
+                        // Ayunan kapal dihitung di fase layout: tidak memicu recompose.
+                        val bob = sin(ombak.value * 2f * PI.toFloat()) * 1.3f * 1.dp.toPx()
                         IntOffset(
                             (boatX - boatPx / 2f + guncangPx).roundToInt(),
                             (boatY - boatPx / 2f + bob).roundToInt(),
@@ -733,3 +738,33 @@ private fun kapalArah(arah: Arah): Int = when (arah) {
 }
 
 private fun lerpF(mulai: Float, selesai: Float, t: Float): Float = mulai + (selesai - mulai) * t
+
+/**
+ * Jumlah pembulatan jam ombak papan per siklus 6,2 detik (≈24 langkah per detik).
+ * Efek dekoratif ini tidak perlu 60 fps; membatasinya memotong kerja gambar lebih dari separuh.
+ */
+private const val LANGKAH_OMBAK = 150f
+
+/**
+ * Jam ombak papan misi.
+ *
+ * [aktif] = false mengembalikan nilai tetap dan TIDAK membuat [rememberInfiniteTransition]:
+ * transisi tak hingga tetap meminta frame baru setiap detik walau nilainya tidak dibaca, jadi
+ * mematikannya benar-benar membuat papan diam (0 frame) di mode Hemat.
+ *
+ * Nilai dibulatkan ke [LANGKAH_OMBAK] langkah. Hasilnya hanya boleh dibaca di fase gambar/layout
+ * (`graphicsLayer`, `offset`, `Canvas`), bukan di badan komposisi, supaya grid petak tidak
+ * disusun ulang tiap frame.
+ */
+@Composable
+private fun rememberJamOmbakPapan(aktif: Boolean): State<Float> {
+    if (!aktif) return remember { mutableFloatStateOf(0.33f) }
+    val transisi = rememberInfiniteTransition(label = "papan-misi")
+    val mentah = transisi.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(6200, easing = LinearEasing)),
+        label = "ombak-papan",
+    )
+    return remember { derivedStateOf { floor(mentah.value * LANGKAH_OMBAK) / LANGKAH_OMBAK } }
+}

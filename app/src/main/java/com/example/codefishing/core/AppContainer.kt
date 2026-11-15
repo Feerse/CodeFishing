@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.example.codefishing.core.audio.AudioManager
 import com.example.codefishing.core.content.ContentRepository
+import com.example.codefishing.core.data.EfekVisualStore
 import com.example.codefishing.core.data.GameRepository
 import com.example.codefishing.core.data.ProgressRepository
 import com.example.codefishing.core.data.ThemeStore
@@ -25,6 +26,8 @@ class AppContainer(
     val progress = ProgressRepository(appContext)
     val content = ContentRepository(appContext)
     val audio = AudioManager(appContext, progress)
+    /** Kepadatan efek visual; dibaca sebelum database siap, seperti tema. */
+    val efekVisual = EfekVisualStore(appContext)
 
     private val _siap = MutableStateFlow(false)
     val siap = _siap.asStateFlow()

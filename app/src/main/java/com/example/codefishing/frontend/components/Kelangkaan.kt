@@ -36,6 +36,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.codefishing.core.data.LocalEfekVisual
+import com.example.codefishing.core.data.hemat
 import com.example.codefishing.ui.theme.LocalWarna
 import kotlin.math.PI
 import kotlin.math.cos
@@ -593,7 +595,10 @@ private fun DrawScope.gambarPartikel(k: Kelangkaan, g: GayaTier, p: PaletEfek, w
 @Composable
 private fun rememberWaktuTier(animasi: Boolean): State<Float> {
     val kurangiGerak = remember { !ValueAnimator.areAnimatorsEnabled() }
-    if (!animasi || kurangiGerak) return remember { mutableFloatStateOf(0.33f) }
+    // Mode "Hemat" mematikan kilau tier sepenuhnya: efek ini menggambar ulang bingkai terus-menerus
+    // dan tidak membawa informasi apa pun.
+    val hemat = LocalEfekVisual.current.hemat
+    if (!animasi || kurangiGerak || hemat) return remember { mutableFloatStateOf(0.33f) }
     val transisi = rememberInfiniteTransition(label = "kelangkaan")
     val mentah: State<Float> = transisi.animateFloat(
         initialValue = 0f,

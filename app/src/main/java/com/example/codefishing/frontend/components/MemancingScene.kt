@@ -48,6 +48,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.codefishing.core.art.Art
+import com.example.codefishing.core.data.LocalEfekVisual
+import com.example.codefishing.core.data.hemat
 import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.delay
 import kotlin.math.PI
@@ -112,6 +114,7 @@ fun MemancingScene(
     val density = LocalDensity.current
     val px = density.density
     val kurangiGerak = remember { !ValueAnimator.areAnimatorsEnabled() }
+    val hemat = LocalEfekVisual.current.hemat
     val jenis = remember(nomorStage, varianBoss) { jenisAdeganStage(nomorStage, varianBoss) }
     val bersalju = adeganBersalju(nomorStage)
 
@@ -219,26 +222,26 @@ fun MemancingScene(
                             .align(Alignment.TopEnd)
                             .padding(top = 6.dp, end = 22.dp)
                             .size(52.dp)
-                            .graphicsLayer { alpha = if (gerak > 0f && kilatState.value > 0.90f) 1f else 0f },
+                            .graphicsLayer { alpha = if (gerak > 0f && !hemat && kilatState.value > 0.90f) 1f else 0f },
                     )
                 }
 
                 // --- Lapisan 1: ambient air, tali, joran, tombak, efek permukaan ------------
                 Canvas(Modifier.fillMaxSize()) {
                     if (jenis == JenisAdegan.LubangEs) {
-                        gambarOmbak(SALJU_ADEGAN, ombak, h * 0.70f, h * 0.008f, 2)
-                        gambarSalju(SALJU_ADEGAN, ombak)
+                        gambarOmbak(SALJU_ADEGAN, ombak, h * 0.70f, h * 0.008f, if (hemat) 1 else 2)
+                        gambarSalju(SALJU_ADEGAN, ombak, jumlah = if (hemat) 10 else 22)
                     } else if (diBawahAir(jenis)) {
-                        gambarGelembung(OMBAK_ADEGAN, ombak, dasar = h * 0.96f)
-                        if (bersalju) gambarSalju(SALJU_ADEGAN.copy(alpha = 0.55f), ombak)
+                        gambarGelembung(OMBAK_ADEGAN, ombak, dasar = h * 0.96f, jumlah = if (hemat) 6 else 12)
+                        if (bersalju) gambarSalju(SALJU_ADEGAN.copy(alpha = 0.55f), ombak, jumlah = if (hemat) 8 else 22)
                     } else {
-                        if (bersalju) gambarSalju(SALJU_ADEGAN, ombak)
+                        if (bersalju) gambarSalju(SALJU_ADEGAN, ombak, jumlah = if (hemat) 10 else 22)
                         gambarOmbak(
                             warna = OMBAK_ADEGAN,
                             fase = ombak,
                             dasar = dasarAir,
                             amplitudo = h * 0.018f,
-                            jumlahGaris = if (jenis == JenisAdegan.Badai) 4 else 3,
+                            jumlahGaris = if (hemat) 2 else if (jenis == JenisAdegan.Badai) 4 else 3,
                         )
                         gambarKilauAir(OMBAK_ADEGAN, ombak, dasarAir + 8.dp.toPx())
                     }
@@ -299,12 +302,12 @@ fun MemancingScene(
                     }
                     val splash = st.splash
                     if (splash != null && st.splashT in 0.002f..0.998f && jenis != JenisAdegan.LubangEs) {
-                        gambarPercikan(splash, st.splashT, Color.White, jumlah = 16)
+                        gambarPercikan(splash, st.splashT, Color.White, jumlah = if (hemat) 8 else 16)
                     }
                     if (varianBoss) {
-                        gambarHujan(TALI_ADEGAN, ombak)
+                        gambarHujan(TALI_ADEGAN, ombak, jumlah = if (hemat) 12 else 26)
                     }
-                    if (varianBoss && !kurangiGerak && kilatState.value > 0.92f) {
+                    if (varianBoss && !kurangiGerak && !hemat && kilatState.value > 0.92f) {
                         drawRect(Color.White.copy(alpha = 0.16f))
                     }
                 }

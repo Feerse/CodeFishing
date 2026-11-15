@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.core.audio.Sfx
+import com.example.codefishing.core.data.EfekVisual
 import com.example.codefishing.core.data.ThemeMode
 import com.example.codefishing.core.db.PengaturanEntity
 import com.example.codefishing.core.nav.AppNavigator
@@ -56,6 +57,7 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
     val tersimpan by c.game.observeSettings().collectAsState(null)
     val statistik by c.game.observeStatistik().collectAsState(null)
     val tema by c.theme.mode.collectAsState()
+    val efekPilihan by c.efekVisual.pilihan.collectAsState()
     val warna = LocalWarna.current
     val totalIkan by produceState<Int?>(null) { value = c.game.jumlahIkan() }
     val totalStage by produceState<Int?>(null) { value = c.game.jumlahStage() }
@@ -111,6 +113,33 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
                 )
             }
         }
+
+        Text("Efek visual", style = MaterialTheme.typography.titleMedium)
+        Text(
+            efekPilihan.keterangan,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+            EfekVisual.entries.forEachIndexed { index, mode ->
+                SegmentedButton(
+                    selected = efekPilihan == mode,
+                    onClick = {
+                        c.audio.play(Sfx.Klik)
+                        c.efekVisual.pilih(mode)
+                    },
+                    shape = SegmentedButtonDefaults.itemShape(index, EfekVisual.entries.size),
+                    label = { Text(mode.label) },
+                )
+            }
+        }
+        // Ketajaman tidak pernah diturunkan oleh pilihan di atas; hanya jumlah efeknya.
+        Text(
+            "Ketajaman gambar tetap sama di semua pilihan. Yang berkurang hanya jumlah animasi " +
+                "dan partikel.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
 
         Text("Preferensi", style = MaterialTheme.typography.titleMedium)
         BarisSaklar(Art.ikon_suara, Art.ikon_suara_terang, "Efek suara", pengaturan.efek_suara == 1) {
