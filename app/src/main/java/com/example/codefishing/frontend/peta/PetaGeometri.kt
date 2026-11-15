@@ -10,15 +10,30 @@ data class TitikPeta(val x: Float, val y: Float) {
 
 /**
  * Geometri peta perairan vertikal.
- * Stage 1 di utara, stage 10 di selatan, lalu Gerbang Antartika.
+ * Dua peta memakai dunia 1000 x 2800 yang sama:
+ * Samudra Pasifik (stage 1-10) dan Antartika (stage 11-20).
  */
 object PetaGeometri {
     const val LEBAR_DUNIA = 1000f
     const val TINGGI_DUNIA = 2800f
+
+    /** Jumlah stage per peta (Pasifik dan Antartika masing-masing 10). */
     const val JUMLAH_STAGE = 10
 
     val mulai = TitikPeta(96f, 154f)
     val gerbang = TitikPeta(575f, 2365f)
+
+    /** Titik masuk peta Antartika, tepat di bawah lapisan es utara. */
+    val mulaiAntartika = TitikPeta(470f, 226f)
+
+    /** Ujung rute Antartika, di lapangan es selatan. */
+    val ujungAntartika = TitikPeta(700f, 2390f)
+
+    /**
+     * Gerbang pratinjau Segitiga Bermuda di akhir peta Antartika. Peta Bermuda belum bisa dimainkan:
+     * node ini hanya membuka lembar pratinjau. Rute Antartika berujung tepat di titik ini.
+     */
+    val gerbangBermuda = ujungAntartika
 
     /** Posisi tetap 10 stage, berliku dari atas ke bawah. Sinkron dengan glow di generate_peta_svg.js. */
     val stage: List<TitikPeta> = listOf(
@@ -34,14 +49,45 @@ object PetaGeometri {
         TitikPeta(820f, 2080f),
     )
 
+    /** Posisi 10 stage Antartika (lokal 1-10 = stage global 11-20). */
+    val stageAntartika: List<TitikPeta> = listOf(
+        TitikPeta(560f, 320f),
+        TitikPeta(300f, 520f),
+        TitikPeta(180f, 760f),
+        TitikPeta(430f, 940f),
+        TitikPeta(700f, 1100f),
+        TitikPeta(840f, 1300f),
+        TitikPeta(620f, 1490f),
+        TitikPeta(380f, 1690f),
+        TitikPeta(560f, 1900f),
+        TitikPeta(700f, 2120f),
+    )
+
     fun titikStage(nomor: Int): TitikPeta? = stage.getOrNull(nomor - 1)
+
+    fun titikStageAntartika(nomorLokal: Int): TitikPeta? = stageAntartika.getOrNull(nomorLokal - 1)
 
     /** Rute penuh termasuk titik mulai dan gerbang Antartika. */
     fun ruteLengkap(): List<TitikPeta> = listOf(mulai) + stage + gerbang
 
-    /** Rute yang sudah ditempuh: mulai + stage yang sudah selesai. */
-    fun ruteSelesai(jumlahSelesai: Int): List<TitikPeta> =
-        listOf(mulai) + stage.take(jumlahSelesai.coerceIn(0, JUMLAH_STAGE))
+    /** Rute penuh Antartika: titik masuk, 10 stage, lalu ujung selatan. */
+    fun ruteLengkapAntartika(): List<TitikPeta> =
+        listOf(mulaiAntartika) + stageAntartika + ujungAntartika
+
+    /** Rute yang sudah ditempuh: mulai + stage yang sudah selesai, lalu gerbang bila tuntas. */
+    fun ruteSelesai(jumlahSelesai: Int): List<TitikPeta> {
+        val n = jumlahSelesai.coerceIn(0, JUMLAH_STAGE)
+        val rute = listOf(mulai) + stage.take(n)
+        // Setelah 10/10, garis progres ikut menyambung ke gerbang Antartika.
+        return if (n >= JUMLAH_STAGE) rute + gerbang else rute
+    }
+
+    /** Rute Antartika yang sudah ditempuh, berlanjut ke ujung selatan bila tuntas. */
+    fun ruteSelesaiAntartika(jumlahSelesai: Int): List<TitikPeta> {
+        val n = jumlahSelesai.coerceIn(0, JUMLAH_STAGE)
+        val rute = listOf(mulaiAntartika) + stageAntartika.take(n)
+        return if (n >= JUMLAH_STAGE) rute + ujungAntartika else rute
+    }
 
     /** Posisi kapal: posisi terakhir pemain, lalu stage aktif, lalu stage 1. */
     fun nomorKapal(nomorTerakhir: Int?, nomorAktif: Int?): Int =

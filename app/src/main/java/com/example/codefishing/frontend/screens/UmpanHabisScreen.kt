@@ -27,7 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -43,12 +42,14 @@ import com.example.codefishing.frontend.components.Gambar
 import com.example.codefishing.frontend.components.IndikatorUmpan
 import com.example.codefishing.frontend.components.Kartu
 import com.example.codefishing.frontend.components.TombolSekunder
+import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun UmpanHabisScreen(nav: AppNavigator, padding: PaddingValues) {
     val c = LocalContainer.current
+    val warna = LocalWarna.current
     val scope = rememberCoroutineScope()
     val stageId = nav.current.stage.takeIf { it > 0 } ?: 1
     var umpan by remember { mutableStateOf<UmpanUi?>(null) }
@@ -68,7 +69,7 @@ fun UmpanHabisScreen(nav: AppNavigator, padding: PaddingValues) {
         Modifier
             .fillMaxSize()
             .padding(padding)
-            .background(Brush.verticalGradient(listOf(Color(0xFF3A2028), Color(0xFF071923)))),
+            .background(Brush.verticalGradient(listOf(warna.bahayaLatar, warna.latarBawah))),
     ) {
         Column(
             Modifier
@@ -80,7 +81,7 @@ fun UmpanHabisScreen(nav: AppNavigator, padding: PaddingValues) {
             Box(
                 Modifier
                     .size(130.dp)
-                    .background(Color(0xFF1B3440), CircleShape),
+                    .background(warna.kartuTinggi, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
                 Gambar(Art.ikon_umpan_habis, "Umpan habis", Modifier.size(92.dp))
@@ -88,13 +89,13 @@ fun UmpanHabisScreen(nav: AppNavigator, padding: PaddingValues) {
             Spacer(Modifier.height(18.dp))
             Text("Umpan Habis", style = MaterialTheme.typography.headlineMedium)
             Text(
-                "Jawaban salah menghabiskan umpan. Umpan pulih satu setiap ${u?.intervalMenit ?: 15} menit.",
+                "Umpan berkurang saat stage selesai dengan minimal 3 jawaban salah. Umpan pulih satu setiap ${u?.intervalMenit ?: 15} menit.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
             )
             Spacer(Modifier.height(20.dp))
-            Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF123B4A)) {
+            Kartu(Modifier.fillMaxWidth(), warna = warna.kartuLembut) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     Gambar(Art.jam_hitung_mundur, "Hitung mundur pemulihan umpan", Modifier.size(56.dp))
                     Text(
@@ -102,7 +103,7 @@ fun UmpanHabisScreen(nav: AppNavigator, padding: PaddingValues) {
                         fontFamily = FontFamily.Monospace,
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if ((u?.sisa ?: 0) > 0) MaterialTheme.colorScheme.primary else Color(0xFFFFB3B3),
+                        color = if ((u?.sisa ?: 0) > 0) MaterialTheme.colorScheme.primary else warna.bahayaTeks,
                     )
                     IndikatorUmpan(u?.sisa ?: 0, u?.maks ?: 5)
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {

@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '../..');
-const SRC = path.join(ROOT, 'app/src/main/assets/content');
+const SRC = path.join(ROOT, '2_Aset_dan_Konten/konten');
 const OUT_SRC = path.join(ROOT, '2_Aset_dan_Konten/konten/seed');
 const OUT_ASSET = path.join(ROOT, 'app/src/main/assets/seed');
 
@@ -16,7 +16,13 @@ const stagesLama = JSON.parse(fs.readFileSync(path.join(SRC, 'stages.json'), 'ut
 const ikanLama = JSON.parse(fs.readFileSync(path.join(SRC, 'ikan_config.json'), 'utf8')).ikan;
 const misiLama = JSON.parse(fs.readFileSync(path.join(SRC, 'misi.json'), 'utf8')).misi;
 
-const ZONA = ['Epipelagik', 'Epipelagik', 'Epipelagik', 'Pelagik', 'Pelagik', 'Pelagik', 'Batial', 'Batial', 'Batial', 'Abisal'];
+const ZONA = [
+  'Epipelagik', 'Epipelagik', 'Epipelagik', 
+  'Pelagik', 'Pelagik', 'Pelagik', 
+  'Batial', 'Batial', 'Batial', 
+  'Abisal',
+  'Polar', 'Polar', 'Polar', 'Polar', 'Polar', 'Polar', 'Polar', 'Polar', 'Polar', 'Polar'
+];
 
 const stageRows = stagesLama.map((s, i) => ({
   id: i + 1,
@@ -25,16 +31,16 @@ const stageRows = stagesLama.map((s, i) => ({
   zona: ZONA[i],
   konsep: s.topic,
   tipe: s.boss ? 'boss' : 'materi',
-  jumlah_soal: 5,
-  skor_lulus: 70,
+  jumlah_soal: s.boss ? 10 : 5,
+  skor_lulus: s.boss ? 80 : 70,
   xp_reward: s.boss ? 100 : 50,
   ikan_target_id: i + 1,
   urutan: i + 1,
 }));
 
-const materiRows = stagesLama.slice(0, 9).map((s, i) => ({
+const materiRows = stagesLama.slice(0, 9).concat(stagesLama.slice(10, 19)).map((s, i) => ({
   id: i + 1,
-  stage_id: i + 1,
+  stage_id: i < 9 ? i + 1 : i + 2,
   judul: s.topic,
   isi_markdown: s.text,
   contoh_kode: s.code,
@@ -49,6 +55,15 @@ const materiRows = stagesLama.slice(0, 9).map((s, i) => ({
     'Jorokkan blok di bawah if dan else dengan empat spasi.',
     'Pastikan penghitung berubah, jika tidak while akan berputar selamanya.',
     'Cek kondisi di dalam loop pada setiap putaran; jangan lupa mengubah penghitung.',
+    'for lebih ringkas dari while jika tahu jumlah iterasi. range(n) = 0 sampai n-1.',
+    'List indeks dimulai dari 0. Indeks negatif dimulai dari akhir: -1 = elemen terakhir.',
+    'Loop di list: for item in list lebih mudah dibaca dari for i in range(len(list)).',
+    'Dict key harus unik. Akses value dengan key, bukan indeks.',
+    'String method tidak ubah string asli, tapi return baru. Simpan hasilnya.',
+    'Fungsi buat kode reusable. Return mengirim nilai ke pemanggil.',
+    'Default parameter harus setelah parameter wajib. Keyword argument boleh tidak urut.',
+    'Try/except tangani error agar program tidak crash. Gunakan jenis error yang spesifik.',
+    'List comprehension singkat dan cepat. Gunakan untuk transform/filter list sederhana.',
   ][i],
   urutan: 1,
 }));
@@ -64,11 +79,21 @@ const IKAN = [
   ['Gurame', 'Osphronemus goramy', 'epik', 'while', 8, 45, 1.8, 'common'],
   ['Sepat', 'Trichopodus pectoralis', 'epik', 'if di dalam loop', 9, 45, 0.4, 'common'],
   ['Gabus', 'Channa striata', 'legenda', 'Boss Ujian Pasifik', 10, 100, 3.2, 'common'],
+  ['Krill', 'Euphausia superba', 'biasa', 'for dan range', 11, 20, 0.01, 'common'],
+  ['Penguin', 'Aptenodytes forsteri', 'biasa', 'List dasar', 12, 25, 15.0, 'common'],
+  ['Seal', 'Hydrurga leptonyx', 'biasa', 'Loop di list', 13, 30, 300.0, 'common'],
+  ['Orca', 'Orcinus orca', 'epik', 'Dictionary', 14, 45, 5000.0, 'common'],
+  ['Albatros', 'Diomedea exulans', 'epik', 'String method', 15, 45, 8.0, 'common'],
+  ['Hiu Paus', 'Rhincodon typus', 'epik', 'Fungsi', 16, 50, 20000.0, 'common'],
+  ['Lumba-lumba', 'Tursiops truncatus', 'epik', 'Parameter default', 17, 50, 200.0, 'common'],
+  ['Gurita', 'Enteroctopus dofleini', 'epik', 'Error handling', 18, 50, 70.0, 'common'],
+  ['Naga Laut', 'Phycodurus eques', 'legenda', 'List + fungsi', 19, 80, 0.15, 'common'],
+  ['Paus Biru', 'Balaenoptera musculus', 'legenda', 'Boss Ujian Antartika', 20, 100, 150000.0, 'common'],
   ['Kerapu', 'Epinephelus coioides', 'langka', 'Jawaban benar beruntun 3', null, 40, 2.0, 'rare'],
   ['Barakuda', 'Sphyraena barracuda', 'langka', 'Jawaban benar beruntun 4', null, 50, 4.5, 'rare'],
   ['Tenggiri', 'Scomberomorus commerson', 'langka', 'Jawaban benar beruntun 5', null, 55, 5.2, 'rare'],
-  ['Arwana', 'Scleropages formosus', 'legenda', 'Selesaikan seluruh stage', null, 90, 3.0, 'legend'],
-  ['Hiu Merah', 'Carcharhinus longimanus', 'mitos', 'Selesaikan seluruh stage tanpa salah', null, 150, 120.0, 'mythic'],
+  ['Arwana', 'Scleropages formosus', 'legenda', 'Selesaikan 20 stage', null, 90, 3.0, 'legend'],
+  ['Hiu Merah', 'Carcharhinus longimanus', 'mitos', 'Selesaikan 20 stage tanpa salah', null, 150, 120.0, 'mythic'],
 ];
 
 const PLACEHOLDER = [
@@ -107,6 +132,8 @@ const PLACEHOLDER = [
   ['Hiu Putih Raksasa', 'Carcharodon carcharias', 'mitos'],
 ];
 
+const slugIkan = (nama) => nama.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').replace(/^ikan_/, '');
+
 const ikanRows = [];
 IKAN.forEach((row, i) => {
   const [nama, ilmiah, tier, konsep, stageId, xp, berat, key] = row;
@@ -121,24 +148,34 @@ IKAN.forEach((row, i) => {
     syarat_unlock: stageId ? `Selesaikan Stage ${stageId}` : 'Tantangan khusus',
     nilai_xp: xp,
     bobot_kg: berat,
-    gambar: `ikan_${nama.toLowerCase().replace(/ /g, '_')}`,
+    gambar: `ikan_${slugIkan(nama)}`,
     urutan: i + 1,
   });
 });
+// Ikan tanpa stage tetap punya ilustrasi; pemain menambahkannya lewat
+// tangkapan sampingan saat memancing (bukan hadiah stage).
+const CARA_DAPAT = {
+  biasa: 'Tangkapan sampingan di perairan Pasifik',
+  langka: 'Tangkapan langka di perairan Pasifik',
+  epik: 'Tangkapan langka di laut dalam',
+  legenda: 'Tangkapan sangat langka di laut dalam',
+  mitos: 'Hanya muncul di laut dalam',
+};
+
 PLACEHOLDER.forEach((row, i) => {
   const [nama, ilmiah, tier] = row;
   ikanRows.push({
-    id: 16 + i,
+    id: 26 + i,
     nama,
     nama_ilmiah: ilmiah,
     tier,
-    konsep_python: 'Spesies dalam riset',
-    deskripsi: `${nama} masih dalam riset tim Material Collecting. Ilustrasinya akan ditambahkan pada pembaruan berikutnya.`,
+    konsep_python: 'Koleksi sampingan',
+    deskripsi: `${nama} (${ilmiah}) bukan hadiah stage, melainkan ikan yang bisa ikut tertangkap saat memancing.`,
     asal_stage_id: null,
-    syarat_unlock: 'Segera hadir — menunggu aset',
+    syarat_unlock: CARA_DAPAT[tier],
     nilai_xp: 10,
     bobot_kg: Math.round((0.2 + (i % 7) * 0.45) * 10) / 10,
-    gambar: 'tanda_tanya_ikan',
+    gambar: `ikan_${slugIkan(nama)}`,
     urutan: 16 + i,
   });
 });
@@ -208,23 +245,13 @@ const TAMBAHAN = {
   ],
 };
 
-// Soal boss lama dipindahkan ke stage yang sesuai agar tidak ada soal yatim.
-const bossLama = stagesLama[9].qs;
-const pinjam = {
-  1: [bossLama[0]],
-  2: [bossLama[1]],
-  5: [bossLama[2]],
-  8: [bossLama[3]],
-  9: [bossLama[4]],
-};
-
+// Stage 1-9: 5 soal per stage dari konten lama + tambahan
 const soalRows = [];
 let soalId = 1;
 const perStage = {};
 for (let s = 1; s <= 9; s++) {
   const qs = [];
   for (const q of stagesLama[s - 1].qs) qs.push(conv(q, s, qs.length + 1));
-  for (const q of pinjam[s] || []) qs.push(conv(q, s, qs.length + 1));
   for (const q of TAMBAHAN[s]) qs.push({ ...q, stage_asal_id: s, tipe: 'token', poin: 25, urutan: qs.length + 1 });
   while (qs.length < 5) qs.push({ ...TAMBAHAN[s][0], stage_asal_id: s, tipe: 'token', poin: 25, urutan: qs.length + 1 });
   perStage[s] = [];
@@ -246,13 +273,96 @@ for (let s = 1; s <= 9; s++) {
   }
 }
 
+// Stage 10: Boss, semua soal dari stagesLama[9].qs
+perStage[10] = [];
+for (const q of stagesLama[9].qs) {
+  const row = {
+    id: soalId++,
+    stage_asal_id: 10,
+    tipe: 'token',
+    teks: q.q,
+    kode_template: q.code,
+    jawaban_benar: null,
+    pembahasan: `Jawaban benar: ${q.o[q.ok].t}. Hasilnya: ${q.o[q.ok].out}.`,
+    poin: 25,
+    urutan: perStage[10].length + 1,
+    pilihan: q.o.map((p, i) => ({
+      id: soalId * 10 + i,
+      soal_id: soalId - 1,
+      teks: p.t,
+      benar: i === q.ok ? 1 : 0,
+      urutan: i + 1,
+    })),
+  };
+  perStage[10].push(row.id);
+  soalRows.push(row);
+}
+
+// Stage 11-19: 5 soal per stage dari stages.json Antartika
+for (let s = 11; s <= 19; s++) {
+  perStage[s] = [];
+  for (const q of stagesLama[s - 1].qs) {
+    const row = {
+      id: soalId++,
+      stage_asal_id: s,
+      tipe: 'token',
+      teks: q.q,
+      kode_template: q.code,
+      jawaban_benar: null,
+      pembahasan: `Jawaban benar: ${q.o[q.ok].t}. Hasilnya: ${q.o[q.ok].out}.`,
+      poin: 20,
+      urutan: perStage[s].length + 1,
+      pilihan: q.o.map((p, i) => ({
+        id: soalId * 10 + i,
+        soal_id: soalId - 1,
+        teks: p.t,
+        benar: i === q.ok ? 1 : 0,
+        urutan: i + 1,
+      })),
+    };
+    perStage[s].push(row.id);
+    soalRows.push(row);
+  }
+}
+
+// Stage 20: Boss Antartika, semua soal dari stagesLama[19].qs
+perStage[20] = [];
+for (const q of stagesLama[19].qs) {
+  const row = {
+    id: soalId++,
+    stage_asal_id: 20,
+    tipe: 'token',
+    teks: q.q,
+    kode_template: q.code,
+    jawaban_benar: null,
+    pembahasan: `Jawaban benar: ${q.o[q.ok].t}. Hasilnya: ${q.o[q.ok].out}.`,
+    poin: 25,
+    urutan: perStage[20].length + 1,
+    pilihan: q.o.map((p, i) => ({
+      id: soalId * 10 + i,
+      soal_id: soalId - 1,
+      teks: p.t,
+      benar: i === q.ok ? 1 : 0,
+      urutan: i + 1,
+    })),
+  };
+  perStage[20].push(row.id);
+  soalRows.push(row);
+}
+
 const komposisi = [];
 let komposisiId = 1;
 for (let s = 1; s <= 9; s++) {
   perStage[s].forEach((qid, i) => komposisi.push({ id: komposisiId++, stage_id: s, soal_id: qid, urutan: i + 1 }));
 }
-// Boss memakai lima soal dari stage berbeda.
-[1, 2, 5, 8, 9].forEach((s, i) => komposisi.push({ id: komposisiId++, stage_id: 10, soal_id: perStage[s][0], urutan: i + 1 }));
+// Boss stage 10 memakai semua soal boss (10 soal)
+perStage[10].forEach((qid, i) => komposisi.push({ id: komposisiId++, stage_id: 10, soal_id: qid, urutan: i + 1 }));
+// Stage 11-19 Antartika (5 soal per stage)
+for (let s = 11; s <= 19; s++) {
+  perStage[s].forEach((qid, i) => komposisi.push({ id: komposisiId++, stage_id: s, soal_id: qid, urutan: i + 1 }));
+}
+// Boss stage 20 memakai semua soal boss (10 soal)
+perStage[20].forEach((qid, i) => komposisi.push({ id: komposisiId++, stage_id: 20, soal_id: qid, urutan: i + 1 }));
 
 const misiRows = misiLama.map((m, i) => {
   const par = { m1: 2, m2: 14, m3: 48, m4: 36, m5: 40, m6: 36, bebas: 999 }[m.id];

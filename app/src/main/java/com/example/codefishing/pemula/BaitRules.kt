@@ -2,7 +2,8 @@ package com.example.codefishing.pemula
 
 /**
  * TIM: Logika Mode Pemula. Aturan umpan (nyawa) Mode Belajar, murni Kotlin supaya mudah diuji.
- * Aturan prototipe: maksimum umpan penuh, pulih 1 umpan tiap 15 menit, salah menjawab -1 umpan.
+ * Maksimum umpan penuh, pulih 1 tiap 15 menit, dan penalti 1 umpan sekali saat stage
+ * selesai dengan minimal 3 jawaban salah.
  */
 data class BaitState(val jumlah: Int, val sejakMs: Long?)
 

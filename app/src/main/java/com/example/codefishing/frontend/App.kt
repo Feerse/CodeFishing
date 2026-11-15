@@ -1,6 +1,13 @@
 package com.example.codefishing.frontend
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -39,6 +46,7 @@ import com.example.codefishing.frontend.screens.PetaScreen
 import com.example.codefishing.frontend.screens.PilihModeScreen
 import com.example.codefishing.frontend.screens.SandboxScreen
 import com.example.codefishing.frontend.screens.UmpanHabisScreen
+import com.example.codefishing.ui.theme.LocalWarna
 
 /** Layar Mode Belajar yang menampilkan indikator umpan di kanan toolbar. */
 private val layarUmpan = setOf(
@@ -80,6 +88,7 @@ fun App() {
     BackHandler(enabled = nav.canGoBack) { nav.back() }
 
     val saatIni = nav.current
+    val gelap = LocalWarna.current.gelap
     // Musik: trek umum di semua layar, trek khusus di Akuarium.
     LaunchedEffect(saatIni.screen) {
         c.audio.pilihBgm(if (saatIni.screen == Screen.Akuarium) Bgm.Akuarium else Bgm.Umum)
@@ -112,7 +121,7 @@ fun App() {
                             onClick = { nav.resetTo(item.target) },
                             icon = {
                                 Gambar(
-                                    item.ikon,
+                                    if (gelap) item.ikon else item.ikonTerang,
                                     null,
                                     Modifier.size(28.dp).alpha(if (aktif == item) 1f else 0.7f),
                                 )
@@ -129,22 +138,37 @@ fun App() {
             }
         },
     ) { padding ->
-        when (saatIni.screen) {
-            Screen.Home -> HomeScreen(nav, padding)
-            Screen.PilihMode -> PilihModeScreen(nav, padding)
-            Screen.Peta -> PetaScreen(nav, padding)
-            Screen.Materi -> MateriScreen(nav, padding)
-            Screen.Kuis -> KuisScreen(nav, padding)
-            Screen.HasilStage -> HasilStageScreen(nav, padding)
-            Screen.Sandbox -> SandboxScreen(nav, padding)
-            Screen.HasilProgram -> HasilProgramScreen(nav, padding)
-            Screen.Koleksi -> KoleksiScreen(nav, padding)
-            Screen.Pengaturan -> PengaturanScreen(nav, padding)
-            Screen.UmpanHabis -> UmpanHabisScreen(nav, padding)
-            Screen.Boss -> BossScreen(nav, padding)
-            Screen.Akuarium -> AkuariumScreen(nav, padding)
-            Screen.GaleriAset -> GaleriAsetScreen(padding)
-            Screen.Pengenalan -> Unit
+        AnimatedContent(
+            targetState = saatIni.screen to saatIni.stage,
+            // Transisi dibuat singkat dan tanpa animasi ukuran. Selama transisi layar lama dan baru
+            // sama-sama tersusun dan digambar; bawaan (300 ms masuk + SizeTransform pegas) membuat
+            // jendela patah-patah itu lebih panjang di HP menengah.
+            transitionSpec = {
+                ContentTransform(
+                    targetContentEnter = fadeIn(tween(150, easing = LinearOutSlowInEasing)),
+                    initialContentExit = fadeOut(tween(90, easing = LinearEasing)),
+                    sizeTransform = null,
+                )
+            },
+            label = "screen_transition"
+        ) { (screen, _) ->
+            when (screen) {
+                Screen.Home -> HomeScreen(nav, padding)
+                Screen.PilihMode -> PilihModeScreen(nav, padding)
+                Screen.Peta -> PetaScreen(nav, padding)
+                Screen.Materi -> MateriScreen(nav, padding)
+                Screen.Kuis -> KuisScreen(nav, padding)
+                Screen.HasilStage -> HasilStageScreen(nav, padding)
+                Screen.Sandbox -> SandboxScreen(nav, padding)
+                Screen.HasilProgram -> HasilProgramScreen(nav, padding)
+                Screen.Koleksi -> KoleksiScreen(nav, padding)
+                Screen.Pengaturan -> PengaturanScreen(nav, padding)
+                Screen.UmpanHabis -> UmpanHabisScreen(nav, padding)
+                Screen.Boss -> BossScreen(nav, padding)
+                Screen.Akuarium -> AkuariumScreen(nav, padding)
+                Screen.GaleriAset -> GaleriAsetScreen(padding)
+                Screen.Pengenalan -> Unit
+            }
         }
     }
 }

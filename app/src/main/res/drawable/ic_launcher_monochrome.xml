@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Layer monochrome untuk ikon bertema (Android 13+). Bentuknya sama dengan
+  foreground dan tetap berada di dalam safe zone 72 x 72 dp, jadi tidak
+  terpotong saat sistem memakai masker atau tema warna perangkat.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <group
+        android:scaleX="0.140625"
+        android:scaleY="0.140625"
+        android:translateX="18"
+        android:translateY="18">
+
+        <!-- Kurung kode. -->
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M152,106l-68,126,68,126"
+            android:strokeColor="#FFFFFF"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="25" />
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M360,106l68,126,-68,126"
+            android:strokeColor="#FFFFFF"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="25" />
+
+        <!-- Badan ular. -->
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M183.6,145.4v132.1c0,27.7,15.2,38.3,45.5,35.7c22.8,-2,28.5,-21.1,24.7,-35.7"
+            android:strokeColor="#FFFFFF"
+            android:strokeLineCap="round"
+            android:strokeWidth="23" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M183.6,264.9l-36.1,10.6,36.1,4Z" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M251.9,262.9l-15.2,15.9h30.4Z" />
+
+        <!-- Ikan (badan dan ekor menyatu sebagai siluet). -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M369.6,284l71.8,-21.9,-30.1,84.3Z" />
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M249.6,241.2c10.2,-18.3,40.4,-31.3,76.1,-18.6c37.3,13.3,56.9,40.4,50.4,63.7c-9.7,22.1,-42,30.7,-79.3,17.4c-35.7,-12.7,-50.8,-41.9,-47.1,-62.5Z" />
+
+        <!-- Ombak. -->
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M134.8,415.8c20,-24,44,-24,64,-4s44,20,64,0c20,-20,44,-20,64,0s44,16,62,-4"
+            android:strokeColor="#FFFFFF"
+            android:strokeLineCap="round"
+            android:strokeWidth="11" />
+    </group>
+</vector>

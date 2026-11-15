@@ -23,19 +23,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.SolidColor
 import com.example.codefishing.core.art.Art
-import com.example.codefishing.ui.theme.RarityCommon
-import com.example.codefishing.ui.theme.RarityEpic
-import com.example.codefishing.ui.theme.RarityLegend
-import com.example.codefishing.ui.theme.RarityMythic
-import com.example.codefishing.ui.theme.RarityRare
+import com.example.codefishing.ui.theme.LocalWarna
 
-fun tierWarna(tier: String): Color = when (tier) {
-    "langka" -> RarityRare
-    "epik" -> RarityEpic
-    "legenda" -> RarityLegend
-    "mitos" -> RarityMythic
-    else -> RarityCommon
+@Composable
+fun tierWarna(tier: String): Color {
+    val warna = LocalWarna.current
+    return when (tier) {
+        "langka" -> warna.rarityLangka
+        "epik" -> warna.rarityEpik
+        "legenda" -> warna.rarityLegenda
+        "mitos" -> warna.rarityMitos
+        else -> warna.rarityBiasa
+    }
 }
 
 fun tierLabel(tier: String): String = when (tier) {
@@ -46,43 +48,34 @@ fun tierLabel(tier: String): String = when (tier) {
     else -> "Biasa"
 }
 
-fun gambarIkan(gambar: String?): Int = when (gambar) {
-    "ikan_teri" -> Art.ikan_teri
-    "ikan_bandeng" -> Art.ikan_bandeng
-    "ikan_bawal" -> Art.ikan_bawal
-    "ikan_mujair" -> Art.ikan_mujair
-    "ikan_nila" -> Art.ikan_nila
-    "ikan_lele" -> Art.ikan_lele
-    "ikan_patin" -> Art.ikan_patin
-    "ikan_gurame" -> Art.ikan_gurame
-    "ikan_sepat" -> Art.ikan_sepat
-    "ikan_gabus" -> Art.ikan_gabus
-    "ikan_kerapu" -> Art.ikan_kerapu
-    "ikan_barakuda" -> Art.ikan_barakuda
-    "ikan_tenggiri" -> Art.ikan_tenggiri
-    "ikan_arwana" -> Art.ikan_arwana
-    "ikan_hiu_merah" -> Art.ikan_hiu_merah
-    else -> Art.tanda_tanya_ikan
+/** Ilustrasi ikan berwarna. Nama aset datang dari seed; tanpa aset memakai tanda tanya. */
+fun gambarIkan(gambar: String?): Int =
+    gambar?.let { Art.byName(it) } ?: Art.tanda_tanya_ikan
+
+/** Siluet ikan yang belum dimiliki (aset ikan_terkunci_*), dengan cadangan ke versi berwarna. */
+fun gambarIkanTerkunci(gambar: String?): Int {
+    val nama = gambar ?: return Art.tanda_tanya_ikan
+    val kunci = if (nama.startsWith("ikan_terkunci_")) nama
+    else "ikan_terkunci_" + nama.removePrefix("ikan_")
+    return Art.byName(kunci) ?: Art.byName(nama) ?: Art.tanda_tanya_ikan
 }
 
-/** Siluet ikan yang belum dimiliki (aset ikan_terkunci_*). Ikan tanpa ilustrasi memakai tanda tanya. */
-fun gambarIkanTerkunci(gambar: String?): Int = when (gambar) {
-    "ikan_teri" -> Art.ikan_terkunci_teri
-    "ikan_bandeng" -> Art.ikan_terkunci_bandeng
-    "ikan_bawal" -> Art.ikan_terkunci_bawal
-    "ikan_mujair" -> Art.ikan_terkunci_mujair
-    "ikan_nila" -> Art.ikan_terkunci_nila
-    "ikan_lele" -> Art.ikan_terkunci_lele
-    "ikan_patin" -> Art.ikan_terkunci_patin
-    "ikan_gurame" -> Art.ikan_terkunci_gurame
-    "ikan_sepat" -> Art.ikan_terkunci_sepat
-    "ikan_gabus" -> Art.ikan_terkunci_gabus
-    "ikan_kerapu" -> Art.ikan_terkunci_kerapu
-    "ikan_barakuda" -> Art.ikan_terkunci_barakuda
-    "ikan_tenggiri" -> Art.ikan_terkunci_tenggiri
-    "ikan_arwana" -> Art.ikan_terkunci_arwana
-    "ikan_hiu_merah" -> Art.ikan_terkunci_hiu_merah
-    else -> Art.tanda_tanya_ikan
+/**
+ * Thumbnail ikan (sisi terpanjang 256 px) untuk grid dan daftar yang menampilkan ikan <= ±90 dp.
+ * Mendekode 1/4 piksel dibanding ukuran penuh sehingga grid 58 ikan jauh lebih ringan.
+ * Memakai ukuran penuh bila thumbnail belum ada.
+ */
+fun gambarIkanKecil(gambar: String?): Int {
+    val nama = gambar ?: return Art.tanda_tanya_ikan
+    return Art.byName(nama + "_kecil") ?: gambarIkan(gambar)
+}
+
+/** Thumbnail siluet ikan terkunci; lihat [gambarIkanKecil]. */
+fun gambarIkanTerkunciKecil(gambar: String?): Int {
+    val nama = gambar ?: return Art.tanda_tanya_ikan
+    val kunci = if (nama.startsWith("ikan_terkunci_")) nama
+    else "ikan_terkunci_" + nama.removePrefix("ikan_")
+    return Art.byName(kunci + "_kecil") ?: gambarIkanTerkunci(gambar)
 }
 
 /** Lencana kelangkaan bergambar (Common sampai Mythic) untuk tier ikan. */
@@ -105,32 +98,67 @@ fun Kartu(
     Column(
         modifier
             .background(warna, RoundedCornerShape(20.dp))
-            .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(20.dp))
+            .border(1.dp, LocalWarna.current.garis, RoundedCornerShape(20.dp))
             .padding(16.dp),
     ) { isi() }
 }
 
+/**
+ * Chip kelangkaan. Tiap tier punya lambang berbeda (lingkaran, belah ketupat, bintang, mahkota, api)
+ * sehingga terbaca tanpa bergantung pada warna; legenda dan mitos memakai latar gradien dan garis tebal.
+ */
 @Composable
 fun ChipTier(tier: String, modifier: Modifier = Modifier) {
     val warna = tierWarna(tier)
-    Text(
-        text = tierLabel(tier),
-        color = warna,
-        style = MaterialTheme.typography.labelMedium,
-        fontWeight = FontWeight.Bold,
+    val k = kelangkaan(tier)
+    val bentuk = RoundedCornerShape(50)
+    val latar: Brush = when (k) {
+        Kelangkaan.LEGENDA -> Brush.horizontalGradient(
+            listOf(warna.copy(alpha = 0.30f), Color(0xFFFFE27A).copy(alpha = 0.34f), warna.copy(alpha = 0.30f)),
+        )
+        Kelangkaan.MITOS -> Brush.horizontalGradient(
+            listOf(
+                Color(0xFFFF4D6D).copy(alpha = 0.28f),
+                Color(0xFFE63DFF).copy(alpha = 0.24f),
+                Color(0xFF3DD9FF).copy(alpha = 0.26f),
+            ),
+        )
+        else -> SolidColor(warna.copy(alpha = 0.14f))
+    }
+    val tebalGaris = when (k) {
+        Kelangkaan.LEGENDA, Kelangkaan.MITOS -> 1.6.dp
+        Kelangkaan.EPIK, Kelangkaan.LANGKA -> 1.2.dp
+        Kelangkaan.BIASA -> 1.dp
+    }
+    Row(
         modifier = modifier
-            .background(warna.copy(alpha = 0.14f), RoundedCornerShape(50))
-            .border(1.dp, warna.copy(alpha = 0.5f), RoundedCornerShape(50))
-            .padding(horizontal = 10.dp, vertical = 4.dp),
-    )
+            .background(latar, bentuk)
+            .border(tebalGaris, warna.copy(alpha = if (k == Kelangkaan.BIASA) 0.5f else 0.75f), bentuk)
+            .padding(horizontal = 9.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        LambangTier(tier, 12.dp)
+        Text(
+            text = tierLabel(tier),
+            color = warna,
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+        )
+    }
 }
 
 @Composable
 fun Bintang(jumlah: Int, modifier: Modifier = Modifier, ukuran: Int = 20) {
+    val gelap = LocalWarna.current.gelap
     Row(modifier, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
         repeat(3) { i ->
             Gambar(
-                if (i < jumlah) Art.bintang_penuh else Art.bintang_kosong,
+                when {
+                    i < jumlah -> Art.bintang_penuh
+                    gelap -> Art.bintang_kosong
+                    else -> Art.bintang_kosong_terang
+                },
                 if (i < jumlah) "Bintang terisi" else "Bintang kosong",
                 Modifier.size((ukuran * 1.3f).dp),
             )
@@ -140,16 +168,17 @@ fun Bintang(jumlah: Int, modifier: Modifier = Modifier, ukuran: Int = 20) {
 
 @Composable
 fun KodeBlok(kode: String, modifier: Modifier = Modifier, judul: String = "PYTHON") {
+    val warna = LocalWarna.current
     Column(
         modifier
             .fillMaxWidth()
-            .background(Color(0xFF071E29), RoundedCornerShape(14.dp))
-            .border(1.dp, Color.White.copy(alpha = 0.08f), RoundedCornerShape(14.dp))
+            .background(warna.kodeLatar, RoundedCornerShape(14.dp))
+            .border(1.dp, warna.garis, RoundedCornerShape(14.dp))
             .padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(judul, color = MaterialTheme.colorScheme.tertiary, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 2.sp)
-        Text(kode, fontFamily = FontFamily.Monospace, fontSize = 14.sp, color = Color(0xFFE8F4F6), lineHeight = 22.sp)
+        Text(kode, fontFamily = FontFamily.Monospace, fontSize = 14.sp, color = warna.kodeTeks, lineHeight = 22.sp)
     }
 }
 
@@ -197,7 +226,7 @@ fun BarProgres(nilai: Float, modifier: Modifier = Modifier, warna: Color = Mater
         modifier
             .fillMaxWidth()
             .height(8.dp)
-            .background(Color.White.copy(alpha = 0.10f), RoundedCornerShape(50)),
+            .background(LocalWarna.current.garis, RoundedCornerShape(50)),
     ) {
         Box(
             Modifier

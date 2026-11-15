@@ -3,7 +3,7 @@
 
   assets-source/NN_Folder/*.png -> app/src/main/res/drawable-nodpi   (+ buat core/art/Art.kt)
   assets-source/10_Pendukung_UI/ic_logo_fg.png -> app/src/main/res/drawable-xxxhdpi
-  assets-source/01_Peta_Perairan/peta_perairan.svg -> app/src/main/assets/peta
+  assets-source/01_Peta_Perairan/peta_*.webp -> app/src/main/assets/peta
   audio/*.mp3|ogg               -> app/src/main/res/raw
   konten/*.json                 -> app/src/main/assets/content
 
@@ -28,10 +28,11 @@ PNG_OK = re.compile(r"^[a-z][a-z0-9_]*\.png$")
 RAW_OK = re.compile(r"^[a-z][a-z0-9_]*\.(mp3|ogg|wav|m4a)$")
 KW = {"in", "is", "as", "do", "if", "for", "val", "var", "fun", "object", "class", "when", "try", "typealias", "interface"}
 
-# Foreground adaptive icon harus 108dp. Karena itu berkas ini tidak boleh
-# masuk drawable-nodpi (yang membuat 432px dianggap 432dp dan terpotong).
-# Sumber `ic_logo_fg_launcher.png` sudah diberi padding agar konten hanya ~46%
-# kanvas, sehingga tetap utuh meski launcher memperbesar layer foreground.
+# Bitmap ini hanya untuk Galeri Aset (Art.ic_logo_fg). Ikon launcher memakai
+# vector drawable (drawable/ic_launcher_foreground.xml + ic_launcher_monochrome.xml)
+# yang safe zone-nya sudah diatur 72x72 dp pada kanvas 108x108 dp.
+# Simpan bitmap di drawable-xxxhdpi, bukan drawable-nodpi (432px di nodpi
+# dianggap 432dp sehingga tampil terzoom).
 LOGO_FG_SRC = "ic_logo_fg_launcher"
 LOGO_FG_DST = "ic_logo_fg"
 
@@ -48,17 +49,19 @@ def sync_dir(files, dst, keep_ext):
 
 
 def sync_svg():
-    """Peta perairan memakai SVG asli, dirender AndroidSVG saat layar dibuka."""
-    src = os.path.join(SRC, "01_Peta_Perairan", "peta_perairan.svg")
-    dst = os.path.join(REPO, "app/src/main/assets/peta")
-    if not os.path.exists(src):
+    """Peta perairan: aplikasi memuat peta_*.webp hasil render sekali (tools/optimalkan_aset.py) agar
+    layar peta tidak merender SVG lewat CPU saat dibuka. SVG tetap di assets-source sebagai sumber."""
+    asal = os.path.join(SRC, "01_Peta_Perairan")
+    if not os.path.isdir(asal):
         return
-    os.makedirs(dst, exist_ok=True)
-    shutil.copyfile(src, os.path.join(dst, "peta_perairan.svg"))
+    for nama in sorted(f for f in os.listdir(asal) if f.startswith("peta_") and f.endswith(".webp")):
+        dst = os.path.join(REPO, "app/src/main/assets/peta", nama)
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        shutil.copyfile(os.path.join(asal, nama), dst)
 
 
 def sync_logo_fg():
-    """Simpan foreground launcher di drawable-xxxhdpi agar intrinsic-nya 108dp."""
+    """Salin bitmap logo ke drawable-xxxhdpi untuk galeri (bukan foreground launcher)."""
     src = os.path.join(SRC, "10_Pendukung_UI", LOGO_FG_SRC + ".png")
     if not os.path.exists(src):
         return
@@ -83,7 +86,7 @@ for d in sorted(os.listdir(SRC)):
         if not PNG_OK.match(f):
             errors.append(f"Nama gambar tidak valid: {d}/{f}"); continue
         if f == LOGO_FG_SRC + ".png":
-            # Dipakai khusus sebagai foreground launcher, bukan aset katalog.
+            # Bitmap logo untuk Galeri Aset, bukan layer foreground launcher.
             continue
         if f in seen:
             errors.append(f"Nama gambar ganda: {f} ({seen[f]} dan {d})"); continue

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -29,8 +28,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.example.codefishing.core.LocalContainer
@@ -39,6 +38,8 @@ import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.TantanganData
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
+import com.example.codefishing.frontend.components.gambarIkanKecil
+import com.example.codefishing.frontend.components.GambarKontras
 import com.example.codefishing.frontend.components.BarProgres
 import com.example.codefishing.frontend.components.Gambar
 import com.example.codefishing.frontend.components.Kartu
@@ -46,11 +47,13 @@ import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
 import com.example.codefishing.frontend.components.gambarIkan
 import com.example.codefishing.pemula.LevelRules
+import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
     val c = LocalContainer.current
+    val warna = LocalWarna.current
     val player by c.game.observePlayer().collectAsState(null)
     val stageList by c.game.observeStages().collectAsState(emptyList())
     val statistik by c.game.observeStatistik().collectAsState(null)
@@ -67,17 +70,24 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
     val xp = player?.xp ?: 0
     val level = player?.level ?: 1
     val terkumpul = statistik?.ikan_terkumpul ?: 0
+    val totalIkan by produceState<Int?>(null) { value = c.game.jumlahIkan() }
 
     Box(Modifier.fillMaxSize().padding(padding)) {
-        Gambar(Art.latar_langit_malam, null, Modifier.fillMaxSize(), ContentScale.Crop)
         Box(
             Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        listOf(Color.Transparent, Color(0xCC0C2B3A), Color(0xFF0C2B3A)),
-                    ),
-                ),
+                .background(Brush.verticalGradient(listOf(warna.latarAtas, warna.latarBawah))),
+        )
+        Gambar(
+            Art.ombak_pola,
+            null,
+            Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(220.dp)
+                .alpha(if (warna.gelap) 0.16f else 0.22f),
+            ContentScale.Crop,
+            warna = warna.ombak,
         )
         Column(
             Modifier
@@ -122,9 +132,9 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
             }
 
             if (harian != null) {
-                Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF173F4E)) {
+                Kartu(Modifier.fillMaxWidth(), warna = warna.kartuTinggi) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        Gambar(gambarIkan(harian!!.ikan.gambar), harian!!.ikan.nama, Modifier.size(52.dp))
+                        GambarKontras(gambarIkanKecil(harian!!.ikan.gambar), harian!!.ikan.nama, Modifier.size(52.dp))
                         Column(Modifier.weight(1f)) {
                             Text("Tantangan Harian", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
                             Text("Tangkap ${harian!!.ikan.nama}", style = MaterialTheme.typography.titleMedium)
@@ -160,7 +170,7 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                 }
             }
 
-            Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF133C4F)) {
+            Kartu(Modifier.fillMaxWidth(), warna = warna.kartu) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Text("Lanjutkan perjalanan", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
                     Text(judulLanjut, style = MaterialTheme.typography.titleLarge)
@@ -196,14 +206,14 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Gambar(Art.ikan_hiu_merah, "Hiu Merah", Modifier.size(56.dp))
                     Column(Modifier.weight(1f)) {
-                        Text("Koleksi $terkumpul/48 ikan", style = MaterialTheme.typography.titleMedium)
-                        Text("15 ikan berilustrasi siap ditangkap. Sisanya segera hadir.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("Koleksi $terkumpul/${totalIkan ?: "…"} ikan", style = MaterialTheme.typography.titleMedium)
+                        Text("Semua ikan sudah berilustrasi. Lengkapi koleksimu!", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     CircularProgressIndicator(
-                        progress = { terkumpul / 48f },
+                        progress = { totalIkan?.let { terkumpul / it.toFloat() } ?: 0f },
                         modifier = Modifier.size(36.dp),
                         color = MaterialTheme.colorScheme.primary,
-                        trackColor = Color.White.copy(alpha = 0.1f),
+                        trackColor = warna.garis,
                     )
                 }
             }

@@ -5,32 +5,45 @@ Semua permainan berjalan **offline** di perangkat; aplikasi tidak meminta izin i
 
 ## Mode Belajar (tim Logika Mode Pemula)
 
-- 10 stage di Samudra Pasifik (Stage 10 = Boss). Perairan lain berstatus **Segera**.
+- 20 stage dalam dua peta: **Samudra Pasifik** (stage 1-10, stage 10 = Boss) dan **Antartika** (stage 11-20, stage 20 = Boss). Antartika terbuka setelah seluruh stage 1-10 selesai; belum ada perairan lain.
 - Tiap stage: Materi (satu kalimat, contoh kode, keluaran) lalu Kuis 5 soal pilihan ganda.
-- **Konfirmasi jawaban**: mengetuk opsi hanya menandai pilihan (kail dilempar), jawaban belum tersubmit. Pemain harus menekan **Ya, kunci jawaban** pada lembar konfirmasi; **Periksa lagi** membatalkan tanpa mengurangi umpan. Ini mencegah salah pencet menghabiskan umpan.
-- **Animasi memancing**: di atas soal ada adegan vector (perahu, nelayan, kail, ikan). Kail terlempar saat opsi dipilih, ikan terangkat saat jawaban benar, dan tali putus saat jawaban salah.
-- **Umpan (nyawa)**: maksimum 5, pulih 1 umpan tiap 15 menit, jawaban salah mengurangi 1 umpan. Umpan habis membuka layar 11 (hitung mundur) sampai umpan >= 1.
-- **Lulus stage**: skor benar/5 × 100 ≥ 70 untuk stage biasa. **Boss Stage 10 lulus di 4 dari 5 (80%)**.
+- **Konfirmasi jawaban**: mengetuk opsi hanya menandai pilihan (kail dilempar), jawaban belum tersubmit. Pemain harus menekan **Ya, kunci jawaban** pada lembar konfirmasi; **Periksa lagi** membatalkan tanpa mengunci jawaban atau mengubah umpan.
+- **Animasi memancing**: di atas soal ada adegan vektor yang mengikuti studi kasus stage. Kapal/dermaga memakai joran lentur dengan tali, pelampung, dan kail berumpan cacing yang digambar kode (ilustrasi tidak lagi memuat alat), perahu cadik melempar jala, penyelam membidik lalu menembak tombak setelah ikan berenang masuk, lubang es memakai tali vertikal, bubu memakai tali pengangkat, dan boss trawler memakai pukat. Animasi aksi baru berjalan saat jawaban dikunci (bukan saat memilih opsi). Ikan tidak tampil saat adegan tenang dan menghilang setelah ditarik.
+- **Studi kasus per peta**: setiap peta memakai studi kasus yang sama (kapal, dermaga, cadik, penyelam, bubu, boss) tetapi ilustrasinya menyesuaikan lokasi. Peta Antartika memakai varian `*_antartika` (bongkahan es, gunung es di cakrawala, salju, aurora) dengan titik jangkar dan animasi yang sama. Memancing di lubang es adalah ciri khas Antartika (stage 12, 15, 19); Pasifik stage 5 memakai kapal. Pemetaan ada di `MemancingAdegan.kt`.
+- **Ikan dan kelangkaan**: bingkai kartu, aura, dan lambang tier berbeda bentuknya (bukan hanya warna). Lihat `Kelangkaan.kt`: Biasa polos, Langka siku kristal + permata, Epik cincin ganda + bintang mengorbit, Legenda bingkai emas + mahkota + sinar, Mitos bingkai pelangi berputar + api + pusaran.
+- **Umpan (nyawa)**: maksimum 5 dan pulih 1 umpan tiap 15 menit. Jawaban salah tidak langsung mengurangi umpan; umpan berkurang **1 sekali** saat stage selesai jika terdapat **minimal 3 jawaban salah**. Umpan 0 membuka layar 11 (hitung mundur) saat mencoba memulai stage berikutnya.
+- **Lulus stage**: skor benar/5 × 100 ≥ 70 untuk stage biasa. **Boss Stage 10 dan Stage 20 lulus di 4 dari 5 (80%)**.
 - Lulus membuka stage berikutnya. Skor terbaik, combo tertinggi, dan percobaan disimpan di `progres_stage`.
+- **Dua peta**: gerbang di ujung Samudra Pasifik membuka peta Antartika setelah stage 1-10 selesai. Chip kiri atas di peta Antartika kembali ke Pasifik, dan progres dihitung per peta (`x/10`).
+- **Sesi kuis tersimpan otomatis**: posisi soal, urutan soal, jumlah benar/salah, combo, dan XP sesi disimpan sementara. Ikon kompas di Peta menggeser peta ke stage yang terakhir dikerjakan; membuka stage tersebut lewat node/Berlayar melanjutkan tepat di soal terakhir. Sesi dihapus setelah kuis selesai, sehingga mengulang stage dimulai dari soal 1.
+- **Mengetuk node di Peta** memindahkan kapal ke node itu dan membuka lembar info. Stage yang sudah selesai menampilkan tombol **Coba Tantang Ulang** untuk mengulang kuisnya.
+- **Pengacakan soal**: percobaan pertama memakai urutan kurikulum; saat stage diulang (sudah pernah diselesaikan), urutan soal diacak agar tidak dihafal. Urutan pilihan jawaban tetap.
 - Jawaban benar memberi **+25 XP** dan menaikkan combo; jawaban salah mereset combo ke 0.
 - Setiap stage memakai studi kasus (kapal, dermaga, selam, jala, es, bubu, trawler/boss).
 
 ### Ikan dan kelangkaan
 
-Katalog berisi **48 ikan**: 15 ikan berilustrasi yang bisa didapatkan dan 33 ikan placeholder dengan label **“Segera hadir — menunggu aset”**.
+Katalog berisi **58 ikan** dan seluruhnya sudah berilustrasi penuh (versi berwarna dan siluet terkunci): 20 ikan target stage (10 Pasifik + 10 Antartika), 33 tangkapan sampingan, dan 5 hadiah tantangan khusus.
 
 | Kelangkaan | Warna | Cara dapat |
 |---|---|---|
-| Biasa | abu-abu | Ikan target Stage 1-7 |
+| Biasa | abu-abu | Ikan target Stage 1-7 dan 11-13 |
 | Langka | biru | Jawaban benar beruntun 3 (Kerapu), 4 (Barakuda), 5 (Tenggiri) |
-| Epik | ungu | Ikan target Stage 8-9 |
-| Legenda | emas | Gabus Stage 10; Arwana setelah seluruh stage 1-10 lulus |
-| Mitos | merah | Gabus saat boss sempurna (naik satu tier); Hiu Merah setelah seluruh 10 stage sempurna (skor 100) |
+| Epik | ungu | Ikan target Stage 8-9 dan 14-18 |
+| Legenda | emas | Gabus Stage 10, Naga Laut Stage 19, Paus Biru Stage 20; Arwana setelah seluruh stage 1-10 lulus |
+| Mitos | merah | Gabus/Paus Biru saat boss sempurna (naik satu tier); Hiu Merah setelah seluruh 10 stage Pasifik sempurna (skor 100) |
 
-Urutan 15 ikan berilustrasi: Teri, Bandeng, Bawal, Mujair, Nila, Lele, Patin, Gurame, Sepat, Gabus, Kerapu, Barakuda, Tenggiri, Arwana, Hiu Merah.
+- **Tangkapan sampingan**: setiap stage yang lulus punya peluang **35%** memberi satu ikan tambahan. Stage Pasifik (1–10) mengundi ikan Biasa/Langka, stage Antartika (11–20) mengundi Epik/Legenda/Mitos. Ikan yang sudah dimiliki tetap bisa muncul lagi; duplikat menambah jumlah dan bisa menaikkan bobot terbesar.
+
+Urutan 25 ikan inti (target stage dan hadiah khusus): Teri, Bandeng, Bawal, Mujair, Nila, Lele, Patin, Gurame, Sepat, Krill, Penguin, Seal, Orca, Albatros, Hiu Paus, Lumba-lumba, Gurita, Naga Laut, Paus Biru, Gabus, Kerapu, Barakuda, Tenggiri, Arwana, Hiu Merah.
+33 ikan tangkapan sampingan (Kakap Merah sampai Hiu Putih Raksasa) tidak menjadi target stage; kartunya menampilkan petunjuk cara mendapatkannya (perairan Pasifik atau laut dalam).
 Karena satu stage hanya 5 soal, ambang combo bonus adalah 3/4/5 dan semua bonus yang tercapai diberikan pada hasil stage.
 
 Ikan yang sama boleh ditangkap berulang; jumlah, bobot terbesar, tier terbaik, dan level/kenyang disimpan di `koleksi_ikan`.
+
+- **Nama panggilan Akuarium**: nama bisa diubah saat ikan diketuk di Akuarium dan disimpan **per ekor**, jadi beberapa ikan sejenis bisa punya nama berbeda. Nama custom **menggantikan** nama spesies pada satu label di bawah ikan; jika nama dikosongkan, nama spesies yang tampil. Nama menempel pada baris ikan di akuarium sehingga tidak berubah saat ikan lain ditambah/dikeluarkan.
+- **Kapasitas dan isi Akuarium**: akuarium menampung maksimal 10 ekor. Pemain menambah atau mengurangi ikan dari detail ikan di Koleksi, lalu bisa mengeluarkan ikan tertentu dari detail ikan di Akuarium. Mengeluarkan ikan **tidak mengurangi koleksi**. Setelah pembaruan aplikasi, akuarium mulai kosong dan diisi ulang oleh pemain.
+- **Kenyang di Akuarium**: status kenyang tetap disimpan per spesies. Memberi makan satu ekor memengaruhi seluruh ekor spesies yang sama, termasuk yang belum dipajang.
 
 ### Tantangan harian
 
@@ -46,6 +59,11 @@ Pemain menulis subset Python lalu menjalankan misi secara offline. Kapal bergera
 - Biaya waktu (ticks): `gerak(arah)` = **1**, `lempar()` = **1**, `lihat()` = **0**. `gerak` yang menabrak tepi tetap dihitung 1 tick.
 - **Bintang** (par = waktu acuan): ticks ≤ par → 3 bintang; ticks ≤ ceil(par × 1,5) → 2 bintang; selain itu 1 bintang. Misi tanpa par: 3 bintang bila berhasil.
 - **Papan misi di atas editor**: sebelum program dijalankan, papan menampilkan posisi awal kapal, ikan, dan sampah; setelah dijalankan, papan menampilkan posisi akhir kapal beserta status misi. Pemain tidak perlu menggulir ke bawah untuk melihat hasil gerak kapal.
+- **Panduan Expert (guidebook)**: bottom sheet dengan tiga tab — **Perintah** (fungsi game, biaya tick, nilai balik, contoh), **Sintaks** (subset Python, error umum, fitur yang belum didukung), dan **Misi** (tujuan, par, bintang, hint semua misi). Bisa dibuka dari daftar misi, kartu Petunjuk, dan kartu hasil error. Tab Misi juga bisa dipakai untuk berpindah misi tanpa keluar editor.
+- **Tombol sisip cepat**: baris chip di bawah editor menyisipkan `Tab` (4 spasi), `gerak()`, `lempar()`, `lihat()`, `if`, `for`, `def`, arah, operator, dan potongan lain di posisi kursor. Kursor otomatis berada di dalam `()` atau `range()` pada potongan yang sesuai.
+- **Auto-indent**: menekan Enter menyalin indentasi baris sebelumnya dan menambah 4 spasi setelah baris yang berakhir `:`. Tab fisik pada keyboard eksternal berfungsi; Shift+Tab mengurangi 4 spasi.
+- **Tombol Kode Awal**: mengembalikan editor ke `kode_awal` misi aktif — snippet starter, bukan solusi — lalu menghapus hasil run dan mengembalikan papan ke status SIAP. Muncul pesan “Kode awal dimuat.” atau “Kode memang sudah memakai contoh awal.” jika kode sudah sama.
+- **Kode contoh panduan diuji**: setiap contoh di `PanduanExpert` dijalankan lewat `SandboxEngine` pada unit test agar dokumentasi tidak melenceng dari perilaku interpreter.
 - **Tombol Misi Berikutnya** muncul tepat di bawah papan setelah misi dinyatakan berhasil, sehingga pemain bisa langsung lanjut ke misi berikutnya tanpa kembali ke daftar. Pada misi terakhir (Bebas), tombol berubah menjadi **Kembali ke Daftar**.
 - **Hasil ditampilkan inline di editor**: ringkasan misi, output, dan jejak gerak muncul di bawah tombol Jalankan. Pemain tidak dipindahkan ke layar hasil, sehingga bisa langsung mengubah kode dan mencoba lagi.
 - **XP Sandbox diberikan per ekor** sesuai `nilai_xp` ikan yang berhasil diangkat. XP misi (`xp_reward`) hanya diberikan saat misi pertama kali sukses. Ikan yang sama tetap memberi XP saat ditangkap lagi.

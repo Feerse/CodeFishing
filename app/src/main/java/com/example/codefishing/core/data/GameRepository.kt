@@ -7,6 +7,7 @@ import com.example.codefishing.core.db.CodeFishingDatabase
 import com.example.codefishing.core.db.HasilProgramEntity
 import com.example.codefishing.core.db.HasilRingkasRow
 import com.example.codefishing.core.db.HasilTangkapanEntity
+import com.example.codefishing.core.db.IkanAkuariumEntity
 import com.example.codefishing.core.db.IkanEntity
 import com.example.codefishing.core.db.KoleksiIkanEntity
 import com.example.codefishing.core.db.KoleksiLengkapView
@@ -25,9 +26,16 @@ import com.example.codefishing.pemula.BaitState
 import com.example.codefishing.pemula.FishRules
 import com.example.codefishing.pemula.LevelRules
 import com.example.codefishing.pemula.PilihanKuis
+import com.example.codefishing.pemula.ProgresPeta
 import com.example.codefishing.pemula.SoalKuis
+import com.example.codefishing.pemula.TangkapanSampingan
+import com.example.codefishing.pemula.acakPilihan
+import com.example.codefishing.pemula.urutanSoal
+import com.example.codefishing.pemula.xpJawabanBenar
 import com.example.codefishing.expert.Scoring
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import java.time.Instant
 import java.time.ZoneId
 import kotlin.random.Random
@@ -62,6 +70,11 @@ data class HasilStageData(
     val rekorBaru: Boolean,
     val naikTier: Boolean,
     val stageBerikut: Int?,
+    /** Stage berikutnya adalah boss, sehingga layar hasil membuka layar Boss. */
+    val stageBerikutBoss: Boolean,
+    val umpanBerkurang: Boolean,
+    /** Ikan tanpa stage yang ikut tertangkap pada stage ini (0 atau 1 ekor). */
+    val sampingan: List<TangkapanData> = emptyList(),
 )
 
 data class TantanganData(
@@ -78,6 +91,13 @@ data class TangkapanMasuk(
 data class HasilProgramData(
     val hasil: HasilProgramEntity,
     val tangkapan: List<TangkapanData>,
+)
+
+/** Ringkasan hasil alat pengembang "Buka semua progres" (hanya untuk build debug). */
+data class RingkasanBukaProgres(
+    val jumlahStage: Int,
+    val jumlahIkanBaru: Int,
+    val tambahanXp: Int,
 )
 
 /**
@@ -98,6 +118,7 @@ class GameRepository(
     private val contentDao = db.contentDao()
     private val baitDao = db.baitDao()
     private val collectionDao = db.collectionDao()
+    private val akuariumDao = db.akuariumDao()
     private val resultDao = db.resultDao()
     private val settingsDao = db.settingsDao()
     private val historyDao = db.historyDao()
@@ -118,6 +139,12 @@ class GameRepository(
     suspend fun stageById(id: Int): StageEntity? = stageDao.berdasarkanId(id)
 
     suspend fun stageStatus(id: Int): StageStatusRow? = stageDao.status(id)
+
+    /** Stage Pasifik (1-10) sudah selesai semua: syarat membuka peta Antartika. */
+    suspend fun antartikaTerbuka(): Boolean =
+        ProgresPeta.antartikaTerbuka(
+            stageDao.jumlahStageSelesaiSampai(ProgresPeta.STAGE_PASIFIK_TERAKHIR),
+        )
 
     suspend fun simpanPosisi(stageId: Int?, mode: String?) {
         playerDao.simpanPosisi(stageId, mode, System.currentTimeMillis())
@@ -206,23 +233,35 @@ class GameRepository(
 
     suspend fun materi(stageId: Int) = contentDao.materi(stageId)
 
+    suspend fun jumlahSoal(stageId: Int) = contentDao.jumlahSoalStage(stageId)
+
     suspend fun quiz(stageId: Int): QuizData? {
         val stage = stageDao.berdasarkanId(stageId) ?: return null
         val rows = contentDao.soalStage(stageId)
         if (rows.isEmpty()) return null
-        val soal = rows.map { s ->
-            SoalKuis(
-                id = s.id,
-                teks = s.teks,
-                kode = s.kode_template ?: "",
-                pembahasan = s.pembahasan,
-                poin = s.poin,
-                pilihan = contentDao.pilihan(s.id).map { p ->
-                    PilihanKuis(p.id, p.teks, p.benar == 1)
-                },
-            )
-        }
-        val lulus = if (stage.tipe == "boss") 80 else stage.skor_lulus
+        val progres = stageDao.progres(stageId)
+        val ulangi = (progres?.percobaan ?: 0) > 0
+        val boss = stage.tipe == "boss"
+        val soal = urutanSoal(
+            rows.map { s ->
+                SoalKuis(
+                    id = s.id,
+                    teks = s.teks,
+                    kode = s.kode_template ?: "",
+                    pembahasan = s.pembahasan,
+                    poin = s.poin,
+                    pilihan = acakPilihan(
+                        contentDao.pilihan(s.id).map { p ->
+                            PilihanKuis(p.id, p.teks, p.benar == 1)
+                        },
+                        s.id,
+                    ),
+                )
+            },
+            ulangi,
+            boss,
+        )
+        val lulus = if (boss) 80 else stage.skor_lulus
         return QuizData(stage, soal, lulus)
     }
 
@@ -231,6 +270,7 @@ class GameRepository(
         pilihanId: Int?,
         benar: Boolean,
         combo: Int,
+        poin: Int,
         now: Long = System.currentTimeMillis(),
     ) {
         historyDao.catat(
@@ -242,7 +282,7 @@ class GameRepository(
                 waktu = now,
             ),
         )
-        if (benar) tambahXp(25)
+        if (benar) tambahXp(xpJawabanBenar(poin))
     }
 
     suspend fun selesaikanStage(
@@ -255,6 +295,7 @@ class GameRepository(
     ): HasilStageData? {
         val stage = stageDao.berdasarkanId(stageId) ?: return null
         val skor = if (total == 0) 0 else (benar * 100) / total
+        val salah = (total - benar).coerceAtLeast(0)
         val lulus = skor >= (if (stage.tipe == "boss") 80 else stage.skor_lulus)
         val lama = stageDao.progres(stageId)
         val rekorBaru = lulus && (lama == null || skor > lama.skor_terbaik)
@@ -293,24 +334,52 @@ class GameRepository(
             }
         }
 
-        val selesai = stageDao.jumlahStageSelesai()
-        if (lulus && selesai >= 10) {
+        val selesaiPasifik = stageDao.jumlahStageSelesaiSampai(ProgresPeta.STAGE_PASIFIK_TERAKHIR)
+        if (lulus && selesaiPasifik >= ProgresPeta.STAGE_PASIFIK_TERAKHIR) {
             contentDao.ikanByNama("Arwana")?.let { b ->
                 if (collectionDao.koleksi(b.id) == null) bonus.add(beriIkan(b, b.tier, now))
             }
         }
-        if (lulus && stageDao.jumlahStageSempurna() >= 10) {
+        if (
+            lulus &&
+            stageDao.jumlahStageSempurnaSampai(ProgresPeta.STAGE_PASIFIK_TERAKHIR) >=
+            ProgresPeta.STAGE_PASIFIK_TERAKHIR
+        ) {
             contentDao.ikanByNama("Hiu Merah")?.let { b ->
                 if (collectionDao.koleksi(b.id) == null) bonus.add(beriIkan(b, b.tier, now))
             }
         }
 
-        val stageLanjut = if (lulus && stage.nomor < 10) {
-            stageDao.berdasarkanNomor(stage.nomor + 1)?.id
-        } else {
-            null
+        val sampingan = mutableListOf<TangkapanData>()
+        if (lulus && Random.nextDouble() < TangkapanSampingan.PELUANG) {
+            val dalam = TangkapanSampingan.lautDalam(stage.nomor)
+            val kandidat = contentDao.semuaIkan().filter {
+                TangkapanSampingan.kandidat(
+                    asalStageId = it.asal_stage_id,
+                    tier = it.tier,
+                    syaratUnlock = it.syarat_unlock,
+                    gambar = it.gambar,
+                    lautDalam = dalam,
+                )
+            }
+            if (kandidat.isNotEmpty()) {
+                val totalBobot = kandidat.sumOf { TangkapanSampingan.bobot(it.tier) }
+                TangkapanSampingan.pilih(
+                    kandidat,
+                    { TangkapanSampingan.bobot(it.tier) },
+                    Random.nextInt(totalBobot),
+                )?.let { ikan -> sampingan.add(beriIkan(ikan, ikan.tier, now)) }
+            }
         }
+
+        val jumlahStage = contentDao.jumlahStage()
+        val nomorBerikut = if (lulus) ProgresPeta.nomorLanjut(stage.nomor, jumlahStage) else null
+        val stageBerikut = nomorBerikut?.let { stageDao.berdasarkanNomor(it) }
+        val stageLanjut = stageBerikut?.id
         simpanPosisi(stageLanjut ?: stageId, "belajar")
+        // Penalti umpan baru berlaku sekali saat stage selesai, bukan per jawaban salah.
+        val umpanBerkurang = salah >= 3
+        if (umpanBerkurang) pakaiUmpan(now)
         val data = HasilStageData(
             stage = stage,
             benar = benar,
@@ -323,7 +392,10 @@ class GameRepository(
             bonus = bonus,
             rekorBaru = rekorBaru,
             naikTier = naikTier,
-            stageBerikut = if (lulus) (stage.nomor + 1).takeIf { it <= 10 } else null,
+            stageBerikut = stageBerikut?.nomor,
+            stageBerikutBoss = stageBerikut?.tipe == "boss",
+            umpanBerkurang = umpanBerkurang,
+            sampingan = sampingan,
         )
         hasilStageTerakhir = data
         return data
@@ -334,10 +406,62 @@ class GameRepository(
     fun observeKoleksi(tier: String? = null): Flow<List<KoleksiLengkapView>> =
         if (tier == null) collectionDao.observeSemua() else collectionDao.observeTier(tier)
 
-    fun observeAkuarium(): Flow<List<KoleksiLengkapView>> = collectionDao.observeDimiliki()
+    fun observeAkuarium(): Flow<List<IkanAkuarium>> =
+        combine(akuariumDao.observe(), collectionDao.observeDimiliki()) { slots, dimiliki ->
+            val peta = dimiliki.associateBy { it.ikan_id }
+            slots.mapNotNull { slot ->
+                peta[slot.ikan_id]?.let { IkanAkuarium(slot.id, it, slot.nama) }
+            }
+        }
+
+    fun observeJumlahAkuarium(): Flow<Map<Int, Int>> =
+        akuariumDao.observeJumlahSpesies().map { rows ->
+            rows.associate { it.ikan_id to it.jumlah }
+        }
+
+    suspend fun tambahIkanKeAkuarium(
+        ikanId: Int,
+        now: Long = System.currentTimeMillis(),
+    ): HasilTambahAkuarium = db.withTransaction {
+        val koleksi = collectionDao.koleksi(ikanId)
+            ?: return@withTransaction HasilTambahAkuarium.TidakDimiliki
+        val total = akuariumDao.jumlah()
+        val diAkuarium = akuariumDao.jumlahSpesies(ikanId)
+        when (val cek = cekTambahAkuarium(diAkuarium, koleksi.jumlah, total)) {
+            HasilTambahAkuarium.Berhasil -> {
+                akuariumDao.tambah(
+                    IkanAkuariumEntity(
+                        ikan_id = ikanId,
+                        ditambahkan_pada = now,
+                    ),
+                )
+                HasilTambahAkuarium.Berhasil
+            }
+            else -> cek
+        }
+    }
+
+    /** Kurangi satu ekor dari akuarium; yang dihapus adalah baris terbaru spesies itu. */
+    suspend fun kurangiIkanDariAkuarium(ikanId: Int) {
+        db.withTransaction {
+            akuariumDao.slotTerbaru(ikanId)?.let { akuariumDao.hapus(it) }
+        }
+    }
+
+    suspend fun keluarkanDariAkuarium(slotId: Long) {
+        akuariumDao.hapus(slotId)
+    }
+
+    suspend fun gantiNamaAkuarium(slotId: Long, teks: String) {
+        akuariumDao.gantiNama(slotId, normalisasiNamaAkuarium(teks))
+    }
 
     suspend fun ikan(id: Int): IkanEntity? = contentDao.ikan(id)
     suspend fun semuaIkan(): List<IkanEntity> = contentDao.semuaIkan()
+
+    /** Jumlah katalog dan stage dari seed, agar layar tidak menulis angka tetap. */
+    suspend fun jumlahIkan(): Int = contentDao.jumlahIkan()
+    suspend fun jumlahStage(): Int = contentDao.jumlahStage()
 
     suspend fun beriIkan(
         ikan: IkanEntity,
@@ -410,9 +534,7 @@ class GameRepository(
             return TantanganData(ada, ikan)
         }
         val selesai = stageDao.stageSelesai()
-        val semua = contentDao.semuaIkan().filter {
-            it.syarat_unlock?.startsWith("Segera hadir") != true
-        }
+        val semua = contentDao.semuaIkan()
         val calon = semua.filter { it.asal_stage_id != null && it.asal_stage_id in selesai }
             .ifEmpty { semua.filter { it.asal_stage_id == 1 } }
             .ifEmpty { semua.take(1) }
@@ -526,6 +648,7 @@ class GameRepository(
         db.withTransaction {
             stageDao.resetProgres()
             collectionDao.reset()
+            akuariumDao.reset()
             resultDao.reset()
             dailyDao.reset()
             historyDao.reset()
@@ -541,6 +664,63 @@ class GameRepository(
                 )
             }
         }
+    }
+
+    // ---------- Alat pengembang ----------
+
+    /**
+     * Membuka seluruh progres untuk pengembangan/demo tanpa menghapus data yang sudah ada:
+     * semua stage ditandai selesai (skor terbaik minimal batas lulus) sehingga peta Antartika
+     * dan pratinjau Bermuda terbuka, seluruh ikan katalog masuk koleksi, umpan diisi penuh,
+     * dan XP stage/ikan yang belum pernah didapat ditambahkan. Skor terbaik yang sudah lebih
+     * tinggi tidak diturunkan.
+     */
+    suspend fun bukaSemuaProgres(now: Long = System.currentTimeMillis()): RingkasanBukaProgres {
+        var tambahanXp = 0
+        var ikanBaru = 0
+        var jumlahStage = 0
+        db.withTransaction {
+            val stages = stageDao.semua()
+            jumlahStage = stages.size
+            stages.forEach { stage ->
+                val lama = stageDao.progres(stage.id)
+                val sudahSelesai = lama?.status == "selesai"
+                stageDao.simpanProgres(
+                    (lama ?: ProgresStageEntity(stage_id = stage.id)).copy(
+                        status = "selesai",
+                        skor_terbaik = maxOf(lama?.skor_terbaik ?: 0, stage.skor_lulus),
+                        percobaan = maxOf(lama?.percobaan ?: 0, 1),
+                        lulus_pada = lama?.lulus_pada ?: now,
+                    ),
+                )
+                if (!sudahSelesai) tambahanXp += stage.xp_reward
+            }
+            contentDao.semuaIkan().forEach { ikan ->
+                if (collectionDao.koleksi(ikan.id) != null) return@forEach
+                collectionDao.simpan(
+                    KoleksiIkanEntity(
+                        ikan_id = ikan.id,
+                        jumlah = 1,
+                        bobot_terbesar = ikan.bobot_kg,
+                        tier_didapat = ikan.tier,
+                        xp = ikan.nilai_xp,
+                        kenyang = 100,
+                        diperbarui_pada = now,
+                        pertama_didapat = now,
+                    ),
+                )
+                tambahanXp += ikan.nilai_xp
+                ikanBaru++
+            }
+            stages.lastOrNull()?.let { playerDao.simpanPosisi(it.id, "belajar", now) }
+            baitDao.isiPenuh()
+            tambahXp(tambahanXp)
+        }
+        return RingkasanBukaProgres(
+            jumlahStage = jumlahStage,
+            jumlahIkanBaru = ikanBaru,
+            tambahanXp = tambahanXp,
+        )
     }
 
     suspend fun seedIfNeeded(loader: com.example.codefishing.core.db.SeedLoader) {

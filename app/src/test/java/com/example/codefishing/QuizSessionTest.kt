@@ -33,8 +33,24 @@ class QuizSessionTest {
         assertEquals(1, q.beruntunTerbaik)
     }
 
-    @Test fun jawabSalahMengurangiUmpan() {
-        val q = QuizSession(stage(1), 70)
-        assertTrue(q.jawab(1).umpanBerkurang)
+    @Test fun penaltiUmpanBaruBerlakuSetelahStageSelesai() {
+        val q = QuizSession(stage(5), 70)
+        repeat(3) { q.jawab(1); q.lanjut() }
+        // Tiga salah sudah terjadi, tetapi stage belum selesai.
+        assertFalse(q.umpanBerkurang)
+        q.jawab(0); q.lanjut()
+        q.jawab(0); q.lanjut()
+        assertTrue(q.selesai)
+        assertTrue(q.umpanBerkurang)
+    }
+
+    @Test fun salahDuaTidakMengurangiUmpan() {
+        val q = QuizSession(stage(5), 70)
+        repeat(5) { i ->
+            q.jawab(if (i < 3) 0 else 1)
+            q.lanjut()
+        }
+        assertTrue(q.selesai)
+        assertFalse(q.umpanBerkurang)
     }
 }

@@ -23,6 +23,25 @@ class ProgressRepository(context: Context) {
         get() = sp.getBoolean("music_on", true)
         set(v) = sp.edit().putBoolean("music_on", v).apply()
 
+    /** Stage kuis terakhir yang dibuka. 0 berarti belum pernah bermain kuis. */
+    var kuisTerakhirStage: Int
+        get() = sp.getInt("kuis_terakhir_stage", 0)
+        set(v) = sp.edit().putInt("kuis_terakhir_stage", v).apply()
+
+    /**
+     * Sesi kuis yang belum selesai. Disimpan sebagai JSON agar urutan soal hasil
+     * pengacakan, posisi soal, dan skor sesi tetap konsisten saat pemain kembali.
+     */
+    var sesiKuis: SesiKuis?
+        get() = sp.getString("sesi_kuis", null)?.let(::sesiKuisDariJson)
+        set(v) {
+            if (v == null) {
+                sp.edit().remove("sesi_kuis").apply()
+            } else {
+                sp.edit().putString("sesi_kuis", v.keJson()).apply()
+            }
+        }
+
     /** Jumlah umpan tersimpan. -1 berarti belum pernah diset (anggap penuh). */
     var umpan: Int
         get() = sp.getInt("umpan", -1)

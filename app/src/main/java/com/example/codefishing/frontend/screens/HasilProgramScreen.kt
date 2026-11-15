@@ -23,7 +23,6 @@ import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,6 +33,8 @@ import com.example.codefishing.core.data.HasilProgramData
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.expert.SandboxDraft
+import com.example.codefishing.frontend.components.gambarIkanKecil
+import com.example.codefishing.frontend.components.GambarKontras
 import com.example.codefishing.frontend.components.Bintang
 import com.example.codefishing.frontend.components.ChipTier
 import com.example.codefishing.core.art.Art
@@ -45,10 +46,12 @@ import com.example.codefishing.frontend.components.Memuat
 import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
 import com.example.codefishing.frontend.components.gambarIkan
+import com.example.codefishing.ui.theme.LocalWarna
 
 @Composable
 fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
     val c = LocalContainer.current
+    val warna = LocalWarna.current
     val id = nav.current.hasil
     val data by produceState<HasilProgramData?>(null, id) {
         value = if (id > 0) c.game.hasilProgram(id) else null
@@ -67,8 +70,8 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
             .padding(padding)
             .background(
                 Brush.verticalGradient(
-                    if (sukses) listOf(Color(0xFF0C3A35), Color(0xFF071923))
-                    else listOf(Color(0xFF3A2028), Color(0xFF071923)),
+                    if (sukses) listOf(warna.suksesLatar, warna.latarBawah)
+                    else listOf(warna.bahayaLatar, warna.latarBawah),
                 ),
             ),
     ) {
@@ -94,18 +97,18 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
             }
 
             if (!sukses && !d.hasil.error.isNullOrBlank()) {
-                Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF41232A)) {
+                Kartu(Modifier.fillMaxWidth(), warna = warna.bahayaLatar) {
                     Text(d.hasil.error, style = MaterialTheme.typography.bodyMedium, fontFamily = FontFamily.Monospace)
                 }
             }
 
             if (d.tangkapan.isNotEmpty()) {
-                Kartu(Modifier.fillMaxWidth(), warna = Color(0xFF123B4A)) {
+                Kartu(Modifier.fillMaxWidth(), warna = warna.kartuLembut) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text("Hasil tangkapan", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
                         d.tangkapan.forEach { t ->
                             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                                Gambar(gambarIkan(t.ikan.gambar), t.ikan.nama, Modifier.size(48.dp))
+                                GambarKontras(gambarIkanKecil(t.ikan.gambar), t.ikan.nama, Modifier.size(48.dp))
                                 Column(Modifier.weight(1f)) {
                                     Text(t.ikan.nama, style = MaterialTheme.typography.titleMedium)
                                     Text("${"%.1f".format(t.bobot)} kg × ${t.jumlah}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

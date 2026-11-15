@@ -22,6 +22,11 @@ android {
 
     buildTypes {
         release {
+            // Untuk menguji performa di HP: pilih varian "release" di Build Variants lalu Run.
+            // Varian debug jauh lebih lambat (debuggable, tanpa profil optimasi, ART memakai JIT) dan
+            // BUKAN ukuran yang tepat untuk menilai patah-patah. Kunci debug di bawah hanya agar varian
+            // release bisa dipasang langsung saat uji lokal; ganti dengan keystore sendiri sebelum rilis.
+            signingConfig = signingConfigs.getByName("debug")
             optimization {
                 enable = false
             }
@@ -48,9 +53,11 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    // Memasang profil optimasi bawaan Compose/AndroidX saat pemasangan (release): mengurangi
+    // patah-patah di pembukaan layar pertama kali dan mempercepat startup.
+    implementation(libs.androidx.profileinstaller)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    implementation(libs.androidsvg)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.json)

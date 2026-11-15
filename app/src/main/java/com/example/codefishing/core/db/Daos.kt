@@ -112,6 +112,26 @@ interface StageDao {
     @Query("SELECT COUNT(*) FROM progres_stage WHERE pemain_id = 1 AND status = 'selesai' AND skor_terbaik = 100")
     suspend fun jumlahStageSempurna(): Int
 
+    /** Jumlah stage selesai dengan nomor ≤ [nomorMaks], dipakai untuk syarat perpindahan peta. */
+    @Query(
+        """
+        SELECT COUNT(*) FROM progres_stage p
+        JOIN stage s ON s.id = p.stage_id
+        WHERE p.pemain_id = 1 AND p.status = 'selesai' AND s.nomor <= :nomorMaks
+        """
+    )
+    suspend fun jumlahStageSelesaiSampai(nomorMaks: Int): Int
+
+    /** Sama seperti di atas, tetapi hanya stage dengan skor terbaik 100. */
+    @Query(
+        """
+        SELECT COUNT(*) FROM progres_stage p
+        JOIN stage s ON s.id = p.stage_id
+        WHERE p.pemain_id = 1 AND p.status = 'selesai' AND p.skor_terbaik = 100 AND s.nomor <= :nomorMaks
+        """
+    )
+    suspend fun jumlahStageSempurnaSampai(nomorMaks: Int): Int
+
     @Query("SELECT stage_id FROM progres_stage WHERE pemain_id = 1 AND status = 'selesai' ORDER BY stage_id")
     suspend fun stageSelesai(): List<Int>
 
@@ -153,6 +173,9 @@ interface ContentDao {
 
     @Query("SELECT COUNT(*) FROM soal")
     suspend fun jumlahSoal(): Int
+
+    @Query("SELECT COUNT(*) FROM komposisi_kuis WHERE stage_id = :stageId")
+    suspend fun jumlahSoalStage(stageId: Int): Int
 
     @Query("SELECT * FROM materi WHERE stage_id = :stageId")
     suspend fun materi(stageId: Int): MateriEntity?
@@ -264,6 +287,42 @@ interface CollectionDao {
     suspend fun jumlahDimiliki(): Int
 
     @Query("DELETE FROM koleksi_ikan WHERE pemain_id = 1")
+    suspend fun reset()
+}
+
+/** Ringkasan jumlah ekor per spesies yang sedang dipajang di akuarium. */
+data class JumlahAkuariumRow(
+    val ikan_id: Int,
+    val jumlah: Int,
+)
+
+@Dao
+interface AkuariumDao {
+    @Query("SELECT * FROM ikan_akuarium WHERE pemain_id = 1 ORDER BY ditambahkan_pada, id")
+    fun observe(): Flow<List<IkanAkuariumEntity>>
+
+    @Query("SELECT COUNT(*) FROM ikan_akuarium WHERE pemain_id = 1")
+    suspend fun jumlah(): Int
+
+    @Query("SELECT COUNT(*) FROM ikan_akuarium WHERE pemain_id = 1 AND ikan_id = :ikanId")
+    suspend fun jumlahSpesies(ikanId: Int): Int
+
+    @Query("SELECT ikan_id, COUNT(*) AS jumlah FROM ikan_akuarium WHERE pemain_id = 1 GROUP BY ikan_id")
+    fun observeJumlahSpesies(): Flow<List<JumlahAkuariumRow>>
+
+    @Insert
+    suspend fun tambah(ikan: IkanAkuariumEntity): Long
+
+    @Query("SELECT id FROM ikan_akuarium WHERE pemain_id = 1 AND ikan_id = :ikanId ORDER BY ditambahkan_pada DESC, id DESC LIMIT 1")
+    suspend fun slotTerbaru(ikanId: Int): Long?
+
+    @Query("DELETE FROM ikan_akuarium WHERE pemain_id = 1 AND id = :id")
+    suspend fun hapus(id: Long)
+
+    @Query("UPDATE ikan_akuarium SET nama = :nama WHERE pemain_id = 1 AND id = :id")
+    suspend fun gantiNama(id: Long, nama: String?)
+
+    @Query("DELETE FROM ikan_akuarium WHERE pemain_id = 1")
     suspend fun reset()
 }
 

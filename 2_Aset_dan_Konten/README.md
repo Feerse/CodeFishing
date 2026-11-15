@@ -10,7 +10,9 @@ Setelah mengubah aset, jalankan dari root repo:
 
 Skrip menyalin ke `app/src/main/res` (gambar, audio), menyalin `peta_perairan.svg` ke `app/src/main/assets/peta`, membuat ulang `core/art/Art.kt`, dan menolak nama tidak valid (huruf kecil, angka, underscore, diawali huruf).
 
-Foreground launcher memakai `assets-source/10_Pendukung_UI/ic_logo_fg_launcher.png` (logo sudah diberi padding, konten ±37% kanvas) dan disalin sebagai `app/src/main/res/drawable-xxxhdpi/ic_logo_fg.png`. Jangan memindahkannya ke `drawable-nodpi`: berkas 432 px di `nodpi` dianggap 432 dp sehingga ikon launcher terzoom dan terpotong.
+Ikon launcher memakai **Vector Drawable** `app/src/main/res/drawable/ic_launcher_foreground.xml` (dan `ic_launcher_monochrome.xml` untuk ikon bertema). Artwork diskalakan ke safe zone 72 × 72 dp di tengah kanvas 108 × 108 dp, jadi ikon tetap center dan utuh di semua bentuk masker (bulat, squircle, kotak, teardrop) serta semua kerapatan layar. Jangan mengganti layer foreground dengan bitmap: bitmap 432 px di `drawable-xxxhdpi` masih bergantung pada kepadatan perangkat dan mudah terzoom/terpotong di launcher tertentu.
+
+`assets-source/10_Pendukung_UI/ic_logo_fg_launcher.png` kini hanya dipakai sebagai aset galeri (`Art.ic_logo_fg`) dan disalin ke `drawable-xxxhdpi/ic_logo_fg.png`. Jangan memindahkannya ke `drawable-nodpi`: berkas 432 px di `nodpi` dianggap 432 dp sehingga tampil terzoom.
 
 Peta perairan vertikal dibuat ulang dengan:
 
@@ -35,9 +37,9 @@ Generator membaca konten prototipe di `app/src/main/assets/content/`, lalu menul
 - `2_Aset_dan_Konten/konten/seed/` — salinan untuk tim konten.
 - `app/src/main/assets/seed/` — yang dibaca `SeedLoader` saat aplikasi pertama dibuka.
 
-Isi seed: 10 stage, 9 materi, 45 soal (5 per stage), 50 komposisi kuis, 48 ikan (15 berilustrasi + 33 placeholder), dan 7 misi Sandbox. Setelah mengubah seed, naikkan `SeedLoader.SEED_VERSION` di `core/db/SeedLoader.kt` agar konten diperbarui saat aplikasi dibuka kembali.
+Isi seed: 20 stage, 18 materi, 110 soal, 110 komposisi kuis, 58 ikan, dan 7 misi Sandbox. Setelah mengubah seed, naikkan `SeedLoader.SEED_VERSION` di `core/db/SeedLoader.kt` agar konten diperbarui saat aplikasi dibuka kembali.
 
-15 ikan berilustrasi memakai aset `ikan_teri` … `ikan_hiu_merah`; 33 sisanya memakai `tanda_tanya_ikan` dengan label “Segera hadir — menunggu aset”.
+Semua 58 ikan punya aset berwarna `ikan_<slug>` dan siluet `ikan_terkunci_<slug>`. Fauna non-ikan (penguin, seal, albatros, krill, gurita) digambar dengan jalur `lapisan` di `generate_ikan.py`.
 
 ## Audio
 

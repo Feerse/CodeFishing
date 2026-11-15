@@ -1,4 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
-    android:src="@drawable/ic_logo_fg"
-    android:gravity="center" />
+<!--
+  Layer foreground adaptive icon (kanvas 108 x 108 dp).
+
+  Seluruh artwork diskalakan ke dalam safe zone 72 x 72 dp tepat di tengah
+  kanvas. Dengan begitu ikon tetap utuh dan center pada semua bentuk masker
+  launcher (bulat, squircle, kotak, teardrop), semua kerapatan layar, dan
+  semua ukuran ikon yang dipilih pengguna. Tidak ada lagi ikon yang terzoom
+  atau terpotong karena perbedaan perangkat.
+
+  Angka path mengikuti logo resmi 2_Aset_dan_Konten/logo/logo_codefishing.svg
+  (viewBox 512 x 512). Skala 72/512 = 0,140625 lalu digeser 18 dp supaya
+  pusat artwork jatuh tepat di pusat kanvas 108 dp.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <group
+        android:scaleX="0.140625"
+        android:scaleY="0.140625"
+        android:translateX="18"
+        android:translateY="18">
+
+        <!-- Kurung kode kiri dan kanan. -->
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M152,106l-68,126,68,126"
+            android:strokeColor="#F4F1E8"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="25" />
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M360,106l68,126,-68,126"
+            android:strokeColor="#F4F1E8"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="25" />
+
+        <!-- Badan ular (huruf S) berwarna hijau. -->
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M183.6,145.4v132.1c0,27.7,15.2,38.3,45.5,35.7c22.8,-2,28.5,-21.1,24.7,-35.7"
+            android:strokeColor="#5BC98A"
+            android:strokeLineCap="round"
+            android:strokeWidth="23" />
+        <path
+            android:fillColor="#5BC98A"
+            android:pathData="M183.6,264.9l-36.1,10.6,36.1,4Z" />
+        <path
+            android:fillColor="#5BC98A"
+            android:pathData="M251.9,262.9l-15.2,15.9h30.4Z" />
+
+        <!-- Ikan oranye: ekor, badan, mata, dan pupil. -->
+        <path
+            android:fillColor="#F37021"
+            android:pathData="M369.6,284l71.8,-21.9,-30.1,84.3Z" />
+        <path
+            android:fillColor="#F37021"
+            android:pathData="M249.6,241.2c10.2,-18.3,40.4,-31.3,76.1,-18.6c37.3,13.3,56.9,40.4,50.4,63.7c-9.7,22.1,-42,30.7,-79.3,17.4c-35.7,-12.7,-50.8,-41.9,-47.1,-62.5Z" />
+        <path
+            android:fillColor="#FBF9F4"
+            android:pathData="M278.1,216.7a16.4,16.4 0 1,0 0,32.8a16.4,16.4 0 1,0 0,-32.8Z" />
+        <path
+            android:fillColor="#0A2839"
+            android:pathData="M274.1,224.2a7.4,7.4 0 1,0 0,14.8a7.4,7.4 0 1,0 0,-14.8Z" />
+
+        <!-- Ombak di bawah logo. -->
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M134.8,415.8c20,-24,44,-24,64,-4s44,20,64,0c20,-20,44,-20,64,0s44,16,62,-4"
+            android:strokeColor="#2C6C9B"
+            android:strokeLineCap="round"
+            android:strokeWidth="11" />
+    </group>
+</vector>

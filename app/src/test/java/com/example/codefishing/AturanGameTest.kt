@@ -40,6 +40,26 @@ class AturanGameTest {
     }
 
     @Test
+    fun umpanBaruBerkurangSetelahSelesaiMinimalTigaSalah() {
+        val engine = QuizEngine((1..5).map { soal(it, 0) }, skorLulus = 70)
+        repeat(3) { engine.pilih(1) }
+        // Belum selesai, jadi belum ada penalti.
+        assertFalse(engine.umpanBerkurang)
+        repeat(2) { engine.pilih(0) }
+        assertTrue(engine.selesai)
+        assertTrue(engine.umpanBerkurang)
+    }
+
+    @Test
+    fun duaSalahTidakMengurangiUmpan() {
+        val engine = QuizEngine((1..5).map { soal(it, 0) }, skorLulus = 70)
+        repeat(3) { engine.pilih(0) }
+        repeat(2) { engine.pilih(1) }
+        assertTrue(engine.selesai)
+        assertFalse(engine.umpanBerkurang)
+    }
+
+    @Test
     fun comboBonusTigaEmpatLima() {
         assertEquals(emptyList<String>(), FishRules.bonusCombo(2))
         assertEquals(listOf("Kerapu"), FishRules.bonusCombo(3))

@@ -174,7 +174,7 @@ class SeedLoader(
         if (isNull(key) || !has(key)) null else optInt(key)
 
     companion object {
-        const val SEED_VERSION = 3
+        private const val SEED_VERSION = 10
         private const val KEY_SEED_VERSION = "seed_version"
     }
 }

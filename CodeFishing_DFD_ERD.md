@@ -74,7 +74,7 @@ Dokumen ini menjawab dua pertanyaan yang tidak dijawab artefak visual:
 |---|---|
 | Stage | Satu bab materi + kuis. Nomor 1–9, nomor 10 = Boss |
 | Zona | Pengelompokan stage secara geografis (Epipelagik, Pelagik, Batial, Abisal) |
-| Umpan | Nyawa kuis. Salah = −1. Pulih otomatis 1 per 15 menit |
+| Umpan | Nyawa kuis. Penalti −1 sekali saat stage selesai dengan minimal 3 salah. Pulih otomatis 1 per 15 menit |
 | Umpan Emas | Reward tantangan harian; dapat ditukar 1:1 menjadi umpan reguler |
 | Tick | Satuan waktu eksekusi Sandbox; 1 aksi = 1 tick (kecuali fungsi observasi) |
 | Par | Target tick terbaik sebuah misi, dipakai menghitung bintang |
@@ -159,7 +159,7 @@ Konsekuensi untuk DFD:
 | P2 | Peta Perairan | status 10 stage, statistik zona, gerbang boss |
 | P3 | Materi & Jalankan Kode | materi, contoh kode, output/error sementara |
 | P4 | Kuis & Evaluasi | 5 soal token, combo, EXP, penalti, hasil, boss |
-| P5 | Umpan & Pemulihan | −1 saat salah, +1 tiap 15 menit, tukar umpan emas |
+| P5 | Umpan & Pemulihan | −1 sekali saat stage selesai dengan ≥3 salah, +1 tiap 15 menit, tukar umpan emas |
 | P6 | Koleksi Ikan | katalog 48 ikan, filter tier, status abu-abu |
 | P7 | Akuarium | detail ikan, animasi, beri makan, kenyang |
 | P8 | Sandbox & Eksekusi Kode | editor, eksekusi tick, animasi, error |
@@ -291,7 +291,7 @@ flowchart LR
   E1 -->|"ubah pengaturan / reset"| P11
   P11 -->|"terapan & konfirmasi"| E1
 
-  P4 -->|"penalti -1 umpan"| P5
+  P4 -->|"penalti stage"| P5
   P5 -->|"status umpan"| P4
   P8 -->|"hasil eksekusi"| P9
 
@@ -366,7 +366,7 @@ flowchart LR
   P42 -->|"salah"| P44
   P42 -->|"jawaban"| P45
   P43 -->|"combo +1, EXP"| E1
-  P44 -->|"-1 umpan"| P5
+  P44 -->|"penalti ≥3 salah"| P5
   P5 -->|"sisa umpan"| P44
   P43 -->|"skor berjalan"| P46
   P46 -->|"lulus / terkunci"| E1
@@ -449,7 +449,7 @@ Catatan: P8 **tidak** memakai umpan (sesuai Figma "No Bait Counter" dan PPT "San
 | 4.1 | Susun Soal | `id_stage`, mode | 5 soal + pilihan | R D2, D3 | Ambil `komposisi_kuis` urut; boss memakai komposisi gabungan stage 1–9 |
 | 4.2 | Validasi Jawaban | `id_soal`, `id_pilihan`/teks | benar / salah | R D2 | `tipe='token'` → `pilihan.benar=1`; `tipe='isi_kode'` → normalisasi spasi lalu bandingkan `jawaban_benar` |
 | 4.3 | Combo & EXP | hasil validasi | combo baru, EXP | R/W D4, R/W D11 | Benar: combo +1, EXP +25; salah: combo 0 |
-| 4.4 | Penalti Umpan | sinyal salah | sisa umpan | W D5 (via P5) | −1 umpan; bila 0 → tampilkan layar Umpan Habis |
+| 4.4 | Penalti Umpan | hasil stage selesai | sisa umpan | W D5 (via P5) | −1 umpan sekali bila salah ≥3; bila 0 → layar Umpan Habis saat mulai stage berikutnya |
 | 4.5 | Catat Riwayat | jawaban | baris riwayat | W D12 | Simpan `pilihan_id`, `jawaban_teks`, `benar`, `combo_setelah`, `waktu` |
 | 4.6 | Hitung Hasil | skor berjalan | lulus/tidak, skor akhir | R/W D3, D4 | Skor = benar/5×100; lulus ≥70; boss ≥4/5; set `status='selesai'` dan `lulus_pada` |
 | 4.7 | Berikan Ikan | hasil lulus | ikan baru / update koleksi | R D6, W D7 | Ikan target stage masuk koleksi (`jumlah+1`); boss sempurna → `tier_didapat` naik satu tingkat (maks `mitos`) |
@@ -928,7 +928,7 @@ Aturan bernomor ini yang dipakai saat implementasi dan saat pengujian. Jika ada 
 |---|---|
 | Jumlah soal per stage | 5 (dari `komposisi_kuis`) |
 | Jawaban benar | EXP +25, combo +1 |
-| Jawaban salah | combo = 0, umpan −1 |
+| Jawaban salah | combo = 0; umpan tidak berubah |
 | Skor stage | `benar / 5 × 100` |
 | Batas lulus | ≥ 70 (minimal 4 benar) |
 | Boss | 5 soal gabungan, lulus ≥ 4/5 |
@@ -971,7 +971,7 @@ Rank **tidak disimpan**; dihitung dari `level` melalui pemetaan konstan di aplik
 1. Maksimum 5, awal 5.
 2. Pemulihan **+1 setiap 15 menit**, bukan pengisian penuh.
 3. Pemulihan dihitung saat data dibaca (app boleh ditutup), memakai `regen_at`.
-4. Jawaban salah = −1. Jika sisa 0, kuis diblokir dan layar **Umpan Habis** ditampilkan.
+4. Penalti umpan = −1 **sekali** saat stage selesai jika jumlah salah minimal 3. Jika sisa 0, layar **Umpan Habis** ditampilkan saat mencoba memulai stage berikutnya.
 5. Materi, peta, koleksi, akuarium, dan Sandbox **tidak** memakai umpan.
 6. Umpan Emas dapat ditukar **1:1** menjadi umpan reguler dari layar Umpan Habis *(asumsi desain, karena Figma hanya menampilkan reward tanpa aturan tukar)*.
 7. Menyelesaikan soal yang sudah dijawab tetap tersimpan walau umpan habis (sesuai teks Figma).
@@ -1144,7 +1144,7 @@ fun muatUmpan(now: Long): Umpan {
 }
 ```
 
-Saat jawaban salah: `sisa = sisa - 1`; bila `sisa` menjadi 0 dan `regenAt` null, set `regenAt = now + interval`.
+Saat stage selesai dengan minimal 3 jawaban salah: `sisa = sisa - 1`; bila `sisa` menjadi 0 dan `regenAt` null, set `regenAt = now + interval`.
 
 ### 7.4 Naik level
 

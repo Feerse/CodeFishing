@@ -8,6 +8,9 @@ import androidx.annotation.RawRes
 import com.example.codefishing.R
 import com.example.codefishing.core.data.ProgressRepository
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
 
 /**
  * Efek suara. Berkas ada di app/src/main/res/raw dan dicatat di assets-source/audio.
@@ -62,8 +65,22 @@ class AudioManager(context: Context, private val progress: ProgressRepository) {
 
     private val ids = HashMap<Sfx, Int>()
     private val siap: MutableSet<Int> = ConcurrentHashMap.newKeySet()
+    // Semua operasi musik latar berjalan di satu thread kerja. MediaPlayer.create menyiapkan dan
+    // mendekode trek secara sinkron (puluhan hingga ratusan ms); di thread utama itu menahan layar
+    // saat aplikasi dibuka dan saat masuk/keluar Akuarium (ganti trek).
+    private val pekerja: ExecutorService = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "audio-bgm").apply { isDaemon = true }
+    }
+    private fun kerja(blok: () -> Unit) {
+        try {
+            pekerja.execute(blok)
+        } catch (_: RejectedExecutionException) {
+            // Sudah di-release (activity dihancurkan); tidak ada yang perlu diputar lagi.
+        }
+    }
+
     private var bgm: MediaPlayer? = null
-    private var trackAktif: Bgm = Bgm.Umum
+    @Volatile private var trackAktif: Bgm = Bgm.Umum
     private var trackDimuat: Bgm? = null
 
     init {
@@ -84,6 +101,12 @@ class AudioManager(context: Context, private val progress: ProgressRepository) {
      */
     fun startBgm() {
         if (!progress.musicOn) return
+        kerja { mulaiBgmDiLatar() }
+    }
+
+    /** Hanya dipanggil dari [pekerja]. */
+    private fun mulaiBgmDiLatar() {
+        if (!progress.musicOn) return
         if (bgm == null || trackDimuat != trackAktif) {
             bgm?.release()
             bgm = MediaPlayer.create(appContext, trackAktif.res)?.apply {
@@ -103,7 +126,7 @@ class AudioManager(context: Context, private val progress: ProgressRepository) {
     }
 
     fun stopBgm() {
-        bgm?.let { if (it.isPlaying) it.pause() }
+        kerja { bgm?.let { if (it.isPlaying) it.pause() } }
     }
 
     /** Dipanggil saat app ke latar belakang. */
@@ -118,8 +141,11 @@ class AudioManager(context: Context, private val progress: ProgressRepository) {
     }
 
     fun release() {
-        bgm?.release()
-        bgm = null
+        kerja {
+            bgm?.release()
+            bgm = null
+        }
+        pekerja.shutdown() // tugas yang sudah antre (termasuk release di atas) tetap dijalankan
         pool.release()
     }
 }
