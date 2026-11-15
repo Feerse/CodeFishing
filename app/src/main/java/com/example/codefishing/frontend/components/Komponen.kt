@@ -91,10 +91,12 @@ fun GambarKontras(
         return
     }
     val context = LocalContext.current
+    // Nilai state harus selalu diambil ulang untuk [id] terbaru. `produceState` menyimpan state-nya
+    // walau kunci berganti, jadi pola "hanya hitung bila value == null" membuat gambar lama tertinggal:
+    // ikon chip peta tetap menampilkan ikon peta sebelumnya setelah peta berganti.
     val kontur by produceState(CacheGambar.daptKontur(id), id) {
-        if (value == null) {
-            value = withContext(Dispatchers.Default) { CacheGambar.buatKontur(context, id) }
-        }
+        value = CacheGambar.daptKontur(id)
+            ?: withContext(Dispatchers.Default) { CacheGambar.buatKontur(context, id) }
     }
     val k = kontur
     if (k == null) {

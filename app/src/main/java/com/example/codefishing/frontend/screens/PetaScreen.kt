@@ -111,8 +111,6 @@ import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import kotlin.math.cos
-import kotlin.math.sin
 
 private sealed interface PilihanPeta {
     data class Stage(val nomor: Int) : PilihanPeta
@@ -818,9 +816,14 @@ private fun PenandaToolbar(aktif: PetaAktif, onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        IkonPeta(aktif, Modifier.size(18.dp))
+        GambarKontras(
+            if (aktif == PetaAktif.ANTARTIKA) Art.ikon_air_dingin else Art.ikon_air_tenang,
+            null,
+            Modifier.size(16.dp),
+        )
         // Nama peta aktif ditulis, bukan hanya ikon: ikon gelombang mudah tertukar dengan peta lain
-        // sehingga pemain bisa mengira peta yang terbuka masih peta sebelumnya.
+        // sehingga pemain bisa mengira peta yang terbuka masih peta sebelumnya. Ikonnya memakai aset
+        // yang sama dengan baris di daftar peta, jadi chip dan daftar tidak pernah beda lambang.
         Text(
             namaPeta(aktif),
             color = warna.petaTeks,
@@ -829,60 +832,6 @@ private fun PenandaToolbar(aktif: PetaAktif, onClick: () -> Unit) {
             maxLines = 1,
         )
         Text("▾", color = warna.petaTeksRedup, fontSize = 13.sp)
-    }
-}
-
-/**
- * Ikon peta aktif di chip toolbar. Digambar langsung di Canvas, bukan dari aset: aset ombak
- * (`ikon_air_tenang`) dan aset salju (`ikon_air_dingin`) sama-sama berbentuk gumpalan radial, jadi
- * pada 16-18 dp keduanya terbaca sebagai bintik yang hampir sama dan pemain mengira peta yang
- * terbuka masih peta sebelumnya. Di sini Pasifik selalu tiga garis ombak mendatar dan Antartika
- * kepingan salju berlengan tebal, sehingga bentuknya tidak mungkin tertukar. Warnanya mengikuti
- * [LocalWarna.petaTeks], jadi kontrasnya benar di tema gelap maupun terang tanpa lapisan kontur.
- */
-@Composable
-private fun IkonPeta(aktif: PetaAktif, modifier: Modifier = Modifier) {
-    val tinta = LocalWarna.current.petaTeks
-    Canvas(modifier) {
-        val lebar = size.width
-        val tinggi = size.height
-        if (aktif == PetaAktif.ANTARTIKA) {
-            // Kepingan salju: tiga garis menembus pusat jadi enam lengan. Tanpa cabang: pada 18 dp
-            // cabang hanya menyatu dengan lengan dan berubah jadi gumpalan.
-            val cx = lebar / 2f
-            val cy = tinggi / 2f
-            val lengan = lebar * 0.45f
-            val tebal = lebar * 0.10f
-            repeat(3) { i ->
-                val sudut = Math.toRadians(90.0 + i * 60.0)
-                val dx = cos(sudut).toFloat() * lengan
-                val dy = sin(sudut).toFloat() * lengan
-                drawLine(
-                    color = tinta,
-                    start = Offset(cx - dx, cy - dy),
-                    end = Offset(cx + dx, cy + dy),
-                    strokeWidth = tebal,
-                    cap = StrokeCap.Round,
-                )
-            }
-        } else {
-            // Ombak: tiga garis mendatar bergelombang.
-            val tebal = lebar * 0.08f
-            val amp = tinggi * 0.085f
-            for (baris in 0..2) {
-                val y = tinggi * (0.22f + 0.28f * baris)
-                val jalur = Path().apply {
-                    moveTo(tebal / 2f, y)
-                    quadraticBezierTo(lebar * 0.27f, y - amp, lebar * 0.5f, y)
-                    quadraticBezierTo(lebar * 0.73f, y + amp, lebar - tebal / 2f, y)
-                }
-                drawPath(
-                    path = jalur,
-                    color = tinta,
-                    style = Stroke(width = tebal, cap = StrokeCap.Round),
-                )
-            }
-        }
     }
 }
 
