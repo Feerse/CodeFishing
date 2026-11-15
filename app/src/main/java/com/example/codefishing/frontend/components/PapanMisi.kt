@@ -606,7 +606,7 @@ private fun PapanGrid(
                                     Text(
                                         "?",
                                         fontSize = (sel.value * 0.42f).sp,
-                                        color = warna.petaTeksRedup.copy(alpha = 0.7f),
+                                        color = warna.petaTeksRedup.copy(alpha = 0.85f),
                                         fontWeight = FontWeight.Bold,
                                         modifier = Modifier.semantics {
                                             contentDescription = contentSembunyi
