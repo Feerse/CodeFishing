@@ -28,11 +28,10 @@
     <stop offset=".55" stop-color="#158C55" stop-opacity=".13"/>
     <stop offset="1" stop-color="#158C55" stop-opacity="0"/>
   </radialGradient>
-  <linearGradient id="koreksiBermuda" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#62E0A0" stop-opacity=".30"/>
-    <stop offset=".55" stop-color="#62E0A0" stop-opacity=".36"/>
-    <stop offset="1" stop-color="#62E0A0" stop-opacity=".45"/>
-  </linearGradient>
+  <radialGradient id="koreksiBermuda">
+    <stop offset=".45" stop-color="#62E0A0" stop-opacity="0"/>
+    <stop offset="1" stop-color="#62E0A0" stop-opacity=".55"/>
+  </radialGradient>
 </defs>
 <rect width="1000" height="2800" fill="url(#lautEs)"/>
 <path d="M-40 210Q240 120 520 190T1040 150" fill="none" stroke="#2A86A5" stroke-opacity=".07" stroke-width="64" stroke-linecap="round"/>
@@ -143,6 +142,13 @@
     <path d="M10 -58L50 -8L78 24L26 24Z" fill="#9CC6D8"/>
     <path d="M-14 -12L-2 24L-6 24Z" fill="#4F8AA2" opacity=".6"/>
   </g>
+<g transform="translate(200 2260) scale(1)">
+    <ellipse cx="0" cy="26" rx="92" ry="15" fill="#FFFFFF" opacity=".16"/>
+    <path d="M-68 24L-48 -32L-14 -12L10 -58L50 -8L78 24Z" fill="#FFFFFF"/>
+    <path d="M-68 24L-48 -32L-14 -12L-6 24Z" fill="#3F7A92"/>
+    <path d="M10 -58L50 -8L78 24L26 24Z" fill="#9CC6D8"/>
+    <path d="M-14 -12L-2 24L-6 24Z" fill="#4F8AA2" opacity=".6"/>
+  </g>
 <g transform="translate(330 660) scale(0.55)">
     <ellipse cx="0" cy="13" rx="44" ry="10" fill="#2A86A5" opacity=".13"/>
     <path d="M-38 13L-24 -24L-7 -9L9 -40L33 13Z" fill="#5B6C77"/>
@@ -212,34 +218,32 @@
 <circle cx="380" cy="1690" r="120" fill="url(#glowEs)"/>
 <circle cx="560" cy="1900" r="120" fill="url(#glowEs)"/>
 <circle cx="700" cy="2120" r="120" fill="url(#glowEs)"/>
-<path d="M0 2184 H1000 V2246 Q860 2284 700 2262 T360 2286 T0 2258 Z" fill="url(#esAtas)"/>
-<path d="M0 2258 Q180 2294 360 2286 T700 2262 T1000 2246 V2274 Q860 2300 700 2282 T360 2304 T0 2276 Z" fill="#FFFFFF" opacity=".6"/>
-<path d="M0 2280 Q170 2298 350 2288 T700 2264 T1000 2286 V2800 H0 Z" fill="url(#lautBermuda)"/>
-<line x1="0" y1="2310" x2="1000" y2="2310" stroke="#1B8E58" stroke-opacity=".38" stroke-width="3" stroke-dasharray="5 18" stroke-linecap="round"/>
-<path d="M-80 2356 Q120 2342 340 2356 T700 2360 T1080 2350" fill="none" stroke="#1B8E58" stroke-opacity="0.170" stroke-width="2.4" stroke-linecap="round"/>
-<path d="M-80 2450 Q120 2436 340 2450 T700 2454 T1080 2444" fill="none" stroke="#1B8E58" stroke-opacity="0.148" stroke-width="2.4" stroke-linecap="round"/>
-<path d="M-80 2544 Q120 2530 340 2544 T700 2548 T1080 2538" fill="none" stroke="#1B8E58" stroke-opacity="0.126" stroke-width="2.4" stroke-linecap="round"/>
-<path d="M-80 2638 Q120 2624 340 2638 T700 2642 T1080 2632" fill="none" stroke="#1B8E58" stroke-opacity="0.104" stroke-width="2.4" stroke-linecap="round"/>
-<path d="M-80 2732 Q120 2718 340 2732 T700 2736 T1080 2726" fill="none" stroke="#1B8E58" stroke-opacity="0.082" stroke-width="2.4" stroke-linecap="round"/>
-<ellipse cx="690" cy="2560" rx="330" ry="230" fill="url(#pendarBermuda)"/>
-<ellipse cx="430" cy="2600" rx="200" ry="170" fill="url(#pendarBermuda)"/>
-<path d="M690,2256 L110,2786 L1000,2786 Z" fill="#158C55" fill-opacity=".07" stroke="#0C7A47" stroke-opacity=".16" stroke-width="18" stroke-linejoin="round"/>
-<path d="M690,2256 L110,2786 L1000,2786 Z" fill="none" stroke="#0C7A47" stroke-opacity=".82" stroke-width="4" stroke-linejoin="round"/>
-<circle cx="690" cy="2256" r="13" fill="#0C7A47" opacity=".9"/>
-<circle cx="690" cy="2256" r="5" fill="#075C37"/>
-<circle cx="110" cy="2786" r="13" fill="#0C7A47" opacity=".9"/>
-<circle cx="110" cy="2786" r="5" fill="#075C37"/>
-<circle cx="1000" cy="2786" r="13" fill="#0C7A47" opacity=".9"/>
-<circle cx="1000" cy="2786" r="5" fill="#075C37"/>
-<ellipse cx="180" cy="2600" rx="320" ry="90" fill="#E6FAEE" opacity="0.16"/>
-<ellipse cx="520" cy="2660" rx="360" ry="96" fill="#E6FAEE" opacity="0.18"/>
-<ellipse cx="860" cy="2620" rx="300" ry="84" fill="#E6FAEE" opacity="0.15"/>
-<ellipse cx="330" cy="2740" rx="420" ry="90" fill="#E6FAEE" opacity="0.2"/>
-<ellipse cx="780" cy="2760" rx="400" ry="86" fill="#E6FAEE" opacity="0.18"/>
+<path d="M0 2338 H1000 V2374 Q860 2402 700 2390 T360 2404 T0 2386 Z" fill="url(#esAtas)"/>
+<path d="M0 2386 Q180 2410 360 2404 T700 2390 T1000 2374 V2396 Q860 2414 700 2402 T360 2416 T0 2398 Z" fill="#FFFFFF" opacity=".6"/>
+<path d="M0 2400 Q170 2412 350 2405 T700 2390 T1000 2404 V2800 H0 Z" fill="url(#lautBermuda)"/>
+<line x1="0" y1="2422" x2="1000" y2="2422" stroke="#1B8E58" stroke-opacity=".34" stroke-width="3" stroke-dasharray="5 18" stroke-linecap="round"/>
+<path d="M-80 2468 Q120 2456 340 2468 T700 2471 T1080 2463" fill="none" stroke="#1B8E58" stroke-opacity="0.150" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M-80 2560 Q120 2548 340 2560 T700 2563 T1080 2555" fill="none" stroke="#1B8E58" stroke-opacity="0.120" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M-80 2652 Q120 2640 340 2652 T700 2655 T1080 2647" fill="none" stroke="#1B8E58" stroke-opacity="0.090" stroke-width="2.4" stroke-linecap="round"/>
+<ellipse cx="700" cy="2570" rx="240" ry="160" fill="url(#pendarBermuda)"/>
+<ellipse cx="470" cy="2620" rx="140" ry="105" fill="url(#pendarBermuda)"/>
+<path d="M700,2440 L360,2700 L1000,2700 Z" fill="#158C55" fill-opacity=".06" stroke="#0C7A47" stroke-opacity=".14" stroke-width="14" stroke-linejoin="round"/>
+<path d="M700,2440 L360,2700 L1000,2700 Z" fill="none" stroke="#0C7A47" stroke-opacity=".85" stroke-width="4" stroke-linejoin="round"/>
+<circle cx="700" cy="2440" r="9" fill="#0C7A47" opacity=".85"/>
+<circle cx="700" cy="2440" r="4" fill="#075C37"/>
+<circle cx="360" cy="2700" r="9" fill="#0C7A47" opacity=".85"/>
+<circle cx="360" cy="2700" r="4" fill="#075C37"/>
+<circle cx="1000" cy="2700" r="9" fill="#0C7A47" opacity=".85"/>
+<circle cx="1000" cy="2700" r="4" fill="#075C37"/>
+<ellipse cx="200" cy="2650" rx="240" ry="54" fill="#E6FAEE" opacity="0.1"/>
+<ellipse cx="560" cy="2706" rx="260" ry="56" fill="#E6FAEE" opacity="0.11"/>
+<ellipse cx="880" cy="2670" rx="220" ry="50" fill="#E6FAEE" opacity="0.09"/>
+<ellipse cx="380" cy="2764" rx="300" ry="54" fill="#E6FAEE" opacity="0.12"/>
+<ellipse cx="780" cy="2776" rx="280" ry="50" fill="#E6FAEE" opacity="0.11"/>
 <rect width="1000" height="2800" fill="url(#vignetteEs)"/>
 <rect x="14" y="14" width="972" height="2772" rx="22" fill="none" stroke="#3E7482" stroke-opacity=".14" stroke-width="2"/>
-<path d="M0 2280 Q170 2298 350 2288 T700 2264 T1000 2286 V2800 H0 Z" fill="url(#koreksiBermuda)"/>
-<g transform="translate(430 2700) scale(0.78)">
+<path d="M0 2400 Q170 2412 350 2405 T700 2390 T1000 2404 V2800 H0 Z" fill="url(#koreksiBermuda)"/>
+<g transform="translate(470 2696) scale(0.42)">
     <ellipse cx="0" cy="2" rx="60" ry="13" fill="#0E4A2C" opacity=".6"/>
     <path d="M-13 0L-9 -86L-2 -86L-4 0Z" fill="#0E4A2C"/>
     <path d="M13 0L9 -86L2 -86L4 0Z" fill="#0E4A2C"/>
@@ -255,7 +259,7 @@
     <path d="M-12 -118L12 -118L22 -176L-22 -176Z" fill="none" stroke="#0B5A36" stroke-opacity=".55" stroke-width="2"/>
     <ellipse cx="2" cy="-226" rx="26" ry="35" fill="none" stroke="#0B5A36" stroke-opacity=".45" stroke-width="2" transform="rotate(-12 2 -226)"/>
   </g>
-<g transform="translate(900 2686) scale(0.52)">
+<g transform="translate(880 2690) scale(0.28)">
     <ellipse cx="0" cy="2" rx="60" ry="13" fill="#0E4A2C" opacity=".6"/>
     <path d="M-13 0L-9 -86L-2 -86L-4 0Z" fill="#0E4A2C"/>
     <path d="M13 0L9 -86L2 -86L4 0Z" fill="#0E4A2C"/>
@@ -271,6 +275,6 @@
     <path d="M-12 -118L12 -118L22 -176L-22 -176Z" fill="none" stroke="#0B5A36" stroke-opacity=".55" stroke-width="2"/>
     <ellipse cx="2" cy="-226" rx="26" ry="35" fill="none" stroke="#0B5A36" stroke-opacity=".45" stroke-width="2" transform="rotate(-12 2 -226)"/>
   </g>
-<ellipse cx="430" cy="2706" rx="150" ry="26" fill="#E6FAEE" opacity=".2"/>
-<ellipse cx="900" cy="2692" rx="100" ry="18" fill="#E6FAEE" opacity=".16"/>
+<ellipse cx="470" cy="2700" rx="88" ry="15" fill="#E6FAEE" opacity=".18"/>
+<ellipse cx="880" cy="2694" rx="60" ry="11" fill="#E6FAEE" opacity=".14"/>
 </svg>
