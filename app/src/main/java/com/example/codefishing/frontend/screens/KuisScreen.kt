@@ -7,14 +7,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,11 +39,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.QuizData
@@ -323,11 +328,9 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                 }
             }
 
-            Kartu(Modifier.fillMaxWidth(), warna = warna.kartuLembut) {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(soal.teks, style = MaterialTheme.typography.bodyLarge)
-                    KodeBlok(soal.kode)
-                }
+            KartuSoal(soal.teks)
+            if (soal.kode.isNotBlank()) {
+                KodeBlok(soal.kode, judul = t("KODE · PYTHON"))
             }
 
             soal.pilihan.forEachIndexed { i, p ->
@@ -489,6 +492,57 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
                     batalPilih()
                 })
             }
+        }
+    }
+}
+
+/**
+ * Instruksi soal sebagai kartu tersendiri, dengan pita aksen dan label "SOAL".
+ *
+ * Tujuannya memisahkan instruksi dari blok kode di bawahnya: keduanya dulu berada dalam satu
+ * kartu sehingga pemain sulit tahu mana yang harus dibaca sebagai pertanyaan.
+ */
+@Composable
+private fun KartuSoal(teks: String) {
+    val warna = LocalWarna.current
+    val bentuk = RoundedCornerShape(20.dp)
+    val aksen = MaterialTheme.colorScheme.primary
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .background(warna.kartu, bentuk)
+            .border(1.dp, warna.garis, bentuk)
+            .clip(bentuk),
+    ) {
+        // Pita kiri berwarna aksen: penanda visual "ini instruksi", bukan kode.
+        Box(Modifier.width(5.dp).fillMaxHeight().background(aksen))
+        Column(
+            Modifier.weight(1f).padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            Row(
+                Modifier
+                    .background(aksen.copy(alpha = 0.14f), RoundedCornerShape(50))
+                    .padding(horizontal = 9.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+            ) {
+                Box(Modifier.size(6.dp).background(aksen, CircleShape))
+                Text(
+                    t("SOAL"),
+                    color = aksen,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.5.sp,
+                )
+            }
+            Text(
+                teks,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium,
+                lineHeight = 26.sp,
+            )
         }
     }
 }

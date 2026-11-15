@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -167,20 +171,60 @@ fun Bintang(jumlah: Int, modifier: Modifier = Modifier, ukuran: Int = 20) {
     }
 }
 
+/**
+ * Blok kode bergaya jendela editor: tiga titik jendela, label isi, lalu teks monospace.
+ *
+ * Bentuk ini sengaja dibuat berbeda dari kartu biasa. Di layar kuis, pemain harus bisa
+ * membedakan mana instruksi soal dan mana potongan kode hanya dari bentuknya, tanpa membaca
+ * ulang kalimatnya.
+ */
 @Composable
 fun KodeBlok(kode: String, modifier: Modifier = Modifier, judul: String = "PYTHON") {
     val warna = LocalWarna.current
+    val bentuk = RoundedCornerShape(14.dp)
     Column(
         modifier
             .fillMaxWidth()
-            .background(warna.kodeLatar, RoundedCornerShape(14.dp))
-            .border(1.dp, warna.garis, RoundedCornerShape(14.dp))
-            .padding(14.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+            .background(warna.kodeLatar, bentuk)
+            .border(1.dp, MaterialTheme.colorScheme.tertiary.copy(alpha = 0.35f), bentuk)
+            .clip(bentuk),
     ) {
-        Text(judul, color = MaterialTheme.colorScheme.tertiary, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 2.sp)
-        Text(kode, fontFamily = FontFamily.Monospace, fontSize = 14.sp, color = warna.kodeTeks, lineHeight = 22.sp)
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.tertiary.copy(alpha = 0.10f))
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+        ) {
+            TitikJendela(Color(0xFFFF5F57))
+            TitikJendela(Color(0xFFFEBC2E))
+            TitikJendela(Color(0xFF28C840))
+            Spacer(Modifier.width(6.dp))
+            Text(
+                judul,
+                color = MaterialTheme.colorScheme.tertiary,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 2.sp,
+            )
+        }
+        Box(Modifier.fillMaxWidth().height(1.dp).background(warna.garis))
+        Text(
+            kode,
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp),
+            fontFamily = FontFamily.Monospace,
+            fontSize = 14.sp,
+            color = warna.kodeTeks,
+            lineHeight = 22.sp,
+        )
     }
+}
+
+/** Satu titik jendela pada [KodeBlok]; murni hiasan, tidak dibacakan pembaca layar. */
+@Composable
+private fun TitikJendela(warna: Color) {
+    Box(Modifier.size(8.dp).background(warna.copy(alpha = 0.85f), CircleShape))
 }
 
 @Composable

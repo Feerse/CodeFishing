@@ -515,5 +515,7 @@ internal object KamusInggris {
         "{} umpan emas" to "{} golden bait",
         "…" to "…",
         "Semua" to "All",
+        "SOAL" to "QUESTION",
+        "KODE · PYTHON" to "CODE · PYTHON",
     )
 }
