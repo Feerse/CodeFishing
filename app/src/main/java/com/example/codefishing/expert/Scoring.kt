@@ -16,4 +16,16 @@ object Scoring {
         val batasDua = kotlin.math.ceil(p * 1.5).toInt()
         return if (ticks <= batasDua) 2 else 1
     }
+
+    /**
+     * Boleh tidaknya satu spesies membayar XP per ekor pada misi ini.
+     *
+     * XP hanya dibayar sekali untuk setiap pasangan misi + spesies, dan hanya bila misinya
+     * berhasil. Tanpa batas ini, misi berisi 16 ikan memberi 400 XP setiap kali dijalankan,
+     * sehingga level pemain bisa dinaikkan tanpa henti tanpa menulis program baru.
+     *
+     * @param sudahDibayar id ikan yang sudah pernah membayar XP di misi tersebut.
+     */
+    fun xpPerEkorBoleh(sukses: Boolean, sudahDibayar: Set<Int>, ikanId: Int): Boolean =
+        sukses && ikanId !in sudahDibayar
 }

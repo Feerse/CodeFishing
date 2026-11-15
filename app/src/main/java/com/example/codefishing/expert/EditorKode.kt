@@ -51,6 +51,18 @@ object EditorKode {
         return indentasiSetelahBaris(barisSebelum(baru, kursor))
     }
 
+    /**
+     * Isi baris ke-[nomor] (1-based), sudah dipangkas spasi pinggir.
+     *
+     * Dipakai untuk menampilkan potongan baris yang error tepat di bawah pesan kesalahan:
+     * editor tidak punya nomor baris, jadi pemain perlu diberi konteks barisnya.
+     * null bila nomor di luar jangkauan atau barisnya kosong.
+     */
+    fun barisKe(teks: String, nomor: Int): String? {
+        if (nomor < 1) return null
+        return teks.lines().getOrNull(nomor - 1)?.trim()?.takeIf { it.isNotEmpty() }
+    }
+
     /** Kurangi indentasi baris tempat kursor berada sebanyak maksimal [jumlah] spasi. */
     fun kurangiIndentasi(teks: String, kursor: Int, jumlah: Int = 4): HasilSisip {
         val pos = kursor.coerceIn(0, teks.length)

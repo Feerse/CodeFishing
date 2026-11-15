@@ -390,6 +390,22 @@ interface ResultDao {
     @Query("SELECT MAX(bintang) FROM hasil_program WHERE pemain_id = 1 AND misi_id = :misiId")
     suspend fun bintangTerbaik(misiId: Int): Int?
 
+    /**
+     * Spesies yang sudah pernah memberi XP per ekor pada misi ini.
+     *
+     * Dipakai untuk menahan pengulangan misi yang sama: run kedua tetap menambah koleksi dan
+     * akuarium, tetapi tidak lagi menambah XP, sehingga XP tidak bisa dipanen tanpa batas.
+     */
+    @Query(
+        """
+        SELECT DISTINCT ht.ikan_id
+        FROM hasil_tangkapan ht
+        JOIN hasil_program hp ON hp.id = ht.hasil_id
+        WHERE hp.pemain_id = 1 AND hp.misi_id = :misiId AND hp.status = 'sukses'
+        """
+    )
+    suspend fun ikanSudahXp(misiId: Int): List<Int>
+
     @Query("DELETE FROM hasil_program WHERE pemain_id = 1")
     suspend fun reset()
 }

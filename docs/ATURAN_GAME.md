@@ -66,9 +66,9 @@ Pemain menulis subset Python lalu menjalankan misi secara offline. Kapal bergera
 - **Kode contoh panduan diuji**: setiap contoh di `PanduanExpert` dijalankan lewat `SandboxEngine` pada unit test agar dokumentasi tidak melenceng dari perilaku interpreter.
 - **Tombol Misi Berikutnya** muncul tepat di bawah papan setelah misi dinyatakan berhasil, sehingga pemain bisa langsung lanjut ke misi berikutnya tanpa kembali ke daftar. Pada misi terakhir (Bebas), tombol berubah menjadi **Kembali ke Daftar**.
 - **Hasil ditampilkan inline di editor**: ringkasan misi, output, dan jejak gerak muncul di bawah tombol Jalankan. Pemain tidak dipindahkan ke layar hasil, sehingga bisa langsung mengubah kode dan mencoba lagi.
-- **XP Sandbox diberikan per ekor** sesuai `nilai_xp` ikan yang berhasil diangkat. XP misi (`xp_reward`) hanya diberikan saat misi pertama kali sukses. Ikan yang sama tetap memberi XP saat ditangkap lagi.
+- **XP Sandbox diberikan per ekor** sesuai `nilai_xp` ikan yang berhasil diangkat, tetapi hanya **sekali untuk setiap pasangan misi + spesies** dan hanya bila misinya sukses. XP misi (`xp_reward`) hanya diberikan saat misi pertama kali sukses. Mengulang misi tetap mengisi Akuarium/Koleksi, namun tidak lagi menambah XP sehingga XP tidak bisa dipanen tanpa batas.
 - Draf kode per misi disimpan selama aplikasi berjalan, sehingga kode tidak kembali ke contoh saat berpindah misi/layar.
-- Misi gagal/error menampilkan penjelasan. Misi berhasil menampilkan waktu, ikan, sampah (jika ada), keluaran `print`, dan jejak gerak.
+- Misi gagal/error menampilkan penjelasan, **nomor baris dan potongan baris yang bermasalah** (mis. `Baris 3 · lempar()x`) karena editor tidak memakai nomor baris. Misi berhasil menampilkan waktu, ikan, sampah (jika ada), keluaran `print`, dan jejak gerak.
 - Ikan yang tertangkap di Sandbox masuk ke Akuarium/Koleksi; hasil gagal tetap dicatat sebagai riwayat.
 - Pada **m5**, mengangkat sampah juga menggagalkan misi, bukan hanya menangkap ikan lain.
 - Batas aman eksekusi adalah 1000 tick dan 10.000 langkah.

@@ -621,6 +621,22 @@ private fun EditorMisi(
                         style = MaterialTheme.typography.titleMedium,
                     )
                     Text(r.hasil.pesanError ?: r.evaluasi.alasan, style = MaterialTheme.typography.bodySmall)
+                    // Editor tidak punya nomor baris, jadi baris yang bermasalah ditampilkan
+                    // langsung di sini. Tanpa ini pemain harus menghitung baris manual.
+                    val barisMasalah = r.hasil.errorBaris
+                    if (barisMasalah > 0) {
+                        val potongan = EditorKode.barisKe(kode.text, barisMasalah)
+                        Text(
+                            if (potongan != null) {
+                                t("Baris {} · {}", barisMasalah, potongan)
+                            } else {
+                                t("Baris {}", barisMasalah)
+                            },
+                            style = MaterialTheme.typography.bodySmall,
+                            fontFamily = FontFamily.Monospace,
+                            color = warna.bahayaTeks,
+                        )
+                    }
                     Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         Text(t("Tick {}", r.hasil.ticks), style = MaterialTheme.typography.labelMedium)
                         Text(t("Tangkap {}", r.hasil.tertangkap), style = MaterialTheme.typography.labelMedium)

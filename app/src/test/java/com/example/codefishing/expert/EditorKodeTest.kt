@@ -79,6 +79,18 @@ class EditorKodeTest {
     }
 
     @Test
+    fun barisKeMengambilBarisUntukPesanError() {
+        val kode = "for i in range(3):\n    lempar()\n\n  gerak(Timur)  "
+        assertEquals("for i in range(3):", EditorKode.barisKe(kode, 1))
+        assertEquals("lempar()", EditorKode.barisKe(kode, 2))
+        assertNull(EditorKode.barisKe(kode, 3))
+        assertEquals("gerak(Timur)", EditorKode.barisKe(kode, 4))
+        assertNull(EditorKode.barisKe(kode, 5))
+        assertNull(EditorKode.barisKe(kode, 0))
+        assertNull(EditorKode.barisKe("", 1))
+    }
+
+    @Test
     fun kurangiIndentasiBarisAktif() {
         val empat = EditorKode.kurangiIndentasi("    lempar()", 12)
         assertEquals("lempar()", empat.teks)

@@ -627,6 +627,8 @@ class GameRepository(
         val bintang = if (sukses) Scoring.bintang(ticks, Scoring.parEfektif(misi?.par_tick)) else 0
         val sebelum = misiId?.let { resultDao.bintangTerbaik(it) } ?: 0
         val xp = if (sukses && sebelum == 0) (misi?.xp_reward ?: 0) else 0
+        // Dibaca SEBELUM run ini disimpan: spesies yang sudah pernah membayar XP di misi ini.
+        val sudahXp = misiId?.let { resultDao.ikanSudahXp(it).toSet() } ?: emptySet()
         val hasilId = resultDao.simpanHasil(
             HasilProgramEntity(
                 pemain_id = 1,
@@ -647,7 +649,20 @@ class GameRepository(
         for (t in tangkapan) {
             val ikan = contentDao.ikanByNama(t.nama) ?: continue
             rows.add(HasilTangkapanEntity(hasil_id = hasilId, ikan_id = ikan.id, jumlah = t.jumlah, bobot_kg = t.bobot))
-            data.add(beriIkan(ikan, ikan.tier, now, t.bobot, jumlah = t.jumlah, xpPerEkor = true))
+            data.add(
+                beriIkan(
+                    ikan,
+                    ikan.tier,
+                    now,
+                    t.bobot,
+                    jumlah = t.jumlah,
+                    // XP per ekor hanya dibayar sekali untuk setiap pasangan misi + spesies, dan
+                    // hanya bila misinya berhasil. Mengulang misi tetap mengisi koleksi dan
+                    // akuarium, tetapi tidak lagi menambah XP — kalau tidak, satu misi 16 ikan
+                    // bisa dipanen ratusan XP tanpa batas.
+                    xpPerEkor = Scoring.xpPerEkorBoleh(sukses, sudahXp, ikan.id),
+                ),
+            )
         }
         if (rows.isNotEmpty()) resultDao.simpanTangkapan(rows)
         if (xp > 0) tambahXp(xp)

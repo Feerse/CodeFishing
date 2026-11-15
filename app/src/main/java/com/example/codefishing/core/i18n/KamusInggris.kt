@@ -401,6 +401,8 @@ internal object KamusInggris {
         "Tekan Jalankan untuk melihat hasil. Kamu bisa mengubah kode sesukanya." to
             "Press Run to see the result. You can change the code however you like.",
         "baris {} · {}{} · tick {}" to "line {} · {}{} · tick {}",
+        "Baris {} · {}" to "Line {} · {}",
+        "Baris {}" to "Line {}",
         "Peta Misi" to "Mission Map",
         "Simulasi" to "Simulation",
         "Posisi Akhir" to "Final Position",
