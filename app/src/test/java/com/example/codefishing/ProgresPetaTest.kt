@@ -79,4 +79,24 @@ class ProgresPetaTest {
     fun daftarKosongTidakPunyaStageAktif() {
         assertNull(stageAktif(emptyList()))
     }
+
+    @Test
+    fun acuanPetaMemakaiProgresTerjauh() {
+        // Mengulang stage Pasifik (posisi 2) tidak boleh menarik peta kembali ke Pasifik
+        // saat progres sudah di Antartika (stage aktif 15).
+        assertEquals(15, ProgresPeta.nomorAcuanPeta(15, 2))
+        assertEquals(15, ProgresPeta.nomorAcuanPeta(2, 15))
+        assertEquals(7, ProgresPeta.nomorAcuanPeta(7, null))
+        assertEquals(7, ProgresPeta.nomorAcuanPeta(null, 7))
+        assertNull(ProgresPeta.nomorAcuanPeta(null, null))
+    }
+
+    @Test
+    fun petaAwalIkutProgresDanKunciAntartika() {
+        assertFalse(ProgresPeta.petaAntartika(false, 20))
+        assertFalse(ProgresPeta.petaAntartika(true, 10))
+        assertFalse(ProgresPeta.petaAntartika(true, null))
+        assertTrue(ProgresPeta.petaAntartika(true, 11))
+        assertTrue(ProgresPeta.petaAntartika(true, 20))
+    }
 }

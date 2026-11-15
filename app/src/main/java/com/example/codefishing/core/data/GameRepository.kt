@@ -164,6 +164,18 @@ class GameRepository(
         playerDao.simpanPosisi(posisi, mode, System.currentTimeMillis())
     }
 
+    /**
+     * Mencatat stage yang sedang dibuka tanpa mengubah mode terakhir.
+     *
+     * Dipakai saat kuis dimulai: `stage_terakhir_id` jadi selalu menunjuk stage yang benar-benar
+     * sedang dimainkan, bukan stage terakhir yang lulus. Tanpa ini, pemain yang baru membuka
+     * stage 11 di Antartika masih terlihat "di Pasifik" sampai stage itu selesai.
+     */
+    suspend fun tandaiStageDibuka(stageId: Int) {
+        val mode = player().mode_terakhir ?: MODE_BELAJAR
+        playerDao.simpanPosisi(stageId, mode, System.currentTimeMillis())
+    }
+
     /** Stage yang akan dilanjutkan: yang belum selesai dan terbuka, atau stage terakhir. */
     private suspend fun stageAktifId(): Int? =
         ProgresPeta.stageAktif(

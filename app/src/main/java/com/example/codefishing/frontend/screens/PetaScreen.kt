@@ -144,18 +144,16 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
         it.nomor <= ProgresPeta.STAGE_PASIFIK_TERAKHIR && it.status == "selesai"
     }
     val antartikaTerbuka = ProgresPeta.antartikaTerbuka(selesaiPasifik)
-    val stageAktifGlobal = stages.firstOrNull { it.status != "selesai" && it.terbuka == 1 }
-        ?: stages.lastOrNull()
+    val stageAktifGlobal = ProgresPeta.stageAktif(stages, { it.status }, { it.terbuka == 1 })
     val nomorTerakhir = player?.stage_terakhir_id?.let { id ->
         stages.firstOrNull { it.id == id }?.nomor
     }
-    // Acuan peta awal: posisi terakhir pemain, atau stage yang sedang aktif bila posisi kosong
-    // (mis. baru masuk mode Belajar). Dengan begitu progres ikut pindah ke Antartika setelah
-    // seluruh stage Pasifik selesai, tidak selalu kembali ke lautan Pasifik.
-    val nomorAcuan = nomorTerakhir ?: stageAktifGlobal?.nomor
+    // Acuan peta awal: progres terjauh (stage aktif atau posisi terakhir). Memakai yang terjauh
+    // supaya mengulang stage Pasifik tidak menarik peta kembali ke Pasifik padahal pemain sudah
+    // di Antartika; setelah seluruh Pasifik selesai peta langsung pindah ke Antartika.
+    val nomorAcuan = ProgresPeta.nomorAcuanPeta(stageAktifGlobal?.nomor, nomorTerakhir)
     val petaAktif = petaPilihan ?: if (
-        antartikaTerbuka &&
-        (nomorAcuan ?: 0) > ProgresPeta.STAGE_PASIFIK_TERAKHIR
+        ProgresPeta.petaAntartika(antartikaTerbuka, nomorAcuan)
     ) {
         PetaAktif.ANTARTIKA
     } else {
@@ -822,6 +820,15 @@ private fun PenandaToolbar(aktif: PetaAktif, onClick: () -> Unit) {
             if (aktif == PetaAktif.ANTARTIKA) Art.ikon_air_dingin else Art.ikon_air_tenang,
             null,
             Modifier.size(16.dp),
+        )
+        // Nama peta aktif ditulis, bukan hanya ikon: ikon gelombang mudah tertukar dengan peta lain
+        // sehingga pemain bisa mengira peta yang terbuka masih peta sebelumnya.
+        Text(
+            namaPeta(aktif),
+            color = warna.petaTeks,
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Medium,
+            maxLines = 1,
         )
         Text("▾", color = warna.petaTeksRedup, fontSize = 13.sp)
     }

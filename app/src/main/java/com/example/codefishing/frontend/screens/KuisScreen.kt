@@ -153,7 +153,12 @@ fun KuisScreen(nav: AppNavigator, padding: PaddingValues, stagePaksa: Int? = nul
     // tidak menimpa sesi stage lain.
     LaunchedEffect(d.stage.id, umpanAwal) {
         val sisa = umpanAwal
-        if (sisa != null && sisa > 0) simpanSesi()
+        if (sisa != null && sisa > 0) {
+            simpanSesi()
+            // Posisi pemain ikut pindah ke stage yang sedang dimainkan, supaya peta dan tombol
+            // "Lanjutkan" tidak menunjuk stage lama selama stage ini belum selesai.
+            c.game.tandaiStageDibuka(d.stage.id)
+        }
     }
     // Ikan target stage: tampil di adegan saat jawaban benar.
     val ikanTarget by produceState<IkanEntity?>(null, d.stage.ikan_target_id) {
