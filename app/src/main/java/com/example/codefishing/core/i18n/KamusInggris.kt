@@ -367,6 +367,10 @@ internal object KamusInggris {
         // Mode Expert / Sandbox
         "Tulis Python, gerakkan kapal, tangkap ikan. Batas 1000 tick." to
             "Write Python, move the ship, catch fish. 1000 tick limit.",
+        "Tulis Python, gerakkan kapal, tangkap ikan." to
+            "Write Python, move the ship, catch fish.",
+        "{} misi" to "{} missions",
+        "Batas {} tick" to "{} tick limit",
         "Panduan Expert" to "Expert Guide",
         "Perintah, sintaks Python, dan petunjuk semua misi" to
             "Commands, Python syntax, and hints for every mission",

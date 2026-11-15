@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -96,14 +98,30 @@ fun lencanaTier(tier: String): Int = when (tier) {
 fun Kartu(
     modifier: Modifier = Modifier,
     warna: Color = MaterialTheme.colorScheme.surface,
+    /**
+     * Garis warna tipis di sisi kiri kartu. Dipakai daftar misi Mode Expert supaya tiap misi
+     * punya penanda warna sendiri dan tidak lagi terbaca sebagai tujuh baris yang sama.
+     */
+    aksenSisi: Color? = null,
     isi: @Composable () -> Unit,
 ) {
     // Column, bukan Box: isi kartu sering terdiri dari beberapa teks/Spacer.
     // Dengan Box semua child menumpuk di posisi yang sama.
+    val bentuk = RoundedCornerShape(20.dp)
     Column(
         modifier
-            .background(warna, RoundedCornerShape(20.dp))
-            .border(1.dp, LocalWarna.current.garis, RoundedCornerShape(20.dp))
+            .clip(bentuk)
+            .background(warna)
+            .then(
+                if (aksenSisi == null) {
+                    Modifier
+                } else {
+                    Modifier.drawBehind {
+                        drawRect(aksenSisi, size = Size(5.dp.toPx(), size.height))
+                    }
+                },
+            )
+            .border(1.dp, LocalWarna.current.garis, bentuk)
             .padding(16.dp),
     ) { isi() }
 }

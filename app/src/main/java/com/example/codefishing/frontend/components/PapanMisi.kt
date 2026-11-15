@@ -168,6 +168,8 @@ fun PapanMisi(
     memuat: Boolean,
     modifier: Modifier = Modifier,
     haptikAktif: Boolean = true,
+    /** Warna aksen misi: dipakai judul papan dan bingkai petak laut. */
+    aksen: Color = Color.Transparent,
     onSelesaiAnimasi: () -> Unit = {},
 ) {
     val c = LocalContainer.current
@@ -394,7 +396,7 @@ fun PapanMisi(
                 Text(
                     judulPapan,
                     style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.tertiary,
+                    color = if (aksen == Color.Transparent) MaterialTheme.colorScheme.tertiary else aksen,
                 )
                 Text(
                     t("{} × {} petak · {} tick", misi.grid, misi.grid, tickKini),
@@ -436,6 +438,7 @@ fun PapanMisi(
                 konfetiT = konfeti.value,
                 petaIkan = petaIkan,
                 error = hasil != null && !hasil.hasil.berhasil,
+                aksen = aksen,
             )
         }
 
@@ -528,6 +531,7 @@ private fun PapanGrid(
     konfetiT: Float,
     petaIkan: Map<String, IkanEntity>,
     error: Boolean,
+    aksen: Color = Color.Transparent,
 ) {
     val warna = LocalWarna.current
     val density = LocalDensity.current
@@ -544,7 +548,15 @@ private fun PapanGrid(
         Modifier
             .fillMaxWidth()
             .background(warna.kodeLatar, RoundedCornerShape(14.dp))
-            .border(1.dp, if (error) warna.bahayaTeks.copy(alpha = 0.7f) else Color.Transparent, RoundedCornerShape(14.dp))
+            .border(
+                1.dp,
+                when {
+                    error -> warna.bahayaTeks.copy(alpha = 0.7f)
+                    aksen != Color.Transparent -> aksen.copy(alpha = 0.5f)
+                    else -> Color.Transparent
+                },
+                RoundedCornerShape(14.dp),
+            )
             .padding(8.dp),
         contentAlignment = Alignment.Center,
     ) {

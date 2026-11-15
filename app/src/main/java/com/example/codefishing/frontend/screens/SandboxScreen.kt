@@ -1,7 +1,17 @@
 package com.example.codefishing.frontend.screens
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,10 +28,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -42,10 +53,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.isShiftPressed
@@ -60,6 +76,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TextFieldValue
@@ -71,6 +88,8 @@ import androidx.compose.ui.unit.sp
 import com.example.codefishing.core.LocalContainer
 import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.data.TangkapanMasuk
+import com.example.codefishing.core.data.LocalEfekVisual
+import com.example.codefishing.core.data.hemat
 import com.example.codefishing.core.db.IkanEntity
 import com.example.codefishing.core.i18n.LocalTeks
 import com.example.codefishing.core.i18n.t
@@ -95,10 +114,13 @@ import com.example.codefishing.frontend.components.TombolUtama
 import com.example.codefishing.pemula.FishRules
 import com.example.codefishing.ui.theme.LocalWarna
 import com.example.codefishing.ui.theme.WarnaCodeFishing
+import com.example.codefishing.ui.theme.aksenMisi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.PI
+import kotlin.math.sin
 
 /**
  * 07 Mode Expert: daftar 7 misi dan editor kode Python.
@@ -171,12 +193,7 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 item {
-                    Text(t("Mode Expert"), style = MaterialTheme.typography.headlineMedium)
-                    Text(
-                        t("Tulis Python, gerakkan kapal, tangkap ikan. Batas 1000 tick."),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                    KepalaExpert(jumlahMisi = misi.size)
                     Spacer(Modifier.height(8.dp))
                 }
                 item {
@@ -210,27 +227,18 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
                         }
                     }
                 }
-                items(misi, key = { it.kode }) { item ->
+                itemsIndexed(misi, key = { _, item -> item.kode }) { indeks, item ->
                     val b = petaBintang[item.dbId]
-                    Kartu(
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable {
+                    MunculBertahap(indeks) {
+                        KartuMisi(
+                            item = item,
+                            bintang = b?.bintang ?: 0,
+                            aksen = aksenMisi(item.nomor, warna.gelap),
+                            onClick = {
                                 c.audio.play(Sfx.Klik)
                                 aktif = item
                             },
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            Gambar(lencanaMisi(item.nomor), t("Misi {}", item.nomor), Modifier.size(52.dp))
-                            Column(Modifier.weight(1f)) {
-                                Text(item.judul, style = MaterialTheme.typography.titleMedium)
-                                Text(item.deskripsi, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    Bintang(b?.bintang ?: 0, ukuran = 14)
-                                    if (item.par != null) Text(t("Par {} tick", item.par), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.tertiary)
-                                }
-                            }
-                        }
+                        )
                     }
                 }
                 item {
@@ -279,6 +287,7 @@ private fun EditorMisi(
     val scope = rememberCoroutineScope()
     val engine = remember { SandboxEngine() }
     val warna = LocalWarna.current
+    val aksen = aksenMisi(misi.nomor, warna.gelap)
     // Untuk teks di dalam lambda non-@Composable (onClick, scope.launch).
     val tr = LocalTeks.current
     val semuaIkan by produceState<List<IkanEntity>>(emptyList()) { value = c.game.semuaIkan() }
@@ -366,7 +375,7 @@ private fun EditorMisi(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(Modifier.weight(1f)) {
-                Text(t("Misi {}", misi.nomor), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
+                Text(t("Misi {}", misi.nomor), style = MaterialTheme.typography.labelLarge, color = aksen)
                 Text(
                     misi.judul,
                     style = MaterialTheme.typography.headlineSmall,
@@ -390,6 +399,7 @@ private fun EditorMisi(
             petaIkan = petaIkan,
             memuat = semuaIkan.isEmpty(),
             haptikAktif = (pengaturan?.haptik ?: 1) != 0,
+            aksen = aksen,
             onSelesaiAnimasi = { tampilHasil = true },
         )
 
@@ -697,6 +707,224 @@ private fun EditorMisi(
             bukaSintaks = panduanSintaks,
         )
     }
+}
+
+/**
+ * Banner kepala layar Mode Expert.
+ *
+ * Sebelumnya kepala layar hanya dua baris teks di atas gradien datar. Diukur dari tangkapan
+ * layar emulator, layar Expert jadi layar paling tidak berwarna di aplikasi: saturasi rata-rata
+ * 0,059 dengan 82% piksel berwarna jatuh di satu sektor hue, dibanding 0,211 di layar kuis.
+ * Banner ini memberi satu bidang bergambar (tiga warna aksen misi, dua pita ombak, kapal)
+ * supaya layar punya tempat mata beristirahat yang bukan teks.
+ */
+@Composable
+private fun KepalaExpert(jumlahMisi: Int, modifier: Modifier = Modifier) {
+    val warna = LocalWarna.current
+    val a1 = aksenMisi(1, warna.gelap)
+    val a3 = aksenMisi(3, warna.gelap)
+    val a6 = aksenMisi(6, warna.gelap)
+    // Hemat: ombak berhenti di fase tetap, jadi tidak ada yang terus-menerus menggambar.
+    val fase = if (LocalEfekVisual.current.hemat) 0f else faseOmbakExpert()
+    val bentuk = RoundedCornerShape(24.dp)
+    // Tema terang perlu aksen lebih pekat supaya banner benar-benar berwarna; tema gelap justru
+    // perlu lebih tipis, karena latarnya sudah pekat dan teks terang di atasnya bisa turun
+    // kontras (pada 0,52 teks kecil hanya ~3,9:1).
+    val alfa = if (warna.gelap) 0.34f else 0.52f
+
+    Box(
+        modifier
+            .fillMaxWidth()
+            .height(176.dp)
+            .clip(bentuk)
+            .background(
+                Brush.linearGradient(
+                    listOf(
+                        a1.copy(alpha = alfa),
+                        a3.copy(alpha = alfa * 0.85f),
+                        a6.copy(alpha = alfa * 0.72f),
+                    ),
+                ),
+            )
+            .border(1.dp, warna.garis, bentuk),
+    ) {
+        Canvas(Modifier.fillMaxSize()) {
+            val w = size.width
+            val h = size.height
+            repeat(2) { i ->
+                val dasar = h * (0.60f + i * 0.15f)
+                val amplitudo = h * 0.035f
+                val geser = fase * (if (i == 0) 1f else -0.7f) * w
+                val path = Path()
+                path.moveTo(0f, h)
+                var x = 0f
+                while (x <= w) {
+                    val y = dasar + sin((x + geser) / w * 2f * PI.toFloat() + i) * amplitudo
+                    path.lineTo(x, y)
+                    x += w / 24f
+                }
+                path.lineTo(w, h)
+                path.close()
+                drawPath(path, (if (i == 0) a1 else a3).copy(alpha = if (i == 0) alfa * 0.40f else alfa * 0.26f))
+            }
+        }
+        Row(
+            Modifier
+                .fillMaxSize()
+                .padding(18.dp),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Column(
+                Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Text(
+                    t("Mode Expert"),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = warna.petaTeks,
+                )
+                Text(
+                    t("Tulis Python, gerakkan kapal, tangkap ikan."),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = warna.petaTeks,
+                )
+                Spacer(Modifier.height(2.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    ChipAksen(t("{} misi", jumlahMisi), a1)
+                    ChipAksen(t("Batas {} tick", 1000), a6)
+                }
+            }
+            Gambar(Art.kapal_peta, t("Kapal pemain"), Modifier.size(84.dp))
+        }
+    }
+}
+
+@Composable
+private fun faseOmbakExpert(): Float {
+    val transisi = rememberInfiniteTransition(label = "ombakExpert")
+    val fase by transisi.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(9000, easing = LinearEasing)),
+        label = "faseOmbakExpert",
+    )
+    return fase
+}
+
+@Composable
+private fun ChipAksen(teks: String, aksen: Color) {
+    val warna = LocalWarna.current
+    Text(
+        teks,
+        Modifier
+            .background(warna.kartu, RoundedCornerShape(50))
+            .border(1.dp, aksen.copy(alpha = 0.45f), RoundedCornerShape(50))
+            .padding(horizontal = 10.dp, vertical = 4.dp),
+        style = MaterialTheme.typography.labelSmall,
+        color = aksen,
+        fontWeight = FontWeight.Bold,
+    )
+}
+
+/**
+ * Kartu satu misi. Sisi kiri, cincin lencana, dan teks par memakai warna aksen misi itu sendiri,
+ * sehingga tujuh misi bisa dibedakan dari warnanya tanpa membaca judul.
+ */
+@Composable
+private fun KartuMisi(
+    item: MisiPeta,
+    bintang: Int,
+    aksen: Color,
+    onClick: () -> Unit,
+) {
+    val warna = LocalWarna.current
+    Kartu(
+        Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        // Kartu ikut diwarnai tipis dengan aksen misinya: sisi kiri saja terlalu sempit untuk
+        // mengubah kesan layar, sedangkan tint seluas kartu membuat tujuh misi terlihat berbeda.
+        warna = lerp(warna.kartu, aksen, if (warna.gelap) 0.12f else 0.08f),
+        aksenSisi = aksen,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Box(
+                Modifier
+                    .size(56.dp)
+                    .background(aksen.copy(alpha = 0.20f), CircleShape)
+                    .border(1.5.dp, aksen.copy(alpha = 0.6f), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Gambar(lencanaMisi(item.nomor), t("Misi {}", item.nomor), Modifier.size(44.dp))
+            }
+            Column(Modifier.weight(1f)) {
+                Text(item.judul, style = MaterialTheme.typography.titleMedium)
+                Text(
+                    item.deskripsi,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    BintangPop(bintang, ukuran = 14)
+                    if (item.par != null) {
+                        Text(t("Par {} tick", item.par), style = MaterialTheme.typography.labelSmall, color = aksen)
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Bintang yang memantul sekali saat misi pertama kali punya bintang. Tanpa ini bintang baru
+ * muncul diam-diam dan pemain tidak sadar misinya sudah bernilai.
+ */
+@Composable
+private fun BintangPop(jumlah: Int, ukuran: Int) {
+    val kurangiGerak = LocalEfekVisual.current.hemat
+    val skala = remember { Animatable(if (kurangiGerak || jumlah == 0) 1f else 0.5f) }
+    LaunchedEffect(jumlah) {
+        if (jumlah > 0 && !kurangiGerak) {
+            skala.snapTo(0.5f)
+            skala.animateTo(1f, spring(dampingRatio = 0.42f, stiffness = 520f))
+        } else {
+            skala.snapTo(1f)
+        }
+    }
+    Box(
+        Modifier.graphicsLayer {
+            scaleX = skala.value
+            scaleY = skala.value
+        },
+    ) {
+        Bintang(jumlah, ukuran = ukuran)
+    }
+}
+
+/** Kartu masuk satu per satu dari bawah; dilewati saat efek visual disetel Hemat. */
+@Composable
+private fun MunculBertahap(indeks: Int, isi: @Composable () -> Unit) {
+    val kurangiGerak = LocalEfekVisual.current.hemat
+    val progres = remember { Animatable(if (kurangiGerak) 1f else 0f) }
+    LaunchedEffect(Unit) {
+        if (!kurangiGerak) {
+            delay(indeks.coerceAtMost(8) * 55L)
+            progres.animateTo(1f, tween(340, easing = FastOutSlowInEasing))
+        }
+    }
+    Box(
+        Modifier.graphicsLayer {
+            alpha = progres.value
+            translationY = (1f - progres.value) * 30f
+        },
+    ) { isi() }
 }
 
 /** Lencana bergambar untuk daftar misi (misi 7 dan seterusnya = mode bebas). */
