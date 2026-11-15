@@ -403,6 +403,9 @@ internal object KamusInggris {
         "baris {} · {}{} · tick {}" to "line {} · {}{} · tick {}",
         "Baris {} · {}" to "Line {} · {}",
         "Baris {}" to "Line {}",
+        "Petak belum diperiksa" to "Tile not inspected yet",
+        "Tanda ? = petak belum diperiksa. Pakai lihat() untuk membukanya, gratis tanpa tick." to
+            "? = tile not inspected yet. Use lihat() to reveal it \u2014 free, no ticks.",
         "Peta Misi" to "Mission Map",
         "Simulasi" to "Simulation",
         "Posisi Akhir" to "Final Position",

@@ -46,6 +46,8 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -59,6 +61,7 @@ import com.example.codefishing.core.db.IkanEntity
 import com.example.codefishing.core.i18n.t
 import com.example.codefishing.expert.Arah
 import com.example.codefishing.expert.MisiPeta
+import com.example.codefishing.expert.Pandangan
 import com.example.codefishing.expert.SandboxRun
 import com.example.codefishing.expert.py.Langkah
 import com.example.codefishing.ui.theme.LocalWarna
@@ -342,6 +345,11 @@ fun PapanMisi(
     } else {
         misi.cells
     }
+    // Isi petak tertutup sampai pemain benar-benar memeriksanya lewat lihat()/lempar(),
+    // jadi rute tidak bisa dihafal dari layar lalu ditulis tanpa algoritma.
+    val terbuka = remember(hasil, tickKini) {
+        Pandangan.petakTerbuka(hasil?.hasil?.trace.orEmpty(), misi.grid, tickKini)
+    }
     val ikanAwal = remember(misi.grid, misi.cells) {
         misi.cells.count { it.isNotEmpty() && it != "sampah" }
     }
@@ -415,6 +423,7 @@ fun PapanMisi(
             PapanGrid(
                 ukuran = misi.grid,
                 cells = selSekarang,
+                terbuka = terbuka,
                 posisiX = posisiX,
                 posisiY = posisiY,
                 arah = arah,
@@ -450,6 +459,13 @@ fun PapanMisi(
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
         )
+        if (terbuka.size < misi.grid * misi.grid) {
+            Text(
+                t("Tanda ? = petak belum diperiksa. Pakai lihat() untuk membukanya, gratis tanpa tick."),
+                style = MaterialTheme.typography.labelSmall,
+                color = warna.peringatanTeks.copy(alpha = 0.9f),
+            )
+        }
 
         if (memutar) {
             if (aksi.size > 200) {
@@ -499,6 +515,7 @@ private fun StatusPapanStatus(teks: String, warna: Color) {
 private fun PapanGrid(
     ukuran: Int,
     cells: List<String>,
+    terbuka: Set<Int>,
     posisiX: Float,
     posisiY: Float,
     arah: Arah,
@@ -514,6 +531,9 @@ private fun PapanGrid(
 ) {
     val warna = LocalWarna.current
     val density = LocalDensity.current
+    // Deskripsi petak yang belum diperiksa: pemain memakai pembaca layar tidak boleh
+    // dibocorkan nama ikannya lewat sel yang masih tertutup.
+    val contentSembunyi = t("Petak belum diperiksa")
     // Hemat: papan tidak diayun sama sekali (satu-satunya efek yang terus-menerus menggambar).
     val ombak = rememberJamOmbakPapan(aktif = !LocalEfekVisual.current.hemat)
     val gap = 3.dp
@@ -564,6 +584,7 @@ private fun PapanGrid(
                             val index = y * ukuran + x
                             val isi = cells.getOrElse(index) { "" }
                             val adaKapal = x == kapalX && y == kapalY
+                            val diketahui = index in terbuka
                             Box(
                                 Modifier.size(sel),
                                 contentAlignment = Alignment.Center,
@@ -571,14 +592,27 @@ private fun PapanGrid(
                                 Gambar(
                                     when {
                                         adaKapal -> if (warna.gelap) Art.petak_kapal_sekarang else Art.petak_kapal_sekarang_terang
-                                        isi == "sampah" -> if (warna.gelap) Art.petak_sampah else Art.petak_sampah_terang
+                                        // Petak sampah pun tidak boleh terbaca sebelum diperiksa:
+                                        // posisi sampah adalah separuh teka-teki misi pilih-pilih.
+                                        diketahui && isi == "sampah" ->
+                                            if (warna.gelap) Art.petak_sampah else Art.petak_sampah_terang
                                         else -> if (warna.gelap) Art.petak_laut else Art.petak_laut_terang
                                     },
                                     null,
                                     Modifier.fillMaxSize(),
                                     ContentScale.FillBounds,
                                 )
-                                if (isi.isNotEmpty() && isi != "sampah" && index !in terangkat) {
+                                if (!diketahui) {
+                                    Text(
+                                        "?",
+                                        fontSize = (sel.value * 0.42f).sp,
+                                        color = warna.petaTeksRedup.copy(alpha = 0.7f),
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.semantics {
+                                            contentDescription = contentSembunyi
+                                        },
+                                    )
+                                } else if (isi.isNotEmpty() && isi != "sampah" && index !in terangkat) {
                                     val ikan = petaIkan[isi.lowercase()]
                                     GambarKontras(
                                         gambarIkanKecil(ikan?.gambar),
