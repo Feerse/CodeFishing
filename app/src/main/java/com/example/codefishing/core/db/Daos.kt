@@ -77,6 +77,30 @@ interface StageDao {
     )
     fun observeStatus(): Flow<List<StageStatusRow>>
 
+    /** Versi sekali-panggil dari [observeStatus], dipakai saat masuk mode (bukan di UI). */
+    @Query(
+        """
+        SELECT st.id, st.nomor, st.nama, st.zona, st.konsep, st.tipe, st.jumlah_soal,
+               st.skor_lulus, st.xp_reward, st.ikan_target_id, st.urutan,
+               COALESCE(p.status, 'terkunci') AS status,
+               COALESCE(p.skor_terbaik, 0) AS skor_terbaik,
+               CASE
+                 WHEN st.nomor = 1 THEN 1
+                 WHEN p.status = 'selesai' THEN 1
+                 WHEN EXISTS (
+                   SELECT 1 FROM stage prev
+                   JOIN progres_stage pp ON pp.stage_id = prev.id AND pp.pemain_id = 1
+                   WHERE prev.nomor = st.nomor - 1 AND pp.status = 'selesai'
+                 ) THEN 1
+                 ELSE 0
+               END AS terbuka
+        FROM stage st
+        LEFT JOIN progres_stage p ON p.stage_id = st.id AND p.pemain_id = 1
+        ORDER BY st.nomor
+        """
+    )
+    suspend fun statusSemua(): List<StageStatusRow>
+
     @Query(
         """
         SELECT st.id, st.nomor, st.nama, st.zona, st.konsep, st.tipe, st.jumlah_soal,

@@ -46,7 +46,10 @@ import com.example.codefishing.frontend.components.Kartu
 import com.example.codefishing.frontend.components.TombolSekunder
 import com.example.codefishing.frontend.components.TombolUtama
 import com.example.codefishing.frontend.components.gambarIkan
+import com.example.codefishing.pemula.JenisLanjut
 import com.example.codefishing.pemula.LevelRules
+import com.example.codefishing.pemula.ProgresPeta
+import com.example.codefishing.pemula.tentukanTujuanLanjut
 import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.launch
 
@@ -63,10 +66,19 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
     val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) { umpan = c.game.muatUmpan().sisa }
 
-    val stageAktif = stageList.firstOrNull { it.status != "selesai" && it.terbuka == 1 }
-        ?: stageList.lastOrNull()
+    val stageAktif = ProgresPeta.stageAktif(stageList, { it.status }, { it.terbuka == 1 })
     val posisi = player?.stage_terakhir_id?.let { id -> stageList.firstOrNull { it.id == id } }
-    val judulLanjut = posisi?.nama ?: stageAktif?.nama ?: "Petualangan Baru"
+    // Tombol "Lanjutkan" memakai aturan yang sama dengan repository, jadi tidak mungkin lagi
+    // berakhir di Pilih Mode hanya karena posisi terakhir kosong.
+    val tujuanLanjut = tentukanTujuanLanjut(
+        modeTerakhir = player?.mode_terakhir,
+        posisiTerakhirId = posisi?.id,
+        posisiTerakhirBoss = posisi?.tipe == "boss",
+        stageAktifId = stageAktif?.id,
+        stageAktifBoss = stageAktif?.tipe == "boss",
+    )
+    val sasaranLanjut = posisi ?: stageAktif
+    val judulLanjut = sasaranLanjut?.nama ?: "Petualangan Baru"
     val xp = player?.xp ?: 0
     val level = player?.level ?: 1
     val terkumpul = statistik?.ikan_terkumpul ?: 0
@@ -175,7 +187,7 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                     Text("Lanjutkan perjalanan", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
                     Text(judulLanjut, style = MaterialTheme.typography.titleLarge)
                     Text(
-                        "Stage ${posisi?.nomor ?: stageAktif?.nomor ?: 1} · ${posisi?.konsep ?: stageAktif?.konsep ?: "Pilih mode untuk mulai"}",
+                        "Stage ${sasaranLanjut?.nomor ?: 1} · ${sasaranLanjut?.konsep ?: "Pilih mode untuk mulai"}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -183,6 +195,7 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                         teks = "Mulai Main",
                         onClick = {
                             c.audio.play(Sfx.KlikUtama)
+                            // "Mulai Main" = pilih cara bermain; "Lanjutkan" = langsung ke stage.
                             nav.go(Screen.PilihMode)
                         },
                     )
@@ -190,12 +203,20 @@ fun HomeScreen(nav: AppNavigator, padding: PaddingValues) {
                         teks = "Lanjutkan",
                         onClick = {
                             c.audio.play(Sfx.Klik)
-                            if (player?.mode_terakhir == "expert") {
-                                nav.go(Screen.Sandbox)
-                            } else if (posisi != null) {
-                                nav.go(if (posisi.tipe == "boss") Screen.Boss else Screen.Materi, posisi.id)
-                            } else {
-                                nav.go(Screen.PilihMode)
+                            when (tujuanLanjut.jenis) {
+                                JenisLanjut.Sandbox -> nav.go(Screen.Sandbox)
+                                JenisLanjut.Stage -> {
+                                    val id = tujuanLanjut.stageId
+                                    if (id == null) {
+                                        nav.go(Screen.PilihMode)
+                                    } else {
+                                        nav.go(
+                                            if (tujuanLanjut.boss) Screen.Boss else Screen.Materi,
+                                            id,
+                                        )
+                                    }
+                                }
+                                JenisLanjut.PilihMode -> nav.go(Screen.PilihMode)
                             }
                         },
                     )

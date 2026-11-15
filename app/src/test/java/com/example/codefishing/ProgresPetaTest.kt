@@ -38,4 +38,45 @@ class ProgresPetaTest {
         assertTrue(ProgresPeta.diAntartika(11))
         assertTrue(ProgresPeta.diAntartika(20))
     }
+
+    private data class Baris(val nomor: Int, val status: String, val terbuka: Boolean)
+
+    private fun stageAktif(daftar: List<Baris>): Baris? =
+        ProgresPeta.stageAktif(daftar, { it.status }, { it.terbuka })
+
+    @Test
+    fun stageAktifMemilihYangBelumSelesaiDanTerbuka() {
+        val daftar = listOf(
+            Baris(1, "selesai", true),
+            Baris(2, "selesai", true),
+            Baris(3, "terkunci", true),
+            Baris(4, "terkunci", false),
+        )
+        assertEquals(3, stageAktif(daftar)?.nomor)
+    }
+
+    @Test
+    fun stageAktifMelewatiStageYangMasihTerkunci() {
+        // Stage 2 belum selesai tetapi belum terbuka; yang dipilih harus stage 3 yang sudah terbuka.
+        val daftar = listOf(
+            Baris(1, "selesai", true),
+            Baris(2, "terkunci", false),
+            Baris(3, "terkunci", true),
+        )
+        assertEquals(3, stageAktif(daftar)?.nomor)
+    }
+
+    @Test
+    fun semuaSelesaiMemakaiStageTerakhir() {
+        val daftar = listOf(
+            Baris(1, "selesai", true),
+            Baris(2, "selesai", true),
+        )
+        assertEquals(2, stageAktif(daftar)?.nomor)
+    }
+
+    @Test
+    fun daftarKosongTidakPunyaStageAktif() {
+        assertNull(stageAktif(emptyList()))
+    }
 }

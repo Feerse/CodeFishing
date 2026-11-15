@@ -61,6 +61,8 @@ import com.example.codefishing.core.audio.Sfx
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
 import com.example.codefishing.frontend.components.Gambar
+import com.example.codefishing.pemula.MODE_BELAJAR
+import com.example.codefishing.pemula.MODE_EXPERT
 import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.launch
 
@@ -136,7 +138,7 @@ fun PilihModeScreen(nav: AppNavigator, padding: PaddingValues) {
                         onClick = {
                             c.audio.play(Sfx.Klik)
                             scope.launch {
-                                c.game.simpanPosisi(null, "belajar")
+                                c.game.masukMode(MODE_BELAJAR)
                                 nav.go(Screen.Peta)
                             }
                         },
@@ -164,7 +166,7 @@ fun PilihModeScreen(nav: AppNavigator, padding: PaddingValues) {
                         onClick = {
                             c.audio.play(Sfx.Klik)
                             scope.launch {
-                                c.game.simpanPosisi(null, "expert")
+                                c.game.masukMode(MODE_EXPERT)
                                 nav.go(Screen.Sandbox)
                             }
                         },

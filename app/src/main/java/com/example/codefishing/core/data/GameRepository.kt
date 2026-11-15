@@ -25,6 +25,8 @@ import com.example.codefishing.pemula.BaitRules
 import com.example.codefishing.pemula.BaitState
 import com.example.codefishing.pemula.FishRules
 import com.example.codefishing.pemula.LevelRules
+import com.example.codefishing.pemula.MODE_BELAJAR
+import com.example.codefishing.pemula.MODE_EXPERT
 import com.example.codefishing.pemula.PilihanKuis
 import com.example.codefishing.pemula.ProgresPeta
 import com.example.codefishing.pemula.SoalKuis
@@ -149,6 +151,26 @@ class GameRepository(
     suspend fun simpanPosisi(stageId: Int?, mode: String?) {
         playerDao.simpanPosisi(stageId, mode, System.currentTimeMillis())
     }
+
+    /**
+     * Masuk mode Belajar/Expert tanpa menghapus posisi terakhir.
+     *
+     * Sebelumnya Pilih Mode memanggil [simpanPosisi] dengan `stageId = null`, sehingga tombol
+     * "Lanjutkan" di Home kehilangan tujuan dan ikut membuka Pilih Mode — sama seperti
+     * "Mulai Main". Bila posisi memang belum ada, isi dengan stage yang sedang aktif.
+     */
+    suspend fun masukMode(mode: String) {
+        val posisi = player().stage_terakhir_id ?: stageAktifId()
+        playerDao.simpanPosisi(posisi, mode, System.currentTimeMillis())
+    }
+
+    /** Stage yang akan dilanjutkan: yang belum selesai dan terbuka, atau stage terakhir. */
+    private suspend fun stageAktifId(): Int? =
+        ProgresPeta.stageAktif(
+            stageDao.statusSemua(),
+            { it.status },
+            { it.terbuka == 1 },
+        )?.id
 
     suspend fun mulaiStage(stageId: Int) {
         val p = stageDao.progres(stageId)
@@ -376,7 +398,7 @@ class GameRepository(
         val nomorBerikut = if (lulus) ProgresPeta.nomorLanjut(stage.nomor, jumlahStage) else null
         val stageBerikut = nomorBerikut?.let { stageDao.berdasarkanNomor(it) }
         val stageLanjut = stageBerikut?.id
-        simpanPosisi(stageLanjut ?: stageId, "belajar")
+        simpanPosisi(stageLanjut ?: stageId, MODE_BELAJAR)
         // Penalti umpan baru berlaku sekali saat stage selesai, bukan per jawaban salah.
         val umpanBerkurang = salah >= 3
         if (umpanBerkurang) pakaiUmpan(now)
@@ -617,7 +639,8 @@ class GameRepository(
         }
         if (rows.isNotEmpty()) resultDao.simpanTangkapan(rows)
         if (xp > 0) tambahXp(xp)
-        simpanPosisi(null, "expert")
+        // Selesai Sandbox: kembali ke mode Expert tanpa menghapus posisi belajar terakhir.
+        masukMode(MODE_EXPERT)
         val hasil = resultDao.hasil(hasilId) ?: return null
         return HasilProgramData(hasil, data)
     }
@@ -712,7 +735,7 @@ class GameRepository(
                 tambahanXp += ikan.nilai_xp
                 ikanBaru++
             }
-            stages.lastOrNull()?.let { playerDao.simpanPosisi(it.id, "belajar", now) }
+            stages.lastOrNull()?.let { playerDao.simpanPosisi(it.id, MODE_BELAJAR, now) }
             baitDao.isiPenuh()
             tambahXp(tambahanXp)
         }

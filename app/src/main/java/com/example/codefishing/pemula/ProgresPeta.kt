@@ -21,4 +21,17 @@ object ProgresPeta {
      * [selesaiPasifik] adalah jumlah stage 1-10 yang berstatus selesai.
      */
     fun antartikaTerbuka(selesaiPasifik: Int): Boolean = selesaiPasifik >= STAGE_PASIFIK_TERAKHIR
+
+    /**
+     * Stage yang paling masuk akal dilanjutkan: yang belum selesai dan sudah terbuka, atau stage
+     * terakhir bila semuanya selesai. [daftar] harus berurutan menurut nomor stage.
+     *
+     * Dipakai Home (tombol "Lanjutkan") dan GameRepository (saat masuk mode) supaya keduanya
+     * memilih stage yang sama dan tidak ada aturan yang ditulis dua kali.
+     */
+    fun <T> stageAktif(
+        daftar: List<T>,
+        status: (T) -> String,
+        terbuka: (T) -> Boolean,
+    ): T? = daftar.firstOrNull { status(it) != "selesai" && terbuka(it) } ?: daftar.lastOrNull()
 }
