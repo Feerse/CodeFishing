@@ -6,7 +6,7 @@ Navigasi di kode: `core/nav/` (`Screen`, `AppNavigator`, `DrawerItem`, `BottomIt
 ## Aturan navigasi (hasil evaluasi dosen)
 
 1. **Pengenalan** (layar 14) muncul **sekali** saat pertama dibuka dan menyebut Python. Bisa dilihat lagi dari Pengaturan. Tanpa toolbar.
-2. **Toolbar seragam** di semua layar lain: ikon hamburger (kiri), judul, indikator umpan (kanan, hanya layar Mode Belajar). **Tidak ada tombol Kembali** di toolbar. Back sistem Android tetap berfungsi lewat `AppNavigator.back()`.
+2. **Toolbar seragam** di semua layar lain: ikon hamburger (kiri), judul, indikator umpan (kanan, hanya layar Mode Belajar). **Tidak ada tombol Kembali** di toolbar. Back sistem Android tetap berfungsi lewat `AppNavigator.back()`. Di layar akar (Home), Back membuka dialog konfirmasi "Keluar dari CodeFishing?" sebelum aplikasi ditutup; dari tab lain (Expert, Koleksi, Akuarium, Pengaturan, ...) Back kembali ke Home lebih dulu.
 3. **Drawer** punya lima tujuan: Home, Mode Belajar (Peta), Mode Expert (Sandbox), Akuarium, Pengaturan. Memilih tujuan mengosongkan tumpukan (`resetTo`).
 4. **Bottom navigation** punya empat tab: Home, Peta, Expert, Koleksi. Koleksi hanya ada di bottom navigation, tidak diulang di drawer.
 5. Bottom navigation ditampilkan pada layar utama (Home, Pilih Mode, Peta, Materi, Hasil Stage, Sandbox, Hasil Program, Koleksi, Akuarium, Pengaturan) dan disembunyikan saat kuis/boss/umpan habis agar fokus.

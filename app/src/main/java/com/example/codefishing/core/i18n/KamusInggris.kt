@@ -222,6 +222,10 @@ internal object KamusInggris {
         "Kembalikan nama asli" to "Restore original name",
         "Simpan" to "Save",
         "Batal" to "Cancel",
+        "Keluar" to "Quit",
+        "Keluar dari CodeFishing?" to "Leave CodeFishing?",
+        "Kamu yakin ingin meninggalkan permainan? Progres dan kode yang sudah tersimpan tetap aman." to
+            "Are you sure you want to leave the game? Your saved progress and code are kept.",
         "Keluarkan ikan?" to "Remove fish?",
         "{} akan dikeluarkan dari akuarium. Ikan tetap tersimpan di Koleksi." to
             "{} will be removed from the aquarium. The fish stays in your Collection.",

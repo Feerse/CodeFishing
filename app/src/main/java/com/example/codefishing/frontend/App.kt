@@ -1,6 +1,7 @@
 package com.example.codefishing.frontend
 
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.core.LinearEasing
@@ -12,12 +13,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -94,8 +99,40 @@ fun App() {
     val nav = remember {
         AppNavigator(if (c.progress.onboardingSeen) Screen.Home else Screen.Pengenalan)
     }
+    val aktivitas = LocalActivity.current
+    var konfirmasiKeluar by remember { mutableStateOf(false) }
 
-    BackHandler(enabled = nav.canGoBack) { nav.back() }
+    // Back di layar akar berarti keluar dari aplikasi, jadi minta konfirmasi dulu.
+    // Tanpa ini satu ketukan Back langsung menutup permainan di tengah sesi.
+    // Tab lain (Expert, Koleksi, Pengaturan, ...) kembali ke Home lebih dulu supaya
+    // dialog keluar hanya muncul saat pemain benar-benar ingin berhenti.
+    BackHandler {
+        val layar = nav.current.screen
+        when {
+            nav.canGoBack -> nav.back()
+            layar != Screen.Home && layar != Screen.Pengenalan -> nav.resetTo(Screen.Home)
+            else -> konfirmasiKeluar = true
+        }
+    }
+
+    if (konfirmasiKeluar) {
+        AlertDialog(
+            onDismissRequest = { konfirmasiKeluar = false },
+            title = { Text(t("Keluar dari CodeFishing?")) },
+            text = {
+                Text(t("Kamu yakin ingin meninggalkan permainan? Progres dan kode yang sudah tersimpan tetap aman."))
+            },
+            confirmButton = {
+                TextButton({
+                    konfirmasiKeluar = false
+                    aktivitas?.finish()
+                }) { Text(t("Keluar")) }
+            },
+            dismissButton = {
+                TextButton({ konfirmasiKeluar = false }) { Text(t("Batal")) }
+            },
+        )
+    }
 
     val saatIni = nav.current
     val gelap = LocalWarna.current.gelap
