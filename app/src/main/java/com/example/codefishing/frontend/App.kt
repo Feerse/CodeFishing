@@ -54,6 +54,15 @@ private val layarUmpan = setOf(
     Screen.Peta, Screen.Materi, Screen.Kuis, Screen.HasilStage, Screen.UmpanHabis, Screen.Boss,
 )
 
+/**
+ * Layar yang sedang menyimpan sesi berjalan dan tidak boleh dibuang dari tumpukan.
+ *
+ * Kuis: pemain kadang perlu membuka Pengaturan di tengah kuis (mis. mematikan musik). Dengan
+ * menu ditaruh DI ATAS kuis, tombol Back mengembalikan pemain ke soal yang sama alih-alih
+ * menutup aplikasi.
+ */
+private val layarSesi = setOf(Screen.Kuis)
+
 /** Layar yang menampilkan bottom navigation 4 tab. */
 private val layarBottom = setOf(
     Screen.Home, Screen.PilihMode, Screen.Peta, Screen.Materi, Screen.HasilStage,
@@ -110,7 +119,12 @@ fun App() {
     AppScaffold(
         judul = t(saatIni.screen.judul),
         aktif = aktifDrawer(saatIni.screen),
-        onDrawerItem = { nav.resetTo(it.target) },
+        onDrawerItem = { item ->
+            // Dari kuis, menu ditumpuk di atas kuis (kecuali Peta, awal Mode Belajar) supaya
+            // kembali ke soal tidak perlu mengulang dari awal.
+            if (saatIni.screen in layarSesi && item.target != Screen.Peta) nav.go(item.target)
+            else nav.resetTo(item.target)
+        },
         kanan = { if (saatIni.screen in layarUmpan) IndikatorUmpan(umpan?.sisa ?: 0) },
         bottomBar = {
             if (saatIni.screen in layarBottom) {

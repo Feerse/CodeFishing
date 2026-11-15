@@ -517,5 +517,6 @@ internal object KamusInggris {
         "Semua" to "All",
         "SOAL" to "QUESTION",
         "KODE · PYTHON" to "CODE · PYTHON",
+        "Lanjutkan Kuis · soal {} dari {}" to "Continue quiz · question {} of {}",
     )
 }

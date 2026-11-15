@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -85,6 +86,13 @@ fun MateriScreen(nav: AppNavigator, padding: PaddingValues) {
     val konteks = LocalContext.current
     LaunchedEffect(d.stage.id) {
         CacheGambar.hangatkan(konteks, listOf(adeganStage(d.stage.nomor, d.stage.tipe == "boss")))
+    }
+
+    // Sesi kuis yang belum selesai untuk stage ini, bila pemain sempat keluar di tengah kuis.
+    val sesiBerjalan = remember(d.stage.id) {
+        c.progress.sesiKuis?.takeIf {
+            it.stageId == d.stage.id && it.indeks in 0 until it.soalIds.size
+        }
     }
 
     Box(
@@ -162,7 +170,14 @@ fun MateriScreen(nav: AppNavigator, padding: PaddingValues) {
             }
 
             TombolUtama(
-                teks = if (d.stage.tipe == "boss") t("Mulai Ujian Boss") else t("Mulai Kuis"),
+                teks = when {
+                    // Sesi belum selesai: sebut "Lanjutkan" supaya pemain tahu soal yang sudah
+                    // dikerjakan tidak diulang setelah keluar sebentar (mis. mematikan musik).
+                    sesiBerjalan != null ->
+                        t("Lanjutkan Kuis · soal {} dari {}", sesiBerjalan.indeks + 1, sesiBerjalan.soalIds.size)
+                    d.stage.tipe == "boss" -> t("Mulai Ujian Boss")
+                    else -> t("Mulai Kuis")
+                },
                 onClick = {
                     c.audio.play(Sfx.KlikUtama)
                     nav.go(if (d.stage.tipe == "boss") Screen.Boss else Screen.Kuis, d.stage.id)
