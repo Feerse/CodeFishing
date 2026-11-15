@@ -53,6 +53,27 @@ function rock(x, y, k = 1) {
   </g>`;
 }
 
+// Siluet alien Segitiga Bermuda: humanoid kurus, kepala memanjang, lengan panjang.
+// (x, y) adalah titik kaki. k = skala (1 -> tinggi ~260 px di ruang peta 1000 x 2800).
+function alien(x, y, k = 1) {
+  return `<g transform="translate(${x} ${y}) scale(${k})">
+    <ellipse cx="0" cy="2" rx="60" ry="13" fill="#020C06" opacity=".6"/>
+    <path d="M-13 0L-9 -86L-2 -86L-4 0Z" fill="#04150C"/>
+    <path d="M13 0L9 -86L2 -86L4 0Z" fill="#04150C"/>
+    <path d="M-16 -84L16 -84L12 -120L-12 -120Z" fill="#04150C"/>
+    <path d="M-12 -118L12 -118L22 -176L-22 -176Z" fill="#04150C"/>
+    <ellipse cx="0" cy="-176" rx="30" ry="14" fill="#04150C"/>
+    <path d="M-26 -178Q-42 -140 -34 -102" stroke="#04150C" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <path d="M26 -178Q42 -140 34 -102" stroke="#04150C" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <path d="M-7 -176L7 -176L5 -204L-5 -204Z" fill="#04150C"/>
+    <ellipse cx="2" cy="-226" rx="26" ry="35" fill="#04150C" transform="rotate(-12 2 -226)"/>
+    <ellipse cx="-7" cy="-234" rx="7" ry="10" fill="#B4FFD8" transform="rotate(-12 -7 -234)"/>
+    <ellipse cx="11" cy="-239" rx="7" ry="10" fill="#B4FFD8" transform="rotate(-12 11 -239)"/>
+    <path d="M-12 -118L12 -118L22 -176L-22 -176Z" fill="none" stroke="#2E7A55" stroke-opacity=".55" stroke-width="2"/>
+    <ellipse cx="2" cy="-226" rx="26" ry="35" fill="none" stroke="#2E7A55" stroke-opacity=".45" stroke-width="2" transform="rotate(-12 2 -226)"/>
+  </g>`;
+}
+
 function fishShadow(x, y, r, k = 1) {
   return `<g transform="translate(${x} ${y}) rotate(${r}) scale(${k})" opacity=".32">
     <ellipse rx="24" ry="8" fill="#030E14"/>
@@ -206,6 +227,21 @@ addA(`<defs>
     <stop offset=".55" stop-color="#000000" stop-opacity="0"/>
     <stop offset="1" stop-color="#000000" stop-opacity=".46"/>
   </radialGradient>
+  <linearGradient id="lautBermuda" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0B3A22"/>
+    <stop offset=".42" stop-color="#12592F"/>
+    <stop offset="1" stop-color="#05170D"/>
+  </linearGradient>
+  <radialGradient id="pendarBermuda">
+    <stop offset="0" stop-color="#5CFFA8" stop-opacity=".30"/>
+    <stop offset=".55" stop-color="#2FA96A" stop-opacity=".13"/>
+    <stop offset="1" stop-color="#2FA96A" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="koreksiBermuda" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#176B42" stop-opacity=".30"/>
+    <stop offset=".55" stop-color="#176B42" stop-opacity=".36"/>
+    <stop offset="1" stop-color="#176B42" stop-opacity=".45"/>
+  </linearGradient>
 </defs>`);
 
 addA(`<rect width="${W}" height="${H}" fill="url(#lautEs)"/>`);
@@ -232,10 +268,11 @@ for (let y = 380; y < H; y += 220) addA(wave(y, 0.045, (Math.round(y / 220) % 2)
   [160, 1520, 12, .75], [880, 1720, 8, .7], [300, 1980, -6, .7], [760, 2140, 10, .65],
 ].forEach((f) => addA(fishShadow(...f)));
 
-// Gunung es besar dan bongkahan es di sisi rute.
+// Gunung es besar dan bongkahan es di sisi rute. Bongkahan di y=2260 dihapus karena
+// tertutup tepi lapisan es yang menjadi batas perairan Bermuda.
 [
   [90, 560, 1.15], [910, 780, 1.0], [80, 1180, .9], [930, 1420, 1.1],
-  [120, 1760, .85], [880, 1980, .95], [200, 2260, 1.0],
+  [120, 1760, .85], [880, 1980, .95],
 ].forEach((p) => addA(iceberg(...p)));
 
 [
@@ -264,30 +301,77 @@ stageTitikAntartika.forEach(([x, y]) => {
   addA(`<circle cx="${x}" cy="${y}" r="120" fill="url(#glowEs)"/>`);
 });
 
-// Lapangan es di ujung selatan.
-addA(`<line x1="0" y1="2260" x2="1000" y2="2260" stroke="#BFE6F2" stroke-opacity=".45" stroke-width="3" stroke-dasharray="5 18" stroke-linecap="round"/>`);
-addA(`<path d="M0 2360Q140 2300 300 2344T600 2322T860 2368T1000 2330V2800H0Z" fill="url(#esAtas)"/>`);
-addA(`<path d="M0 2490Q200 2428 380 2470T720 2452T1000 2498V2800H0Z" fill="#DCEEF5"/>`);
-addA(`<path d="M0 2620Q180 2570 360 2602T740 2592T1000 2632V2800H0Z" fill="#BFE6F2"/>`);
-for (let i = 0; i < 9; i++) {
-  const x = 40 + i * 118;
-  addA(`<path d="M${x} 2800L${x + 24 + (i % 3) * 14} ${2510 + (i % 4) * 24}" stroke="#8DB7CA" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>`);
+// ---------------------------------------------- Perairan Segitiga Bermuda
+// Ujung selatan peta Antartika bukan lagi lapangan es: di sini perairan Bermuda dimulai,
+// ditandai air hijau zamrud, kabut, segitiga bercahaya, dan siluet alien. Node
+// gerbangBermuda (700, 2390) berdiri di dalam segitiga ini.
+const bmAtas = 2280;
+const bmA = [690, 2256];
+const bmKiri = [110, 2786];
+const bmKanan = [1000, 2786];
+
+// Tepi lapisan es terakhir: batas tegas antara es Antartika dan air Bermuda.
+addA(`<path d="M0 ${bmAtas - 96} H1000 V${bmAtas - 34} Q860 ${bmAtas + 4} 700 ${bmAtas - 18} T360 ${bmAtas + 6} T0 ${bmAtas - 22} Z" fill="url(#esAtas)"/>`);
+addA(`<path d="M0 ${bmAtas - 22} Q180 ${bmAtas + 14} 360 ${bmAtas + 6} T700 ${bmAtas - 18} T1000 ${bmAtas - 34} V${bmAtas - 6} Q860 ${bmAtas + 20} 700 ${bmAtas + 2} T360 ${bmAtas + 24} T0 ${bmAtas - 4} Z" fill="#BFE6F2" opacity=".6"/>`);
+
+// Air hijau zamrud menutupi sisa peta ke bawah.
+addA(`<path d="M0 ${bmAtas} Q170 ${bmAtas + 18} 350 ${bmAtas + 8} T700 ${bmAtas - 16} T1000 ${bmAtas + 6} V2800 H0 Z" fill="url(#lautBermuda)"/>`);
+
+// Garis batas perairan.
+addA(`<line x1="0" y1="${bmAtas + 30}" x2="1000" y2="${bmAtas + 30}" stroke="#7CE89A" stroke-opacity=".38" stroke-width="3" stroke-dasharray="5 18" stroke-linecap="round"/>`);
+
+// Ombak hijau.
+for (let i = 0; i < 5; i++) {
+  const y = bmAtas + 76 + i * 94;
+  addA(`<path d="M-80 ${y} Q120 ${y - 14} 340 ${y} T700 ${y + 4} T1080 ${y - 6}" fill="none" stroke="#7CE89A" stroke-opacity="${(0.17 - i * 0.022).toFixed(3)}" stroke-width="2.4" stroke-linecap="round"/>`);
 }
+
+// Pendar hijau di belakang segitiga dan alien.
+addA(`<ellipse cx="690" cy="2560" rx="330" ry="230" fill="url(#pendarBermuda)"/>`);
+addA(`<ellipse cx="430" cy="2600" rx="200" ry="170" fill="url(#pendarBermuda)"/>`);
+
+// Segitiga bercahaya: halo lebar lalu garis tegas.
+addA(`<path d="M${bmA} L${bmKiri} L${bmKanan} Z" fill="#2FA96A" fill-opacity=".07" stroke="#5CFFA8" stroke-opacity=".16" stroke-width="18" stroke-linejoin="round"/>`);
+addA(`<path d="M${bmA} L${bmKiri} L${bmKanan} Z" fill="none" stroke="#5CFFA8" stroke-opacity=".82" stroke-width="4" stroke-linejoin="round"/>`);
+[bmA, bmKiri, bmKanan].forEach(([x, y]) => {
+  addA(`<circle cx="${x}" cy="${y}" r="13" fill="#5CFFA8" opacity=".9"/>`);
+  addA(`<circle cx="${x}" cy="${y}" r="5" fill="#E8FFF2"/>`);
+});
+
+// Kabut hijau di tepi bawah peta. Digambar sebelum alien agar siluetnya tetap tegas
+// (kalau kabut di atas alien, tubuhnya tertutup lapisan hijau muda dan hanya kepala terlihat).
+[
+  [180, 2600, 320, 90, 0.16], [520, 2660, 360, 96, 0.18], [860, 2620, 300, 84, 0.15],
+  [330, 2740, 420, 90, 0.2], [780, 2760, 400, 86, 0.18],
+].forEach(([x, y, rx, ry, o]) => {
+  addA(`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="#A8F0B8" opacity="${o}"/>`);
+});
+
+// Siluet alien dipindah ke akhir berkas (setelah vinyet) agar tetap tegas.
 
 addA(`<rect width="${W}" height="${H}" fill="url(#vignetteEs)"/>`);
 addA(`<rect x="14" y="14" width="${W - 28}" height="${H - 28}" rx="22" fill="none" stroke="#8FB2B8" stroke-opacity=".14" stroke-width="2"/>`);
+
+// Vinyet peta berwarna biru (#2F7EA0 di tema terang) sehingga air Bermuda di tepi terbaca
+// teal. Lapisan hijau tipis di atas vinyet mengembalikan hue hijau tanpa mengubah kerangka peta.
+addA(`<path d="M0 ${bmAtas} Q170 ${bmAtas + 18} 350 ${bmAtas + 8} T700 ${bmAtas - 16} T1000 ${bmAtas + 6} V2800 H0 Z" fill="url(#koreksiBermuda)"/>`);
+
+// Siluet alien berdiri di permukaan air, di dalam segitiga.
+addA(alien(430, 2700, 0.78));
+addA(alien(900, 2686, 0.52));
+// Kabut tipis di kaki alien saja, supaya terlihat berdiri di air.
+addA(`<ellipse cx="430" cy="2706" rx="150" ry="26" fill="#A8F0B8" opacity=".2"/>`);
+addA(`<ellipse cx="900" cy="2692" rx="100" ry="18" fill="#A8F0B8" opacity=".16"/>`);
 addA('</svg>');
 
 function tulis(nama, svg) {
-  const tujuan = [
-    path.join(ROOT, '2_Aset_dan_Konten', 'assets-source', '01_Peta_Perairan', nama),
-    path.join(ROOT, 'app', 'src', 'main', 'assets', 'peta', nama),
-  ];
-  for (const file of tujuan) {
-    fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, svg);
-    console.log(`Tulis ${path.relative(ROOT, file)} (${svg.length} byte)`);
-  }
+  // Hanya ke assets-source. APK hanya memuat hasil render `peta_*.webp`
+  // (lihat optimalkan_aset.py); SVG di dalam APK dianggap pemborosan
+  // dan dijaga oleh AsetPerformaTest.
+  const tujuan = path.join(ROOT, '2_Aset_dan_Konten', 'assets-source', '01_Peta_Perairan', nama);
+  fs.mkdirSync(path.dirname(tujuan), { recursive: true });
+  fs.writeFileSync(tujuan, svg);
+  console.log(`Tulis ${path.relative(ROOT, tujuan)} (${svg.length} byte)`);
 }
 
 tulis('peta_perairan.svg', peta.join('\n') + '\n');

@@ -149,6 +149,22 @@ PETA_MAP = {
     "#FFD166": "#D99A00",
     "#EAF7FB": "#FFFFFF",
     "#A9CDDB": "#8EC0D3",
+    # Perairan Segitiga Bermuda di ujung selatan peta Antartika: air hijau zamrud,
+    # segitiga bercahaya, dan siluet alien. Dipetakan agar tetap hijau (bukan biru)
+    # saat tema terang, dengan kontras siluet yang cukup di atas air terang.
+    "#0B3A22": "#C4EED3",
+    "#12592F": "#A9E6C2",
+    "#05170D": "#90D7AE",
+    "#5CFFA8": "#0C7A47",
+    "#2FA96A": "#158C55",
+    "#7CE89A": "#1B8E58",
+    "#A8F0B8": "#E6FAEE",
+    "#E8FFF2": "#075C37",
+    "#04150C": "#0E4A2C",
+    "#020C06": "#0E4A2C",
+    "#2E7A55": "#0B5A36",
+    "#B4FFD8": "#0A6B43",
+    "#176B42": "#62E0A0",
 }
 
 THRESHOLD = 46
