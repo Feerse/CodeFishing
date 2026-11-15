@@ -276,14 +276,13 @@ fun PetaScreen(nav: AppNavigator, padding: PaddingValues) {
                 }
             }
 
-            // Kompas: geser peta ke node stage yang terakhir dikerjakan.
+            // Kompas: geser peta ke kapal, yaitu node yang sedang dipakai pemain. Dulu sasarannya
+            // `kuisTerakhirStage` dari SharedPreferences, sehingga kompas bisa meleset ke stage lain
+            // (bahkan ke stage awal peta ini) padahal kapal ada di node lain; sekarang sasarannya
+            // persis titik kapal yang tampil, jadi mengetuk kompas selalu membawa kapal ke layar.
             LaunchedEffect(mintaGeser) {
                 if (mintaGeser == 0) return@LaunchedEffect
-                val global = stages.firstOrNull { it.id == c.progress.kuisTerakhirStage }?.nomor
-                    ?: stageAktifGlobal?.nomor
-                    ?: return@LaunchedEffect
-                val nomor = if (diPeta(global)) global else stageAktif?.nomor ?: return@LaunchedEffect
-                titikLokal(nomorLokal(nomor))?.let { geserKe(it) }
+                geserKe(titikKapal)
             }
 
             Column(
