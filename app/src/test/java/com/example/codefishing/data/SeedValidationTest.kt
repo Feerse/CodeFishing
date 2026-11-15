@@ -2,6 +2,8 @@ package com.example.codefishing.data
 
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.pemula.TangkapanSampingan
+import com.example.codefishing.pemula.WilayahIkan
+import com.example.codefishing.pemula.WilayahIkanAturan
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
@@ -97,6 +99,40 @@ class SeedValidationTest {
         val belumBergambar = ikan.filter { Art.byName(it.getString("gambar")) == null }
             .map { it.getString("nama") }
         assertEquals(emptyList<String>(), belumBergambar)
+    }
+
+    @Test
+    fun setiapIkanMasukTepatSatuWilayah() {
+        val stage = baca("stage.json").objects()
+        val nomorStage = stage.associate { it.getInt("id") to it.getInt("nomor") }
+        val ikan = baca("ikan.json").objects()
+        val perWilayah = ikan.groupingBy {
+            WilayahIkanAturan.dari(
+                nomorStage[it.optInt("asal_stage_id", 0).takeIf { id -> !it.isNull("asal_stage_id") }],
+                it.getString("tier"),
+                it.optString("syarat_unlock", ""),
+            )
+        }.eachCount()
+
+        // 31 Pasifik (10 stage + 21 sampingan Biasa/Langka), 22 Antartika (10 stage + 12 laut
+        // dalam), 5 hadiah khusus. Jumlahnya harus tetap 58.
+        assertEquals(31, perWilayah[WilayahIkan.PASIFIK])
+        assertEquals(22, perWilayah[WilayahIkan.ANTARTIKA])
+        assertEquals(5, perWilayah[WilayahIkan.KHUSUS])
+        assertEquals(ikan.size, perWilayah.values.sum())
+    }
+
+    @Test
+    fun tangkapanLautDalamTidakMunculDiPasifik() {
+        // Hanya untuk ikan tanpa stage: ikan hadiah stage tetap boleh bertier tinggi di Pasifik
+        // (mis. hadiah boss stage 10), sedangkan tangkapan sampingan Epik ke atas khusus Antartika.
+        baca("ikan.json").objects().forEach { i ->
+            if (!i.isNull("asal_stage_id")) return@forEach
+            val tier = i.getString("tier")
+            if (tier !in setOf("epik", "legenda", "mitos")) return@forEach
+            val wilayah = WilayahIkanAturan.dari(null, tier, i.optString("syarat_unlock", ""))
+            assertTrue("${i.getString("nama")} ($tier) tidak boleh di Pasifik", wilayah != WilayahIkan.PASIFIK)
+        }
     }
 
     @Test

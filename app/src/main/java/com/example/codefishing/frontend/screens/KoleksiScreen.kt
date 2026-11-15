@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.grid.items
@@ -24,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -68,6 +71,8 @@ import com.example.codefishing.frontend.components.lencanaTier
 import com.example.codefishing.frontend.components.tierLabel
 import com.example.codefishing.core.art.Art
 import com.example.codefishing.frontend.components.tierWarna
+import com.example.codefishing.pemula.WilayahIkan
+import com.example.codefishing.pemula.WilayahIkanAturan
 import com.example.codefishing.ui.theme.LocalWarna
 import kotlinx.coroutines.launch
 
@@ -85,6 +90,7 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
     val c = LocalContainer.current
     val warna = LocalWarna.current
     var filter by remember { mutableStateOf<String?>(null) }
+    var wilayah by remember { mutableStateOf<WilayahIkan?>(null) }
     val list by c.game.observeKoleksi(filter).collectAsState(emptyList())
     val statistik by c.game.observeStatistik().collectAsState(null)
     val jumlahAkuarium by c.game.observeJumlahAkuarium().collectAsState(emptyMap())
@@ -92,6 +98,20 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
     var dipilih by remember { mutableStateOf<KoleksiLengkapView?>(null) }
     val dimiliki = statistik?.ikan_terkumpul ?: list.count { it.dimiliki == 1 }
     val totalIkan by produceState<Int?>(null) { value = c.game.jumlahIkan() }
+
+    // Peta asal tiap ikan. Nomor stage diambil dari katalog stage (bukan dari asal_stage_id yang
+    // berupa id), lalu wilayahnya ditentukan WilayahIkanAturan.
+    val stages by c.game.observeStageList().collectAsState(emptyList())
+    val katalog by produceState<List<IkanEntity>>(emptyList()) { value = c.game.semuaIkan() }
+    val wilayahIkan = remember(katalog, stages) {
+        val nomor = stages.associate { it.id to it.nomor }
+        katalog.associate { ikan ->
+            ikan.id to WilayahIkanAturan.dari(nomor[ikan.asal_stage_id], ikan.tier, ikan.syarat_unlock)
+        }
+    }
+    val tampil = remember(list, wilayah, wilayahIkan) {
+        if (wilayah == null) list else list.filter { wilayahIkan[it.ikan_id] == wilayah }
+    }
 
     Box(
         Modifier
@@ -119,9 +139,25 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxWidth()) {
                     filterTier.drop(3).forEach { (value, label) -> FilterChip(value, label, filter) { filter = it } }
                 }
+                // Empat chip peta berbagi lebar baris, tanpa gulir mendatar: chip yang tergulir
+                // membuat ketukan di tepinya meleset. Angka progres pindah ke judul bagian supaya
+                // label chip cukup satu kata.
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    ChipSaring(wilayah == null, t("Semua"), Modifier.weight(1f)) { wilayah = null }
+                    WilayahIkan.entries.forEach { w ->
+                        ChipSaring(
+                            aktif = wilayah == w,
+                            teks = t(w.labelSingkat),
+                            modifier = Modifier.weight(1f),
+                        ) { wilayah = if (wilayah == w) null else w }
+                    }
+                }
             }
 
-            if (list.isEmpty()) {
+            if (tampil.isEmpty()) {
                 Kosong(
                     t("Belum ada ikan"),
                     t("Selesaikan stage atau jalankan misi Sandbox untuk mengisi koleksi."),
@@ -130,7 +166,18 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
                 // Efek kelangkaan dibekukan selama grid digulir: menggambar ulang puluhan kanvas
                 // beranimasi saat scroll adalah penyebab utama patah-patah di daftar panjang.
                 val gridState = rememberLazyGridState()
+                // Isi grid berganti setiap kali saringan peta/tier berubah. Tanpa gulir ke atas,
+                // grid tetap di posisi lama, jadi bagian yang terlihat bukan bagian pertama peta
+                // yang baru dipilih (mis. memilih "Semua" dari Khusus tetap menampilkan Khusus).
+                LaunchedEffect(wilayah, filter) { gridState.scrollToItem(0) }
                 val animasiKartu = !gridState.isScrollInProgress
+                // Saat tidak ada filter peta, grid dibagi menjadi tiga bagian berjudul. Saat filter
+                // peta aktif, judulnya hanya satu supaya daftar tidak terasa berulang.
+                val kelompok = if (wilayah != null) {
+                    listOf(wilayah!! to tampil)
+                } else {
+                    WilayahIkan.entries.map { w -> w to tampil.filter { wilayahIkan[it.ikan_id] == w } }
+                }
                 LazyVerticalGrid(
                     state = gridState,
                     columns = GridCells.Fixed(2),
@@ -139,10 +186,16 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.weight(1f),
                 ) {
-                    items(list, key = { it.ikan_id }) { ikan ->
-                        KartuIkan(ikan, jumlahAkuarium[ikan.ikan_id] ?: 0, animasiKartu) {
-                            c.audio.play(Sfx.Klik)
-                            dipilih = ikan
+                    kelompok.forEach { (w, anggota) ->
+                        if (anggota.isEmpty()) return@forEach
+                        item(key = "kepala_${w.name}", span = { GridItemSpan(maxLineSpan) }) {
+                            KepalaWilayah(w, anggota.count { it.dimiliki == 1 }, anggota.size)
+                        }
+                        items(anggota, key = { it.ikan_id }) { ikan ->
+                            KartuIkan(ikan, jumlahAkuarium[ikan.ikan_id] ?: 0, animasiKartu) {
+                                c.audio.play(Sfx.Klik)
+                                dipilih = ikan
+                            }
                         }
                     }
                 }
@@ -154,6 +207,7 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
         Dialog(onDismissRequest = { dipilih = null }) {
             DetailIkan(
                 ikan = k,
+                wilayah = wilayahIkan[k.ikan_id],
                 jumlahDiAkuarium = jumlahAkuarium[k.ikan_id] ?: 0,
                 totalDiAkuarium = totalAkuarium,
                 onTutup = { dipilih = null },
@@ -167,21 +221,84 @@ fun KoleksiScreen(nav: AppNavigator, padding: PaddingValues) {
     }
 }
 
+/**
+ * Judul bagian grid koleksi: satu baris tipis beraksen, nama wilayah, dan progres wilayah itu.
+ * Bentuknya sengaja bukan kartu supaya tidak bersaing dengan kartu ikan di bawahnya.
+ */
+@Composable
+private fun KepalaWilayah(wilayah: WilayahIkan, dimiliki: Int, total: Int) {
+    val palet = LocalWarna.current
+    val aksen = warnaWilayah(wilayah)
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(top = 6.dp, bottom = 2.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Box(
+            Modifier
+                .size(width = 4.dp, height = 18.dp)
+                .background(aksen, RoundedCornerShape(50)),
+        )
+        Text(
+            t(wilayah.label),
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Bold,
+            color = aksen,
+            modifier = Modifier.weight(1f),
+        )
+        Text(
+            t("{}/{} jenis", dimiliki, total),
+            style = MaterialTheme.typography.labelSmall,
+            color = palet.petaTeksRedup,
+        )
+    }
+}
+
+@Composable
+private fun warnaWilayah(wilayah: WilayahIkan): Color {
+    val palet = LocalWarna.current
+    return when (wilayah) {
+        WilayahIkan.PASIFIK -> palet.suksesTeks
+        WilayahIkan.ANTARTIKA -> palet.rarityLangka
+        WilayahIkan.KHUSUS -> palet.rarityLegenda
+    }
+}
+
 @Composable
 private fun FilterChip(value: String?, label: String, aktif: String?, onClick: (String?) -> Unit) {
-    val on = aktif == value
+    ChipSaring(aktif == value, t(label)) { onClick(value) }
+}
+
+/**
+ * Chip saring bersama untuk filter tier dan filter peta.
+ *
+ * [modifier] dipakai chip peta untuk berbagi lebar baris (`weight`), sehingga teks dipusatkan dan
+ * dipotong satu baris alih-alih melebarkan chip.
+ */
+@Composable
+private fun ChipSaring(
+    aktif: Boolean,
+    teks: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
     val warna = LocalWarna.current
     Text(
-        t(label),
+        teks,
         style = MaterialTheme.typography.labelMedium,
-        color = if (on) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier
+        color = if (aktif) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.Center,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier
             .background(
-                if (on) MaterialTheme.colorScheme.primary else warna.kartuLembut,
+                if (aktif) MaterialTheme.colorScheme.primary else warna.kartuLembut,
                 RoundedCornerShape(50),
             )
-            .clickable { onClick(value) }
-            .padding(horizontal = 12.dp, vertical = 7.dp),
+            .clickable { onClick() }
+            .padding(horizontal = 8.dp, vertical = 7.dp),
     )
 }
 
@@ -249,6 +366,7 @@ private fun KartuIkan(ikan: KoleksiLengkapView, jumlahAkuarium: Int, animasi: Bo
 @Composable
 private fun DetailIkan(
     ikan: KoleksiLengkapView,
+    wilayah: WilayahIkan?,
     jumlahDiAkuarium: Int,
     totalDiAkuarium: Int,
     onTutup: () -> Unit,
@@ -282,6 +400,20 @@ private fun DetailIkan(
         }
         Text(if (dimiliki) ikan.nama else t("Belum ditemukan"), style = MaterialTheme.typography.headlineSmall)
         detail?.nama_ilmiah?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+        if (wilayah != null) {
+            // Peta asal: satu-satunya petunjuk di layar ini tentang di mana ikan itu dicari.
+            val aksen = warnaWilayah(wilayah)
+            Text(
+                t("Didapat di {}", t(wilayah.label)),
+                Modifier
+                    .background(aksen.copy(alpha = 0.14f), RoundedCornerShape(50))
+                    .border(1.dp, aksen.copy(alpha = 0.45f), RoundedCornerShape(50))
+                    .padding(horizontal = 10.dp, vertical = 4.dp),
+                style = MaterialTheme.typography.labelSmall,
+                color = aksen,
+                fontWeight = FontWeight.Bold,
+            )
+        }
         if (dimiliki) {
             Gambar(lencanaTier(ikan.tier), t(tierLabel(ikan.tier)), Modifier.size(56.dp))
             ChipTier(ikan.tier)

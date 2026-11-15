@@ -174,6 +174,11 @@ internal object KamusInggris {
         "Koleksi Ikan" to "Fish Collection",
         "{} dari {} jenis ikan sudah dikoleksi · akuarium {}/{} ekor" to
             "{} of {} fish species collected · aquarium {}/{} fish",
+        "Hadiah khusus" to "Special rewards",
+        "Pasifik" to "Pacific",
+        "Khusus" to "Special",
+        "{}/{} jenis" to "{}/{} species",
+        "Didapat di {}" to "Found in {}",
         "Belum ada ikan" to "No fish yet",
         "Selesaikan stage atau jalankan misi Sandbox untuk mengisi koleksi." to
             "Finish a stage or run a Sandbox mission to fill your collection.",
