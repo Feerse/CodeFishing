@@ -20,9 +20,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,6 +35,7 @@ import com.example.codefishing.core.data.HasilProgramData
 import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
+import com.example.codefishing.expert.SandboxContent
 import com.example.codefishing.expert.SandboxDraft
 import com.example.codefishing.frontend.components.gambarIkanKecil
 import com.example.codefishing.frontend.components.GambarKontras
@@ -53,6 +56,8 @@ import com.example.codefishing.ui.theme.LocalWarna
 fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
     val c = LocalContainer.current
     val warna = LocalWarna.current
+    val context = LocalContext.current
+    val jumlahMisi = remember(context) { SandboxContent.misi(context).size }
     val id = nav.current.hasil
     val data by produceState<HasilProgramData?>(null, id) {
         value = if (id > 0) c.game.hasilProgram(id) else null
@@ -147,7 +152,7 @@ fun HasilProgramScreen(nav: AppNavigator, padding: PaddingValues) {
                     nav.replace(Screen.Sandbox, misi = nav.current.misi)
                 },
             )
-            if (nav.current.misi in 1..6) {
+            if (nav.current.misi in 1..(jumlahMisi - 1)) {
                 TombolSekunder(
                     teks = t("Misi Berikutnya"),
                     onClick = {

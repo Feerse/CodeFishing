@@ -20,7 +20,7 @@ Lima peran. Nama pemegang adalah usulan dari percakapan tim, ubah bila berbeda.
 ## Status implementasi
 
 - **Frontend**: seluruh 14 layar sudah memakai UI asli; `LayarSementara` tidak dipakai lagi. Drawer 5 tujuan dan bottom nav 4 tab sudah aktif.
-- **Aset dan Konten**: seed berisi 10 stage, 9 materi, 45 soal, 50 komposisi, 48 ikan (15 ilustrasi + 33 placeholder), dan 7 misi. Galeri Aset tetap tersedia di build debug.
+- **Aset dan Konten**: seed berisi 20 stage, 18 materi, 110 soal, 110 komposisi, 58 ikan, dan 11 misi. Galeri Aset tetap tersedia di build debug.
 - **Pemula**: `QuizEngine`, `BaitRules`, `LevelRules`, `FishRules`, dan `GameRepository` menyimpan progres ke Room. Combo bonus memakai ambang 3/4/5 karena satu stage 5 soal.
 - **Expert**: interpreter Python subset (variabel, ekspresi, if/elif/else, while, for/range, def/return, print) beserta dunia, tick, trace, evaluasi misi, dan bintang 1,5× par.
 - **Desainer**: tema dan aset tetap dipertahankan; teks UI mengikuti palet laut yang sudah ada.

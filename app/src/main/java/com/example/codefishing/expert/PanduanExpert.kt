@@ -42,6 +42,7 @@ object PanduanExpert {
         "lempar() memakan 1 tick; lihat() gratis. Periksa isi petak dulu sebelum melempar.",
         "Sampah tidak dihitung ikan dan bisa menggagalkan misi tertentu.",
         "Bintang: 3 jika tick ≤ par, 2 jika tick ≤ 1,5 × par, selain itu 1.",
+        "Bintang pertama kali mencapai 3 pada satu misi memberi bonus 40 XP sekali.",
         "Batas aman: 1000 tick dan 10.000 langkah.",
     )
 

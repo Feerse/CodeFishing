@@ -123,9 +123,9 @@ import kotlin.math.PI
 import kotlin.math.sin
 
 /**
- * 07 Mode Expert: daftar 7 misi dan editor kode Python.
+ * 07 Mode Expert: daftar 11 misi dan editor kode Python.
  * Hasil eksekusi tampil inline di editor (tanpa pindah layar).
- * 15 angka batas tick, 3 bintang di par, 2 bintang di 1,5x par.
+ * 15 angka batas tick, 3 bintang di par, 2 bintang di 1,5x par, bonus 40 XP saat 3 bintang pertama.
  */
 private val kataKunciPython = Regex(
     """\b(def|return|if|elif|else|for|while|in|and|or|not|True|False|None|print|range|len|int|str|float|bool)\b""",
@@ -164,6 +164,7 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
     val c = LocalContainer.current
     val warna = LocalWarna.current
     val bintang by c.game.observeBintangMisi().collectAsState(emptyList())
+    val statistik by c.game.observeStatistik().collectAsState(null)
     val petaBintang = bintang.associateBy { it.id }
     val petaBintangInt = remember(bintang) { bintang.associate { it.id to it.bintang } }
     var panduan by remember { mutableStateOf(false) }
@@ -193,7 +194,10 @@ fun SandboxScreen(nav: AppNavigator, padding: PaddingValues) {
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 item {
-                    KepalaExpert(jumlahMisi = misi.size)
+                    KepalaExpert(
+                        jumlahMisi = misi.size,
+                        bintang = statistik?.total_bintang ?: 0,
+                    )
                     Spacer(Modifier.height(8.dp))
                 }
                 item {
@@ -719,7 +723,7 @@ private fun EditorMisi(
  * supaya layar punya tempat mata beristirahat yang bukan teks.
  */
 @Composable
-private fun KepalaExpert(jumlahMisi: Int, modifier: Modifier = Modifier) {
+private fun KepalaExpert(jumlahMisi: Int, bintang: Int, modifier: Modifier = Modifier) {
     val warna = LocalWarna.current
     val a1 = aksenMisi(1, warna.gelap)
     val a3 = aksenMisi(3, warna.gelap)
@@ -792,7 +796,9 @@ private fun KepalaExpert(jumlahMisi: Int, modifier: Modifier = Modifier) {
                 Spacer(Modifier.height(2.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     ChipAksen(t("{} misi", jumlahMisi), a1)
-                    ChipAksen(t("Batas {} tick", 1000), a6)
+                    // Progres bintang dipakai sebagai alasan mengulang misi: 3 bintang pertama
+                    // juga memberi bonus XP, jadi jumlah bintang adalah target yang terlihat.
+                    ChipAksen(t("{} / {} bintang", bintang, jumlahMisi * 3), a3)
                 }
             }
             Gambar(Art.kapal_peta, t("Kapal pemain"), Modifier.size(84.dp))
@@ -829,7 +835,11 @@ private fun ChipAksen(teks: String, aksen: Color) {
 
 /**
  * Kartu satu misi. Sisi kiri, cincin lencana, dan teks par memakai warna aksen misi itu sendiri,
- * sehingga tujuh misi bisa dibedakan dari warnanya tanpa membaca judul.
+ * sehingga misi bisa dibedakan dari warnanya tanpa membaca judul.
+ *
+ * Status juga terbaca dari bentuk: kartu yang belum pernah selesai bersudut bulat biasa, kartu
+ * yang sudah selesai lebih kotak, dan kartu sempurna (3 bintang) memakai sudut asimetris dengan
+ * garis tepi lebih tebal serta label "Sempurna". Jadi status tidak bergantung pada warna saja.
  */
 @Composable
 private fun KartuMisi(
@@ -839,14 +849,24 @@ private fun KartuMisi(
     onClick: () -> Unit,
 ) {
     val warna = LocalWarna.current
+    val selesai = bintang > 0
+    val sempurna = bintang >= 3
+    val bentuk = when {
+        sempurna -> RoundedCornerShape(topStart = 26.dp, topEnd = 6.dp, bottomEnd = 26.dp, bottomStart = 6.dp)
+        selesai -> RoundedCornerShape(10.dp)
+        else -> RoundedCornerShape(20.dp)
+    }
     Kartu(
         Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
         // Kartu ikut diwarnai tipis dengan aksen misinya: sisi kiri saja terlalu sempit untuk
-        // mengubah kesan layar, sedangkan tint seluas kartu membuat tujuh misi terlihat berbeda.
+        // mengubah kesan layar, sedangkan tint seluas kartu membuat misi terlihat berbeda.
         warna = lerp(warna.kartu, aksen, if (warna.gelap) 0.12f else 0.08f),
         aksenSisi = aksen,
+        bentuk = bentuk,
+        warnaGaris = if (selesai) aksen.copy(alpha = 0.55f) else null,
+        tebalGaris = if (sempurna) 2.dp else if (selesai) 1.5.dp else 1.dp,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -859,7 +879,19 @@ private fun KartuMisi(
                     .border(1.5.dp, aksen.copy(alpha = 0.6f), CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
-                Gambar(lencanaMisi(item.nomor), t("Misi {}", item.nomor), Modifier.size(44.dp))
+                val lencana = lencanaMisi(item.nomor)
+                if (lencana != null) {
+                    Gambar(lencana, t("Misi {}", item.nomor), Modifier.size(44.dp))
+                } else {
+                    // Misi lanjutan belum punya ilustrasi lencana; nomornya dipakai sebagai
+                    // lencana supaya tidak semua misi baru tampil dengan gambar yang sama.
+                    Text(
+                        "${item.nomor}",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = aksen,
+                    )
+                }
             }
             Column(Modifier.weight(1f)) {
                 Text(item.judul, style = MaterialTheme.typography.titleMedium)
@@ -875,6 +907,17 @@ private fun KartuMisi(
                     BintangPop(bintang, ukuran = 14)
                     if (item.par != null) {
                         Text(t("Par {} tick", item.par), style = MaterialTheme.typography.labelSmall, color = aksen)
+                    }
+                    if (sempurna) {
+                        Text(
+                            t("Sempurna"),
+                            Modifier
+                                .background(aksen.copy(alpha = 0.18f), RoundedCornerShape(50))
+                                .padding(horizontal = 7.dp, vertical = 2.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = aksen,
+                            fontWeight = FontWeight.Bold,
+                        )
                     }
                 }
             }
@@ -927,15 +970,16 @@ private fun MunculBertahap(indeks: Int, isi: @Composable () -> Unit) {
     ) { isi() }
 }
 
-/** Lencana bergambar untuk daftar misi (misi 7 dan seterusnya = mode bebas). */
-private fun lencanaMisi(nomor: Int): Int = when (nomor) {
+/** Lencana bergambar untuk misi 1-6 dan mode bebas; misi lanjutan memakai nomor sebagai lencana. */
+private fun lencanaMisi(nomor: Int): Int? = when (nomor) {
     1 -> Art.lencana_misi_1
     2 -> Art.lencana_misi_2
     3 -> Art.lencana_misi_3
     4 -> Art.lencana_misi_4
     5 -> Art.lencana_misi_5
     6 -> Art.lencana_misi_6
-    else -> Art.lencana_misi_bebas
+    11 -> Art.lencana_misi_bebas
+    else -> null
 }
 
 @Composable

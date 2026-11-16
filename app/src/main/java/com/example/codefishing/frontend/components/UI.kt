@@ -24,9 +24,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Brush
@@ -103,11 +105,19 @@ fun Kartu(
      * punya penanda warna sendiri dan tidak lagi terbaca sebagai tujuh baris yang sama.
      */
     aksenSisi: Color? = null,
+    /**
+     * Bentuk sudut kartu. Daftar misi memakai bentuk berbeda untuk status yang berbeda
+     * (belum selesai / selesai / sempurna) supaya status terbaca dari siluet kartu, bukan
+     * hanya dari warna bintang.
+     */
+    bentuk: Shape = RoundedCornerShape(20.dp),
+    /** Warna garis tepi; null berarti memakai warna garis tema. */
+    warnaGaris: Color? = null,
+    tebalGaris: Dp = 1.dp,
     isi: @Composable () -> Unit,
 ) {
     // Column, bukan Box: isi kartu sering terdiri dari beberapa teks/Spacer.
     // Dengan Box semua child menumpuk di posisi yang sama.
-    val bentuk = RoundedCornerShape(20.dp)
     Column(
         modifier
             .clip(bentuk)
@@ -121,7 +131,7 @@ fun Kartu(
                     }
                 },
             )
-            .border(1.dp, LocalWarna.current.garis, bentuk)
+            .border(tebalGaris, warnaGaris ?: LocalWarna.current.garis, bentuk)
             .padding(16.dp),
     ) { isi() }
 }

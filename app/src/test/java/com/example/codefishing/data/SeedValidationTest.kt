@@ -31,7 +31,7 @@ class SeedValidationTest {
         assertEquals(18, baca("materi.json").length())
         assertEquals(110, baca("soal.json").length())
         assertEquals(58, baca("ikan.json").length())
-        assertEquals(7, baca("misi.json").length())
+        assertEquals(11, baca("misi.json").length())
     }
 
     @Test

@@ -376,6 +376,10 @@ internal object KamusInggris {
             "Write Python, move the ship, catch fish.",
         "{} misi" to "{} missions",
         "Batas {} tick" to "{} tick limit",
+        "{} / {} bintang" to "{} / {} stars",
+        "Sempurna" to "Perfect",
+        "Bintang Expert" to "Expert stars",
+        "Misi Expert" to "Expert missions",
         "Panduan Expert" to "Expert Guide",
         "Perintah, sintaks Python, dan petunjuk semua misi" to
             "Commands, Python syntax, and hints for every mission",

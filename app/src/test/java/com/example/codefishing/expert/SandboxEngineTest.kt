@@ -59,23 +59,47 @@ class SandboxEngineTest {
 
     @Test
     fun sapuEmpatKaliEmpat() {
-        val m = misi("m3", 4, List(16) { "mujair" }, "all", par = 48)
+        // Par 38 dikalibrasi dari rute ular dua arah (31 tick). Program yang selalu kembali ke
+        // kolom 0 memakan 40 tick, jadi hanya 2 bintang; versi ular tetap 3 bintang.
+        val m = misi("m3", 4, List(16) { "mujair" }, "all", par = 38)
         val kode = """
             for baris in range(4):
-                for kolom in range(4):
+                for kolom in range(3):
                     lempar()
-                    if kolom < 3:
+                    if baris % 2 == 0:
                         gerak(Timur)
+                    else:
+                        gerak(Barat)
+                lempar()
                 if baris < 3:
                     gerak(Utara)
-                    for balik in range(3):
-                        gerak(Barat)
         """.trimIndent()
         val run = SandboxEngine().jalankan(kode, m)
         assertTrue(run.hasil.berhasil)
         assertTrue(run.evaluasi.sukses)
         assertEquals(16, run.hasil.tertangkap)
+        assertEquals(31, run.hasil.ticks)
         assertEquals(3, run.evaluasi.bintang)
+    }
+
+    @Test
+    fun misiCetakButuhSemuaIkanDanSatuBarisOutput() {
+        val cells = listOf("teri", "teri", "", "")
+        val m = misi("m10", 2, cells, "cetak")
+        val tanpaCetak = SandboxEngine().jalankan("lempar()\ngerak(Timur)\nlempar()", m)
+        assertTrue(tanpaCetak.evaluasi.sukses.not())
+        assertEquals(
+            "Semua ikan tertangkap, tetapi belum ada print() yang dijalankan.",
+            tanpaCetak.evaluasi.alasan,
+        )
+
+        val cetakSaja = SandboxEngine().jalankan("print(\"laporan\")", m)
+        assertTrue(cetakSaja.evaluasi.sukses.not())
+
+        val lengkap = SandboxEngine().jalankan("lempar()\ngerak(Timur)\nlempar()\nprint(\"laporan\")", m)
+        assertTrue(lengkap.hasil.berhasil)
+        assertTrue(lengkap.evaluasi.sukses)
+        assertEquals(1, lengkap.hasil.keluaran.size)
     }
 
     @Test

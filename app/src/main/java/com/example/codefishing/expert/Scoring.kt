@@ -6,6 +6,9 @@ package com.example.codefishing.expert
  * selain itu 1 bintang. Misi tanpa par selalu 3 bintang bila berhasil.
  */
 object Scoring {
+    /** Bonus XP sekali saja saat sebuah misi pertama kali mencapai 3 bintang. */
+    const val BONUS_TIGA_BINTANG = 40
+
     /** Par di luar 1..998 (mis. 999 pada mode Bebas) dianggap tanpa par. */
     fun parEfektif(par: Int?): Int? = par?.takeIf { it in 1..998 }
 
@@ -16,6 +19,17 @@ object Scoring {
         val batasDua = kotlin.math.ceil(p * 1.5).toInt()
         return if (ticks <= batasDua) 2 else 1
     }
+
+    /**
+     * Bonus XP untuk pencapaian 3 bintang pertama pada satu misi.
+     *
+     * Tanpa bonus, mengulang misi yang sudah selesai tidak memberi apa pun; hadiah ini memberi
+     * alasan menyempurnakan program sampai tick-nya di bawah par, bukan sekadar lulus.
+     *
+     * @param sebelum bintang terbaik misi itu sebelum percobaan ini.
+     */
+    fun bonusTigaBintang(sukses: Boolean, bintang: Int, sebelum: Int): Int =
+        if (sukses && bintang >= 3 && sebelum < 3) BONUS_TIGA_BINTANG else 0
 
     /**
      * Boleh tidaknya satu spesies membayar XP per ekor pada misi ini.

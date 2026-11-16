@@ -33,4 +33,15 @@ class ScoringTest {
         // Misi gagal tidak membayar XP walau spesiesnya baru.
         assertFalse(Scoring.xpPerEkorBoleh(sukses = false, sudahDibayar = emptySet(), ikanId = mujair))
     }
+
+    @Test fun bonusTigaBintangSekaliPerMisi() {
+        // 3 bintang pertama: bonus dibayar.
+        assertEquals(40, Scoring.bonusTigaBintang(sukses = true, bintang = 3, sebelum = 0))
+        assertEquals(40, Scoring.bonusTigaBintang(sukses = true, bintang = 3, sebelum = 2))
+        // Sudah pernah 3 bintang: tidak dibayar lagi.
+        assertEquals(0, Scoring.bonusTigaBintang(sukses = true, bintang = 3, sebelum = 3))
+        // Belum 3 bintang atau misi gagal: tidak ada bonus.
+        assertEquals(0, Scoring.bonusTigaBintang(sukses = true, bintang = 2, sebelum = 0))
+        assertEquals(0, Scoring.bonusTigaBintang(sukses = false, bintang = 3, sebelum = 0))
+    }
 }

@@ -31,8 +31,17 @@ object SandboxContent {
     fun misi(context: Context): List<MisiPeta> {
         cache?.let { return it }
         val teks = context.assets.open("seed/misi.json").bufferedReader().use { it.readText() }
+        val hasil = dariJson(teks)
+        cache = hasil
+        return hasil
+    }
+
+    fun cari(context: Context, kode: String): MisiPeta? = misi(context).firstOrNull { it.kode == kode }
+
+    /** Ubah isi `misi.json` menjadi daftar misi. Dipisah dari [misi] agar bisa diuji tanpa Context. */
+    fun dariJson(teks: String): List<MisiPeta> {
         val arr = JSONArray(teks)
-        val hasil = (0 until arr.length()).map { i ->
+        return (0 until arr.length()).map { i ->
             val o = arr.getJSONObject(i)
             val goal = o.getJSONObject("goal")
             val cells = o.getJSONArray("cells")
@@ -53,11 +62,7 @@ object SandboxContent {
                 dbId = o.getInt("id"),
             )
         }
-        cache = hasil
-        return hasil
     }
-
-    fun cari(context: Context, kode: String): MisiPeta? = misi(context).firstOrNull { it.kode == kode }
 }
 
 data class EvaluasiMisi(
@@ -139,6 +144,7 @@ class SandboxEngine {
                     dunia.sisaSpesies(target) == 0
             }
             "def" -> dunia.sisaIkan == 0 && hasil.defDigunakan
+            "cetak" -> dunia.sisaIkan == 0 && hasil.keluaran.isNotEmpty()
             "free" -> hasil.tangkapan.isNotEmpty()
             else -> false
         }
@@ -146,8 +152,10 @@ class SandboxEngine {
             sukses -> "Misi selesai."
             misi.goalTipe == "def" && dunia.sisaIkan == 0 && !hasil.defDigunakan ->
                 "Semua ikan tertangkap, tetapi program belum memakai def."
+            misi.goalTipe == "cetak" && dunia.sisaIkan == 0 ->
+                "Semua ikan tertangkap, tetapi belum ada print() yang dijalankan."
             misi.goalTipe == "catch" -> "Baru ${hasil.tangkapan.size} dari ${misi.goalN} ikan."
-            misi.goalTipe == "all" -> "Masih ada ${dunia.sisaIkan} ikan di petak."
+            misi.goalTipe == "all" || misi.goalTipe == "cetak" -> "Masih ada ${dunia.sisaIkan} ikan di petak."
             else -> "Target misi belum terpenuhi."
         }
         return EvaluasiMisi(sukses, if (sukses) Scoring.bintang(hasil.ticks, misi.par) else 0, alasan)

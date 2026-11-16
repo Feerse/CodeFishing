@@ -44,6 +44,7 @@ import com.example.codefishing.core.i18n.LocalTeks
 import com.example.codefishing.core.i18n.t
 import com.example.codefishing.core.nav.AppNavigator
 import com.example.codefishing.core.nav.Screen
+import com.example.codefishing.expert.SandboxContent
 import com.example.codefishing.frontend.components.Gambar
 import com.example.codefishing.frontend.components.Kartu
 import com.example.codefishing.frontend.components.LabelNilai
@@ -67,6 +68,7 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
     val teks = LocalTeks.current
     val totalIkan by produceState<Int?>(null) { value = c.game.jumlahIkan() }
     val totalStage by produceState<Int?>(null) { value = c.game.jumlahStage() }
+    val totalMisi = remember { SandboxContent.misi(ctx).size }
     var konfirmasi by remember { mutableStateOf(false) }
     var konfirmasiBuka by remember { mutableStateOf(false) }
     var hasilBuka by remember { mutableStateOf<String?>(null) }
@@ -95,6 +97,10 @@ fun PengaturanScreen(nav: AppNavigator, padding: PaddingValues) {
                         LabelNilai("XP", "${s.xp}")
                         LabelNilai(t("Stage"), "${s.stage_selesai}/${totalStage ?: "…"}")
                         LabelNilai(t("Ikan"), "${s.ikan_terkumpul}/${totalIkan ?: "…"}")
+                    }
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        LabelNilai(t("Bintang Expert"), "${s.total_bintang}/${totalMisi * 3}")
+                        LabelNilai(t("Misi Expert"), "$totalMisi")
                     }
                 } ?: Text(t("Memuat statistik..."), style = MaterialTheme.typography.bodySmall)
             }

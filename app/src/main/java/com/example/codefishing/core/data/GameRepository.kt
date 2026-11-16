@@ -626,7 +626,9 @@ class GameRepository(
         val sukses = status == "sukses"
         val bintang = if (sukses) Scoring.bintang(ticks, Scoring.parEfektif(misi?.par_tick)) else 0
         val sebelum = misiId?.let { resultDao.bintangTerbaik(it) } ?: 0
-        val xp = if (sukses && sebelum == 0) (misi?.xp_reward ?: 0) else 0
+        val xpMisi = if (sukses && sebelum == 0) (misi?.xp_reward ?: 0) else 0
+        val bonus = Scoring.bonusTigaBintang(sukses, bintang, sebelum)
+        val xp = xpMisi + bonus
         // Dibaca SEBELUM run ini disimpan: spesies yang sudah pernah membayar XP di misi ini.
         val sudahXp = misiId?.let { resultDao.ikanSudahXp(it).toSet() } ?: emptySet()
         val hasilId = resultDao.simpanHasil(
